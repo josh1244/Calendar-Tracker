@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CalendarMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <days>
+    <item>
+      <key>
+        <string>5-12-15-2023</string>
+      </key>
+      <value>
+        <DayNotes>
+          <exists>true</exists>
+          <dayQuality>8</dayQuality>
+          <sleepQuality>10</sleepQuality>
+          <tookMeds>false</tookMeds>
+        </DayNotes>
+      </value>
+    </item>
+  </days>
+</CalendarMap>
