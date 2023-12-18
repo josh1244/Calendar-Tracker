@@ -9,7 +9,6 @@ namespace Calendar_Tracker.Pages
         {
             // Load Calendar data
             CalendarMap myCalendar = LoadFromFile("calendarData.xml");
-            //CalendarMap myCalendar = new CalendarMap();
             DayNotes retrievedNotes;
 
             // Get the current time

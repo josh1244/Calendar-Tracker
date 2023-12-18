@@ -4,7 +4,44 @@
     ViewData["Title"] = "Josh's Calendar Tracker";
 }
 
+<!DOCTYPE html>
+<html>
+<body>
+
 <div class="text-center">
     <h1 class="display-4">Hello Josh!</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+
+<!-- <b>Day Quality</b> -->
+
+<!-- Display a message if there is one. Not necessary since now there is always one. -->
+    @if (ViewData["Message"] != null)
+    {
+        <p>@ViewData["Message"]</p>
+    }
+
+<!-- Create a form to submit the slider value -->
+<form method="post">
+    <!-- Create a slider with a name and an id of Age -->
+    <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue" oninput="updateOutput(this.value)">
+    
+    <!-- Create an output element to display the slider value with a fixed width -->
+    <output id="output" style="width: 30px;">@Model.SliderValue</output>
+    
+    
+    <!-- Create a submit button -->
+    <input type="submit" value="Submit">
+</form>
+
+<!-- Add a script to update the output element with the slider value -->
+<script>
+    function updateOutput(SliderValue) {
+        document.getElementById("output").innerHTML = SliderValue;
+    }
+</script>
+
+
+</body>
+</html>
