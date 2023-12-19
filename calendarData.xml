@@ -3,13 +3,13 @@
   <days>
     <item>
       <key>
-        <string>5-12-15-2023</string>
+        <string>1-12-18-2023</string>
       </key>
       <value>
         <DayNotes>
           <exists>true</exists>
-          <dayQuality>8</dayQuality>
-          <sleepQuality>10</sleepQuality>
+          <dayQuality>0</dayQuality>
+          <sleepQuality>6</sleepQuality>
           <tookMeds>false</tookMeds>
         </DayNotes>
       </value>

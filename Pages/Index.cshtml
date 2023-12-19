@@ -14,31 +14,32 @@
 </div>
 
 
-<!-- <b>Day Quality</b> -->
+<!-- <b>"Day Quality: {SliderValue1}""</b> -->
 
-<!-- Display a message if there is one. Not necessary since now there is always one. -->
-    @if (ViewData["Message"] != null)
-    {
-        <p>@ViewData["Message"]</p>
-    }
+<!-- <p>@ViewData["Message1"]</p> -->
 
 <!-- Create a form to submit the slider value -->
 <form method="post">
-    <!-- Create a slider with a name and an id of Age -->
-    <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue" oninput="updateOutput(this.value)">
-    
-    <!-- Create an output element to display the slider value with a fixed width -->
-    <output id="output" style="width: 30px;">@Model.SliderValue</output>
-    
-    
-    <!-- Create a submit button -->
-    <input type="submit" value="Submit">
+    <!-- DayQuality -->
+    <div>
+        <p>Day Quality: <span id="output1">@Model.SliderValue1</span></p>
+        <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, 1)">
+        <output id="output1" style="width: 30px;">@Model.SliderValue1</output>
+        <input type="submit" name="DayQualitySubmit" value="Submit">
+    </div>
+
+    <!-- SleepQuality -->
+    <div>
+        <p>Sleep Quality: <span id="output2">@Model.SliderValue2</span></p>
+        <input id="SleepQuality" name="SleepQuality" type="range" min="0" max="10" value="@Model.SliderValue2" oninput="updateOutput(this.value, 2)">
+        <output id="output2" style="width: 30px;">@Model.SliderValue2</output>
+        <input type="submit" name="SleepQualitySubmit" value="Submit">
+    </div>
 </form>
 
-<!-- Add a script to update the output element with the slider value -->
 <script>
-    function updateOutput(SliderValue) {
-        document.getElementById("output").innerHTML = SliderValue;
+    function updateOutput(sliderValue, sliderNumber) {
+        document.getElementById("output" + sliderNumber).innerHTML = sliderValue;
     }
 </script>
 

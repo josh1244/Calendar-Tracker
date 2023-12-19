@@ -1,14 +1,17 @@
-﻿using System.Reflection.PortableExecutable;
+﻿using Newtonsoft.Json;
+using System.Reflection.PortableExecutable;
 using System.Xml.Serialization;
+using static Calendar;
 
 public class Calendar
 {
+    [Serializable]
     public class DayNotes // Class DayNotes to keep notes
     {
-        public bool exists;
-        public int dayQuality;
-        public int sleepQuality;
-        public bool tookMeds;
+        public bool exists { get; set; }
+        public int dayQuality { get; set; }
+        public int sleepQuality { get; set; }
+        public bool tookMeds { get; set; }
 
         // Define a constructor for DayNotes
         public DayNotes()
@@ -32,60 +35,71 @@ public class Calendar
         // Function to add a day with notes to the calendar
         public void AddDay(string id, DayNotes notes)
         {
-            days[id] = notes;
+            if (days.ContainsKey(id))
+            {
+                // Day note already exists, update it
+                days[id] = notes;
+            }
+            else
+            {
+                // Day note doesn't exist, add a new one
+                days.Add(id, notes);
+            }
         }
 
         // Function to get notes for a specific day
         public DayNotes GetDayNotes(string id)
         {
-            DayNotes value;
-            if (days.TryGetValue(id, out value))
+            if (days.TryGetValue(id, out DayNotes value))
             {
                 // Key was in dictionary; "value" contains corresponding value
-                //return days[id];
                 return value;
             }
             else
             {
-                // Key wasn't in dictionary; "value" is now 0
-                return new DayNotes { };
+                // Key wasn't in dictionary; create a new DayNotes object with the specified ID
+                DayNotes newNotes = new DayNotes();
+                days.Add(id, newNotes);
+                return newNotes;
             }
         }
-    }
 
-    // Function to load calendar from file
-    public static CalendarMap LoadFromFile(string fileName)
-    {
-        // Check if the file exists
+
+
+        // Function to load calendar from file
+        public static CalendarMap LoadFromFile(string fileName)
+        {
+            // Check if the file exists
             if (!File.Exists(fileName))
-        {
-            // Return a new CalendarMap object
-            return new CalendarMap();
-        }
-        using (TextReader reader = new StreamReader(fileName))
-        {
-                var serializer = new XmlSerializer(typeof(CalendarMap));
-            // Check if the file is empty
-            if (reader.Peek() == -1)
             {
                 // Return a new CalendarMap object
                 return new CalendarMap();
             }
-            else
+            using (TextReader reader = new StreamReader(fileName))
             {
-                // Deserialize the CalendarMap object from the file
-                return (CalendarMap)serializer.Deserialize(reader);
+                var serializer = new XmlSerializer(typeof(CalendarMap));
+                // Check if the file is empty
+                if (reader.Peek() == -1)
+                {
+                    // Return a new CalendarMap object
+                    return new CalendarMap();
+                }
+                else
+                {
+                    // Deserialize the CalendarMap object from the file
+                    return (CalendarMap)serializer.Deserialize(reader);
+                }
             }
         }
-    }
 
-    // Function to save calendar to file
-    public static void SaveToFile(string fileName, CalendarMap data)
-    {
-        XmlSerializer serializer = new XmlSerializer(typeof(CalendarMap));
-        using (StreamWriter writer = new StreamWriter(fileName))
+        // Function to save calendar to file
+        public static void SaveToFile(string fileName, CalendarMap data)
         {
-            serializer.Serialize(writer, data);
+            XmlSerializer serializer = new XmlSerializer(typeof(CalendarMap));
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                serializer.Serialize(writer, data);
+            }
         }
     }
 }

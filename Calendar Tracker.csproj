@@ -7,4 +7,9 @@
     <RootNamespace>Calendar_Tracker</RootNamespace>
   </PropertyGroup>
 
+	<ItemGroup>
+		<!-- Add the following line to reference Newtonsoft.Json -->
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@ namespace Calendar_Tracker.Pages
         public void OnGet()
         {
             // Load Calendar data
-            CalendarMap myCalendar = LoadFromFile("calendarData.xml");
+            CalendarMap myCalendar = CalendarMap.LoadFromFile("calendarData.xml");
             DayNotes retrievedNotes;
 
             // Get the current time
@@ -142,7 +142,7 @@ namespace Calendar_Tracker.Pages
             retrievedNotes = myCalendar.GetDayNotes(inputID);
             UI.DisplayNotes(retrievedNotes);
 
-            SaveToFile("calendarData.xml", myCalendar);
+            CalendarMap.SaveToFile("calendarData.xml", myCalendar);
         }
     }
 }
