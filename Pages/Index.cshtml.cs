@@ -88,32 +88,24 @@ public class IndexModel : PageModel
         // Retrieve or create a new DayNotes object
         DayNotes note = MyCalendar.GetDayNotes(Id);
 
-
         // Update Note in calendar
-        //DayNotes note = RetrievedNotes;
-
-        if (!string.IsNullOrEmpty(Request.Form["DayQualitySubmit"]))
+        if (!string.IsNullOrEmpty(Request.Form["Submit"]))
         {
-            // Bind the value from the form to the SliderValue property
-            if (int.TryParse(Request.Form["DayQuality"], out int sliderValue))
+            // Bind the value from the form to the SliderValue property based on the submitted button
+            if (int.TryParse(Request.Form["DayQuality"], out int sliderValue1))
             {
                 note.exists = true;
-                note.dayQuality = sliderValue;
-                Console.WriteLine($"dayQuality: {sliderValue}");
+                note.dayQuality = sliderValue1;
+                Console.WriteLine($"dayQuality: {sliderValue1}");
             }
-        }
 
-        if (!string.IsNullOrEmpty(Request.Form["SleepQualitySubmit"]))
-        {
-            // Bind the value from the form to the SliderValue property
-            if (int.TryParse(Request.Form["SleepQuality"], out int sliderValue))
+            if (int.TryParse(Request.Form["SleepQuality"], out int sliderValue2))
             {
                 note.exists = true;
-                note.sleepQuality = sliderValue;
-                Console.WriteLine($"sleepQuality: {sliderValue}");
+                note.sleepQuality = sliderValue2;
+                Console.WriteLine($"sleepQuality: {sliderValue2}");
             }
         }
-        Console.WriteLine($"note after editing directly: {JsonConvert.SerializeObject(note)}");
 
         // Update MyCalendar
         CalendarMap newCalendar = MyCalendar;
@@ -143,25 +135,5 @@ public class IndexModel : PageModel
             SliderValue1 = -1; // Set initial value to DayNote's value;
             SliderValue2 = -1; // Set initial value to DayNote's value
         }
-    }
-
-    public IActionResult OnPostUpdateSlider(int sliderNumber, int sliderValue)
-    {
-        Console.WriteLine("OnPostUpdateSlider method executed.");
-
-        // Handle the slider update here
-        if (sliderNumber == 1)
-        {
-            SliderValue1 = sliderValue;
-        }
-        else if (sliderNumber == 2)
-        {
-            SliderValue2 = sliderValue;
-        }
-
-        // Update the notes and save
-        UpdateNotesAndSave();
-
-        return new EmptyResult(); // Return an empty result for AJAX requests
     }
 }

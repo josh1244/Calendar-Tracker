@@ -8,8 +8,8 @@
       <value>
         <DayNotes>
           <exists>true</exists>
-          <dayQuality>3</dayQuality>
-          <sleepQuality>5</sleepQuality>
+          <dayQuality>9</dayQuality>
+          <sleepQuality>8</sleepQuality>
           <tookMeds>false</tookMeds>
         </DayNotes>
       </value>
