@@ -18,6 +18,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.UseRouting();
 
 app.UseAuthorization();
@@ -25,6 +26,9 @@ app.UseAuthorization();
 // Use session
 app.UseSession();
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+});
 
 app.Run();

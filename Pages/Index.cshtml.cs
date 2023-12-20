@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using static Calendar;
 
+/*
 public static class SessionExtensions
 {
     public static T GetObject<T>(this ISession session, string key)
@@ -19,6 +20,7 @@ public static class SessionExtensions
         session.SetString(key, JsonConvert.SerializeObject(value));
     }
 }
+*/
 
 public class IndexModel : PageModel
 {
@@ -26,24 +28,7 @@ public class IndexModel : PageModel
     public int SliderValue1 { get; set; }
     public int SliderValue2 { get; set; }
 
-    [BindProperty]
-    public string Id
-    {
-        get => HttpContext.Session.GetString("Id");
-        set => HttpContext.Session.SetString("Id", value);
-    }
-
-    public DayNotes RetrievedNotes
-    {
-        get => HttpContext.Session.GetObject<DayNotes>("RetrievedNotes") ?? new DayNotes();
-        set => HttpContext.Session.SetObject("RetrievedNotes", value);
-    }
-
-    public CalendarMap MyCalendar
-    {
-        get => HttpContext.Session.GetObject<CalendarMap>("MyCalendar") ?? new CalendarMap();
-        set => HttpContext.Session.SetObject("MyCalendar", value);
-    }
+    
 
     
 
@@ -57,17 +42,18 @@ public class IndexModel : PageModel
     {
         Console.WriteLine("OnGet method executed.");
 
-        MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+        CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
 
         // Get the current time
         DateTime now = DateTime.Today;
 
         // Convert Time to ID
-        Id = ID.DateToID(now);
+        string Id = ID.DateToID(now);
 
         // Retrieve or create a new DayNotes object
-        RetrievedNotes = MyCalendar.GetDayNotes(Id);
+        DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
+        //Set Sliders
         if (RetrievedNotes.exists)
         {
             SliderValue1 = RetrievedNotes.dayQuality;
@@ -85,13 +71,35 @@ public class IndexModel : PageModel
     {
         Console.WriteLine("OnPost method executed.");
 
+        UpdateNotesAndSave();
+    }
+
+    private void UpdateNotesAndSave()
+    {
+        Console.WriteLine("UpdateNotesAndSave method executed.");
+        CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+
+        // Get the current time
+        DateTime now = DateTime.Today;
+
+        // Convert Time to ID
+        string Id = ID.DateToID(now);
+
+        // Retrieve or create a new DayNotes object
+        DayNotes note = MyCalendar.GetDayNotes(Id);
+
+
+        // Update Note in calendar
+        //DayNotes note = RetrievedNotes;
+
         if (!string.IsNullOrEmpty(Request.Form["DayQualitySubmit"]))
         {
             // Bind the value from the form to the SliderValue property
             if (int.TryParse(Request.Form["DayQuality"], out int sliderValue))
             {
-                SliderValue1 = sliderValue;
-                UpdateNotesAndSave(SliderValue1, null);
+                note.exists = true;
+                note.dayQuality = sliderValue;
+                Console.WriteLine($"dayQuality: {sliderValue}");
             }
         }
 
@@ -100,28 +108,12 @@ public class IndexModel : PageModel
             // Bind the value from the form to the SliderValue property
             if (int.TryParse(Request.Form["SleepQuality"], out int sliderValue))
             {
-                SliderValue2 = sliderValue;
-                UpdateNotesAndSave(null, SliderValue2);
+                note.exists = true;
+                note.sleepQuality = sliderValue;
+                Console.WriteLine($"sleepQuality: {sliderValue}");
             }
         }
-    }
-
-    private void UpdateNotesAndSave(int? dayQuality, int? sleepQuality)
-    {
-        Console.WriteLine("UpdateNotesAndSave method executed.");
-        // Update Note in calendar
-        DayNotes note = RetrievedNotes;
-        if (dayQuality.HasValue)
-        {
-            note.exists = true;
-            note.dayQuality = dayQuality.Value;
-        }
-
-        if (sleepQuality.HasValue)
-        {
-            note.exists = true;
-            note.sleepQuality = sleepQuality.Value;
-        }
+        Console.WriteLine($"note after editing directly: {JsonConvert.SerializeObject(note)}");
 
         // Update MyCalendar
         CalendarMap newCalendar = MyCalendar;
@@ -138,5 +130,38 @@ public class IndexModel : PageModel
         // Log values for debugging
         Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
         Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
+
+        //Set Sliders
+        if (note.exists)
+        {
+            SliderValue1 = note.dayQuality;
+            SliderValue2 = note.sleepQuality;
+        }
+        else
+        {
+            // Only set the initial value if it hasn't been set yet
+            SliderValue1 = -1; // Set initial value to DayNote's value;
+            SliderValue2 = -1; // Set initial value to DayNote's value
+        }
+    }
+
+    public IActionResult OnPostUpdateSlider(int sliderNumber, int sliderValue)
+    {
+        Console.WriteLine("OnPostUpdateSlider method executed.");
+
+        // Handle the slider update here
+        if (sliderNumber == 1)
+        {
+            SliderValue1 = sliderValue;
+        }
+        else if (sliderNumber == 2)
+        {
+            SliderValue2 = sliderValue;
+        }
+
+        // Update the notes and save
+        UpdateNotesAndSave();
+
+        return new EmptyResult(); // Return an empty result for AJAX requests
     }
 }
