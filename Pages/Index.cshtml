@@ -10,33 +10,95 @@
 
 <div class="text-center">
     <h1 class="display-4">Hello Josh!</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <b>Today is @DateTime.Now.ToString("MMM dd, yyyy")</b>
+    <p></p>
 </div>
 
-<form method="post">
-    <!-- DayQuality -->
-    <div>
-        <p>Day Quality: <span>@Model.SliderValue1</span></p>
-        <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, 1)">
-        <output id="output1" style="width: 30px;" id="output1">@Model.SliderValue1</output>
-    </div>
+<div class="center-container">
+    <form method="post">
+        <div  class="form-container">
+            <div class="text-column">
+                <!-- Text content goes here -->
+                <p>Day Quality: <span>@Model.SliderValue1</span></p>
+                <p>Sleep Quality: <span>@Model.SliderValue2</span></p>
+                <p>Took Medication: <span>@Model.CheckValue3</span></p>
+            </div>
 
-    <!-- SleepQuality -->
-    <div>
-        <p>Sleep Quality: <span>@Model.SliderValue2</span></p>
-        <input id="SleepQuality" name="SleepQuality" type="range" min="0" max="10" value="@Model.SliderValue2" oninput="updateOutput(this.value, 2)">
-        <output id="output2" style="width: 30px;" id="output2">@Model.SliderValue2</output>
-    </div>
+            <div class="components-column">
+                <!-- DayQuality -->
+                <div class="components-container">
+                    <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, 1)">
+                    <output style="width: 30px;" id="output1">@Model.SliderValue1</output>
+                </div>
 
-    <input type="submit" name="Submit" value="Submit">
-</form>
+                <!-- SleepQuality -->
+                <div class="components-container">
+                    <input id="SleepQuality" name="SleepQuality" type="range" min="0" max="10" value="@Model.SliderValue2" oninput="updateOutput(this.value, 2)">
+                    <output style="width: 30px;" id="output2">@Model.SliderValue2</output>
+                </div>
+
+                <!-- TookMeds -->
+                <div class="components-container">
+                    <input id="TookMeds" name="TookMeds" type="checkbox" @(Model.CheckValue3 ? "checked" : "") oninput="updateOutput(this.checked, 3)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="text-center">
+            <input type="submit" name="Submit" value="Submit">
+        </div>
+    </form>
+</div>
+
+
 
 <script>
-    function updateOutput(sliderValue, sliderNumber) 
+    function updateOutput(Value, Number) 
     {
-        document.getElementById("output" + sliderNumber).innerHTML = sliderValue;
+        document.getElementById("output" + Number).innerHTML = Value;
+        console.log("output" + Number + Value);
     }
 </script>
+
+
+<style>
+    .text-center {
+        align-items: start;
+        justify-content: center;
+    }
+
+    .center-container {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        margin: 0; /* Remove default margin */
+    }
+
+    .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .text-column {
+        text-align: left;
+        margin-right: 20px; /* Adjust margin between columns */
+    }
+
+    .components-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .components-container {
+        width: 100%;
+        margin-bottom: 15px; /* Adjust spacing between containers */
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
 
 
 </body>

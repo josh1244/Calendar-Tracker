@@ -27,10 +27,11 @@ public class IndexModel : PageModel
     [BindProperty]
     public int SliderValue1 { get; set; }
     public int SliderValue2 { get; set; }
+    public bool CheckValue3 { get; set; }
 
-    
 
-    
+
+
 
 
 
@@ -58,12 +59,14 @@ public class IndexModel : PageModel
         {
             SliderValue1 = RetrievedNotes.dayQuality;
             SliderValue2 = RetrievedNotes.sleepQuality;
+            CheckValue3 = RetrievedNotes.tookMeds;
         }
         else
         {
             // Only set the initial value if it hasn't been set yet
             SliderValue1 = -1; // Set initial value to DayNote's value;
             SliderValue2 = -1; // Set initial value to DayNote's value
+            CheckValue3 = false; // Set initial value to DayNote's value
         }
     }
 
@@ -91,7 +94,6 @@ public class IndexModel : PageModel
         // Update Note in calendar
         if (!string.IsNullOrEmpty(Request.Form["Submit"]))
         {
-            // Bind the value from the form to the SliderValue property based on the submitted button
             if (int.TryParse(Request.Form["DayQuality"], out int sliderValue1))
             {
                 note.exists = true;
@@ -104,6 +106,22 @@ public class IndexModel : PageModel
                 note.exists = true;
                 note.sleepQuality = sliderValue2;
                 Console.WriteLine($"sleepQuality: {sliderValue2}");
+            }
+
+            // Check if the checkbox is checked
+            string tookMedsValue = Request.Form["TookMeds"];
+            if (tookMedsValue == "on")
+            {
+                note.exists = true;
+                note.tookMeds = true;
+                Console.WriteLine("tookMeds: true");
+            }
+            else
+            {
+                // Checkbox is unchecked
+                note.exists = true;
+                note.tookMeds = false; // Set to your default value for unchecked state
+                Console.WriteLine("tookMeds: false");
             }
         }
 
@@ -128,12 +146,14 @@ public class IndexModel : PageModel
         {
             SliderValue1 = note.dayQuality;
             SliderValue2 = note.sleepQuality;
+            CheckValue3 = note.tookMeds;
         }
         else
         {
             // Only set the initial value if it hasn't been set yet
             SliderValue1 = -1; // Set initial value to DayNote's value;
             SliderValue2 = -1; // Set initial value to DayNote's value
+            CheckValue3 = false; // Set initial value to DayNote's value
         }
     }
 }

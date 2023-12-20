@@ -8,9 +8,9 @@
       <value>
         <DayNotes>
           <exists>true</exists>
-          <dayQuality>9</dayQuality>
-          <sleepQuality>8</sleepQuality>
-          <tookMeds>false</tookMeds>
+          <dayQuality>10</dayQuality>
+          <sleepQuality>3</sleepQuality>
+          <tookMeds>true</tookMeds>
         </DayNotes>
       </value>
     </item>
