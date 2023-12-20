@@ -22,7 +22,9 @@ public static class SessionExtensions
 }
 */
 
+#pragma warning disable CA1050 // Declare types in namespaces
 public class IndexModel : PageModel
+#pragma warning restore CA1050 // Declare types in namespaces
 {
     [BindProperty]
     public int SliderValue1 { get; set; }
@@ -55,11 +57,11 @@ public class IndexModel : PageModel
         DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
         //Set Sliders
-        if (RetrievedNotes.exists)
+        if (RetrievedNotes.Exists)
         {
-            SliderValue1 = RetrievedNotes.dayQuality;
-            SliderValue2 = RetrievedNotes.sleepQuality;
-            CheckValue3 = RetrievedNotes.tookMeds;
+            SliderValue1 = RetrievedNotes.DayQuality;
+            SliderValue2 = RetrievedNotes.SleepQuality;
+            CheckValue3 = RetrievedNotes.TookMeds;
         }
         else
         {
@@ -96,31 +98,31 @@ public class IndexModel : PageModel
         {
             if (int.TryParse(Request.Form["DayQuality"], out int sliderValue1))
             {
-                note.exists = true;
-                note.dayQuality = sliderValue1;
+                note.Exists = true;
+                note.DayQuality = sliderValue1;
                 Console.WriteLine($"dayQuality: {sliderValue1}");
             }
 
             if (int.TryParse(Request.Form["SleepQuality"], out int sliderValue2))
             {
-                note.exists = true;
-                note.sleepQuality = sliderValue2;
+                note.Exists = true;
+                note.SleepQuality = sliderValue2;
                 Console.WriteLine($"sleepQuality: {sliderValue2}");
             }
 
             // Check if the checkbox is checked
-            string tookMedsValue = Request.Form["TookMeds"];
+            string? tookMedsValue = Request.Form["TookMeds"];
             if (tookMedsValue == "on")
             {
-                note.exists = true;
-                note.tookMeds = true;
+                note.Exists = true;
+                note.TookMeds = true;
                 Console.WriteLine("tookMeds: true");
             }
             else
             {
                 // Checkbox is unchecked
-                note.exists = true;
-                note.tookMeds = false; // Set to your default value for unchecked state
+                note.Exists = true;
+                note.TookMeds = false; // Set to your default value for unchecked state
                 Console.WriteLine("tookMeds: false");
             }
         }
@@ -142,11 +144,11 @@ public class IndexModel : PageModel
         Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
 
         //Set Sliders
-        if (note.exists)
+        if (note.Exists)
         {
-            SliderValue1 = note.dayQuality;
-            SliderValue2 = note.sleepQuality;
-            CheckValue3 = note.tookMeds;
+            SliderValue1 = note.DayQuality;
+            SliderValue2 = note.SleepQuality;
+            CheckValue3 = note.TookMeds;
         }
         else
         {

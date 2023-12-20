@@ -6,11 +6,11 @@ internal class UI
     // Function to display notes
     internal static void DisplayNotes(Calendar.DayNotes notes)
     {
-        if (notes.exists)
+        if (notes.Exists)
         {
-            Console.WriteLine("Day Quality: " + notes.dayQuality);
-            Console.WriteLine("Sleep Quality: " + notes.sleepQuality);
-            Console.WriteLine("Took Meds: " + (notes.tookMeds ? "Yes" : "No"));
+            Console.WriteLine("Day Quality: " + notes.DayQuality);
+            Console.WriteLine("Sleep Quality: " + notes.SleepQuality);
+            Console.WriteLine("Took Meds: " + (notes.TookMeds ? "Yes" : "No"));
             Console.WriteLine();
         }
         else
@@ -26,7 +26,7 @@ internal class UI
         DateTime date = ID.IDToDate(id);
 
         int weekNumber = date.DayOfYear / 7 + 1;
-        int day = date.Day; // Day of month
+        //int dayOfMonth = date.Day; // Day of month
         int dayOfWeek = (int)date.DayOfWeek; // Week begins at 0 on Sunday
         int year = date.Year; // Year
 
@@ -40,6 +40,7 @@ internal class UI
         }
 
         // Asign month name to month
+#pragma warning disable CA2208 // Instantiate argument exceptions correctly
         string month = date.Month switch
         {
             1 => "January",
@@ -57,6 +58,7 @@ internal class UI
             //_ => "MONTH ERROR",
             _ => throw new ArgumentException($"MONTH ERROR: {date.Month}", nameof(date.Month)),
         };
+#pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
         Console.WriteLine("Week: " + weekNumber + "                         " + year);
         Console.WriteLine(month);

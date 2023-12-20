@@ -6,5 +6,106 @@
 
 <div class="text-center">
     <h1 class="display-4">Calendar</h1>
-    <p>This is a placeholder of where the calendar will be.</p>
+
+    <b>
+         <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">
+             @DateTime.Now.ToString("MMM")</span>
+
+        <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">
+            @DateTime.Now.Day,</span>
+
+        <span id="editableYear" onclick="makeEditable(this, `42px`, 4, `year`)" style="cursor: pointer;">
+            @DateTime.Now.Year</span>
+    
+    </b>
+
+    <p></p>
 </div>
+
+<script>
+     function makeEditable(element, widthValue, number, typeValue) {
+        // Create an input element
+        var inputElement = document.createElement("input");
+        inputElement.type = "text";
+        inputElement.value = element.innerText;
+
+        if (typeValue === "day") {
+            inputElement.value = inputElement.value.slice(0, -1); // Remove comma from day
+        }
+
+        inputElement.pattern = `\\d{${number}}`;
+        inputElement.style.width = widthValue;
+
+        // Replace the span with the input element
+        element.replaceWith(inputElement);
+
+        // Focus on the input field
+        inputElement.focus();
+
+        // Attach event listeners to handle input restrictions and updating
+        inputElement.addEventListener("input", function () {
+
+            // Limit the length to # digits 
+           if (inputElement.value.length > number) {
+                inputElement.value = inputElement.value.substring(0, number);
+            }
+        });
+
+        inputElement.addEventListener("blur", function () {
+            // Perform any additional validation or processing here before updating
+            // For simplicity, let's assume any entered value is a valid year
+
+            // Update the displayed value
+            var newValue = inputElement.value;
+
+            // Create a span element without the comma initially
+            var spanElement = document.createElement("span");
+            spanElement.id = `editable${typeValue.charAt(0).toUpperCase() + typeValue.slice(1)}`;
+            spanElement.onclick = function () { makeEditable(this, widthValue, number, typeValue); };
+            spanElement.style.cursor = "pointer";
+
+            // Check if the value is valid
+            if (typeValue === "year") {
+                newValue = newValue.replace(/\D/g, '');  // Remove non-numeric characters
+                if (newValue === "") {
+                    newValue = @DateTime.Now.Year;  // Default to this year
+                }
+            } else if (typeValue === "day") {
+                newValue = newValue.replace(/\D/g, '');  // Remove non-numeric characters
+                if (newValue === "") {
+                    newValue = @DateTime.Now.Day;  // Default to today
+                }
+                newValue += ",";  // Add the comma to day
+            }
+
+            spanElement.innerText = newValue;
+
+            // Replace the input with the span
+            inputElement.replaceWith(spanElement);
+        });
+
+        // Handle pressing Enter key
+        inputElement.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                // Trigger the blur event when Enter is pressed
+                inputElement.blur();
+            }
+        });
+    }
+
+    function cycleMonth(direction) {
+        var months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+
+        var currentMonth = document.getElementById("editableMonth").innerText;
+        var currentIndex = months.indexOf(currentMonth);
+
+        // Cycle through months in the specified direction
+        var newMonthIndex = (currentIndex + direction + months.length) % months.length;
+        var newMonth = months[newMonthIndex];
+
+        // Update the displayed month
+        document.getElementById("editableMonth").innerText = newMonth;
+    }
+</script>

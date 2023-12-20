@@ -7,10 +7,23 @@
       </key>
       <value>
         <DayNotes>
-          <exists>true</exists>
-          <dayQuality>10</dayQuality>
-          <sleepQuality>3</sleepQuality>
-          <tookMeds>true</tookMeds>
+          <Exists>false</Exists>
+          <DayQuality>0</DayQuality>
+          <SleepQuality>0</SleepQuality>
+          <TookMeds>false</TookMeds>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>3-12-20-2023</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <DayQuality>6</DayQuality>
+          <SleepQuality>3</SleepQuality>
+          <TookMeds>false</TookMeds>
         </DayNotes>
       </value>
     </item>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static Calendar;
 
@@ -5,7 +6,41 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
+        // Properties to hold the date values
+        [BindProperty]
+        public string EditedMonth { get; set; }
+
+        [BindProperty]
+        public string EditedDay { get; set; }
+
+        [BindProperty]
+        public string EditedYear { get; set; }
+
+
         public void OnGet()
+        {
+            Console.WriteLine("OnGet method executed.");
+        }
+
+        public void OnPost()
+        {
+            Console.WriteLine("OnPost method executed.");
+        }
+
+        [HttpPost]
+        public IActionResult OnPostUpdateDate(string propertyName, string propertyValue)
+        {
+            Console.WriteLine("OnPostUpdateDate method executed.");
+            // Process the updated value on the server
+            // propertyName will be "EditedDay", "EditedMonth", or "EditedYear"
+            // propertyValue will be the updated value
+
+            // Perform any additional processing or validation
+
+            return new EmptyResult(); // Or return a JSON response if needed
+        }
+
+        public void OnGetTerminal()
         {
             // Load Calendar data
             CalendarMap myCalendar = CalendarMap.LoadFromFile("calendarData.xml");
@@ -32,7 +67,7 @@ namespace Calendar_Tracker.Pages
             while (true)
             { // Make sure input is valid
                 Console.Write("Input date (mm/dd/yyyy): ");
-                string sinput = Console.ReadLine();
+                string sinput = Console.ReadLine() ?? "mm/dd/yyyy";
 
                 //cin >> get_time(&inputDateTime, "%m/%d/%Y");
                 if (DateTime.TryParse(sinput, out inputDateTime))
@@ -59,7 +94,7 @@ namespace Calendar_Tracker.Pages
 
 
             // Add notes for a day
-            DayNotes notes = new DayNotes();
+            DayNotes notes = new();
 
 
             // Day Quality
@@ -68,7 +103,7 @@ namespace Calendar_Tracker.Pages
             { // Make sure input is valid
                 Console.Write("Input Day Quality: ");
 
-                string sinput = Console.ReadLine();
+                string sinput = Console.ReadLine() ?? "day quality";
                 if (int.TryParse(sinput, out _))
                 {
                     // Valid Integer Input
@@ -80,14 +115,14 @@ namespace Calendar_Tracker.Pages
             }
             // Success
             Console.WriteLine("You entered: " + input);
-            notes.dayQuality = input;
+            notes.DayQuality = input;
 
             // Sleep Quality
             while (true)
             { // Make sure input is valid
                 Console.Write("Input Sleep Quality: ");
 
-                string sinput = Console.ReadLine();
+                string sinput = Console.ReadLine() ?? "sleep quality";
                 if (int.TryParse(sinput, out _))
                 {
                     // Valid Integer Input
@@ -99,7 +134,7 @@ namespace Calendar_Tracker.Pages
             }
             // Success
             Console.WriteLine("You entered: " + input);
-            notes.sleepQuality = input;
+            notes.SleepQuality = input;
 
             // Took Meds
             while (true)
@@ -108,8 +143,8 @@ namespace Calendar_Tracker.Pages
                 // Make sure input is valid
                 Console.Write("Took Meds?: ");
 
-                string sinput = Console.ReadLine();
-                sinput.ToLower();
+                string sinput = Console.ReadLine() ?? "took meds";
+                sinput = sinput.ToLower();
 
                 if (sinput == "1" || sinput == "yes" || sinput == "true" || sinput == "y")
                 {
@@ -126,13 +161,13 @@ namespace Calendar_Tracker.Pages
                     continue; // Skip the rest of the loop
                 }
                 // Success
-                notes.tookMeds = binput;
+                notes.TookMeds = binput;
                 break;
             }
             // Success
-            Console.WriteLine("You entered: " + (notes.tookMeds ? "Yes" : "No"));
+            Console.WriteLine("You entered: " + (notes.TookMeds ? "Yes" : "No"));
 
-            notes.exists = true;
+            notes.Exists = true;
 
 
             myCalendar.AddDay(inputID, notes);
