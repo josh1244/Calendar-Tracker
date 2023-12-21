@@ -1,24 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using System;
 using System.Reflection;
 using System.Security.Cryptography;
 using static Calendar;
 using static System.Net.Mime.MediaTypeNames;
-public static class SessionExtensions
-{
-    public static T GetObject<T>(this ISession session, string key)
-    {
-        var data = session.GetString(key);
-        return data == null ? default : JsonConvert.DeserializeObject<T>(data);
-    }
-
-    public static void SetObject(this ISession session, string key, object value)
-    {
-        session.SetString(key, JsonConvert.SerializeObject(value));
-    }
-}
 
 namespace Calendar_Tracker.Pages
 {
@@ -88,8 +74,8 @@ namespace Calendar_Tracker.Pages
 
         public class UpdateDateModel
         {
-            public string PropertyName { get; set; }
-            public string PropertyValue { get; set; }
+            public required string PropertyName { get; set; }
+            public required string PropertyValue { get; set; }
         }
 
         public void CalculateDate()
@@ -101,7 +87,10 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine($"EditedYear: {EditedYear}");
             Console.WriteLine($"EditedMonth: {EditedMonth}");
             Console.WriteLine($"EditedDay: {EditedDay}");
-            DateTime EditDate = new DateTime(EditedYear, EditedMonth, EditedDay);
+
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+            DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
         }
 
         public void OnGetTerminal()
