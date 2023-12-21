@@ -3,26 +3,32 @@
 @{
     ViewData["Title"] = "Calendar";
 }
+<form>
+    @Html.AntiForgeryToken()
 
-<div class="text-center">
-    <h1 class="display-4">Calendar</h1>
+    <div class="text-center">
+        <h1 class="display-4">Calendar</h1>
 
-    <b>
-         <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">
-             @DateTime.Now.ToString("MMM")</span>
+        <b>
+             <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">
+                 @DateTime.Now.ToString("MMM")</span>
 
-        <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">
-            @DateTime.Now.Day,</span>
+            <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">
+                @DateTime.Now.Day,</span>
 
-        <span id="editableYear" onclick="makeEditable(this, `42px`, 4, `year`)" style="cursor: pointer;">
-            @DateTime.Now.Year</span>
-    
-    </b>
+            <span id="editableYear" onclick="makeEditable(this, `42px`, 4, `year`)" style="cursor: pointer;">
+                @DateTime.Now.Year</span>
+        </b>
 
-    <p></p>
-</div>
+        <p></p>
+    </div>
+</form>
 
 <script>
+    var months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
      function makeEditable(element, widthValue, number, typeValue) {
         // Create an input element
         var inputElement = document.createElement("input");
@@ -72,9 +78,22 @@
                 }
             } else if (typeValue === "day") {
                 newValue = newValue.replace(/\D/g, '');  // Remove non-numeric characters
-                if (newValue === "") {
+                 
+                if (isNaN(newValue) || newValue === "") {
                     newValue = @DateTime.Now.Day;  // Default to today
                 }
+
+                if (newValue < 1) {
+                    // Invalid day, set it to default (1)
+                    newValue = 1;
+                }
+
+                var maxDaysInMonth = new Date(parseInt(document.getElementById("editableYear").innerText), months.indexOf(document.getElementById("editableMonth").innerText) + 1, 0).getDate();
+                if (newValue > maxDaysInMonth) {
+                    // Invalid day, set it to default (1)
+                    newValue = maxDaysInMonth;
+                }
+                
                 newValue += ",";  // Add the comma to day
             }
 
@@ -82,6 +101,8 @@
 
             // Replace the input with the span
             inputElement.replaceWith(spanElement);
+
+                updateServer();
         });
 
         // Handle pressing Enter key
@@ -93,11 +114,43 @@
         });
     }
 
-    function cycleMonth(direction) {
-        var months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
+    function updateServer() {
+        console.log("updateServer");
 
+        console.log("Not editing day");
+        document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); // Remove comma from day
+        var maxDaysInMonth = new Date(parseInt(document.getElementById("editableYear").innerText), months.indexOf(document.getElementById("editableMonth").innerText) + 1, 0).getDate();
+        if (parseInt(document.getElementById("editableDay").innerText) > maxDaysInMonth) {
+            // Invalid day, set it to default (1)
+            console.log("invalid day", document.getElementById("editableDay").innerText, " ", maxDaysInMonth);          
+            document.getElementById("editableDay").innerText = maxDaysInMonth;
+        }
+        var day = document.getElementById("editableDay").innerText;
+        document.getElementById("editableDay").innerText += ",";  // Add the comma to day
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Page("/Calendar", "UpdateDate")',
+            data: JSON.stringify({
+                editedMonth: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
+                editedDay: day,
+                editedYear: parseInt(document.getElementById("editableYear").innerText),
+            }), contentType: 'application/json',
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            success: function (response) {
+                //console.log("Update successful", response);
+            },
+            error: function (error) {
+                console.error("Error updating server", error);
+            }
+        });
+    }
+
+
+    function cycleMonth(direction) {
         var currentMonth = document.getElementById("editableMonth").innerText;
         var currentIndex = months.indexOf(currentMonth);
 
@@ -107,5 +160,7 @@
 
         // Update the displayed month
         document.getElementById("editableMonth").innerText = newMonth;
+
+        updateServer();
     }
 </script>

@@ -1,6 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using System;
+using System.Reflection;
+using System.Security.Cryptography;
 using static Calendar;
+using static System.Net.Mime.MediaTypeNames;
+public static class SessionExtensions
+{
+    public static T GetObject<T>(this ISession session, string key)
+    {
+        var data = session.GetString(key);
+        return data == null ? default : JsonConvert.DeserializeObject<T>(data);
+    }
+
+    public static void SetObject(this ISession session, string key, object value)
+    {
+        session.SetString(key, JsonConvert.SerializeObject(value));
+    }
+}
 
 namespace Calendar_Tracker.Pages
 {
@@ -8,18 +26,29 @@ namespace Calendar_Tracker.Pages
     {
         // Properties to hold the date values
         [BindProperty]
-        public string EditedMonth { get; set; }
+        public int EditedMonth { get; set; }
 
         [BindProperty]
-        public string EditedDay { get; set; }
+        public int EditedDay { get; set; }
 
         [BindProperty]
-        public string EditedYear { get; set; }
+        public int EditedYear { get; set; }
 
 
         public void OnGet()
         {
             Console.WriteLine("OnGet method executed.");
+
+            int EditedMonth = DateTime.Now.Month;
+            int EditedDay = DateTime.Now.Day;
+            int EditedYear = DateTime.Now.Year;
+
+    
+            HttpContext.Session.SetObject("EditedMonth", EditedMonth);
+            HttpContext.Session.SetObject("EditedDay", EditedDay);
+            HttpContext.Session.SetObject("EditedYear", EditedYear);
+
+            CalculateDate();
         }
 
         public void OnPost()
@@ -28,16 +57,51 @@ namespace Calendar_Tracker.Pages
         }
 
         [HttpPost]
-        public IActionResult OnPostUpdateDate(string propertyName, string propertyValue)
+        public IActionResult UpdateDate(int editedMonth, int editedDay, int editedYear)
         {
             Console.WriteLine("OnPostUpdateDate method executed.");
-            // Process the updated value on the server
-            // propertyName will be "EditedDay", "EditedMonth", or "EditedYear"
-            // propertyValue will be the updated value
 
-            // Perform any additional processing or validation
+            
 
-            return new EmptyResult(); // Or return a JSON response if needed
+            // Convert the abbreviated month name to its numerical representation
+            //string[] Months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            //int MonthNumber = Array.IndexOf(Months, editedMonth) + 1;
+            EditedMonth = editedMonth;
+            HttpContext.Session.SetObject("EditedMonth", EditedMonth);
+
+            //int DayNumber = int.Parse(editedDay.Trim(',')); // Remove comma from day
+            EditedDay = editedDay;
+            HttpContext.Session.SetObject("EditedDay", EditedDay);
+
+            //int YearNumber = int.Parse(model.PropertyValue);
+            EditedYear = editedYear;
+            HttpContext.Session.SetObject("EditedYear", EditedYear);
+
+            
+            
+            // Perform any common processing
+            CalculateDate();
+
+            // Return a JSON response using JsonResult
+            return new JsonResult(new { success = true, message = "Update successful" });
+        }
+
+        public class UpdateDateModel
+        {
+            public string PropertyName { get; set; }
+            public string PropertyValue { get; set; }
+        }
+
+        public void CalculateDate()
+        {
+            EditedMonth = HttpContext.Session.GetObject<int>("EditedMonth");
+            EditedDay = HttpContext.Session.GetObject<int>("EditedDay");
+            EditedYear = HttpContext.Session.GetObject<int>("EditedYear");
+
+            Console.WriteLine($"EditedYear: {EditedYear}");
+            Console.WriteLine($"EditedMonth: {EditedMonth}");
+            Console.WriteLine($"EditedDay: {EditedDay}");
+            DateTime EditDate = new DateTime(EditedYear, EditedMonth, EditedDay);
         }
 
         public void OnGetTerminal()

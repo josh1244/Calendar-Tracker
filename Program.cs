@@ -26,9 +26,6 @@ app.UseAuthorization();
 // Use session
 app.UseSession();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
-});
+app.MapRazorPages();
 
 app.Run();

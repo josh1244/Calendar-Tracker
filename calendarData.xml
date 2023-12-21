@@ -21,8 +21,8 @@
       <value>
         <DayNotes>
           <Exists>true</Exists>
-          <DayQuality>6</DayQuality>
-          <SleepQuality>3</SleepQuality>
+          <DayQuality>8</DayQuality>
+          <SleepQuality>6</SleepQuality>
           <TookMeds>false</TookMeds>
         </DayNotes>
       </value>
