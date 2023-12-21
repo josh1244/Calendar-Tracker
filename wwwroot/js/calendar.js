@@ -93,7 +93,6 @@ function makeEditable(element, widthValue, number, typeValue) {
 function updateServer() {
     console.log("updateServer");
 
-    console.log("Not editing day");
     document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); // Remove comma from day
     var maxDaysInMonth = new Date(parseInt(document.getElementById("editableYear").innerText), months.indexOf(document.getElementById("editableMonth").innerText) + 1, 0).getDate();
     if (parseInt(document.getElementById("editableDay").innerText) > maxDaysInMonth) {
@@ -106,18 +105,18 @@ function updateServer() {
 
     $.ajax({
         type: "POST",
-        url: '@Url.Page("/Calendar", "UpdateDate")',
+        url: updateDateUrl,
         data: JSON.stringify({
-            editedMonth: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
-            editedDay: day,
-            editedYear: parseInt(document.getElementById("editableYear").innerText),
+            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
+            DayAJAX: day,
+            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
         }), contentType: 'application/json',
         headers: {
             RequestVerificationToken:
                 $('input:hidden[name="__RequestVerificationToken"]').val()
         },
         success: function (response) {
-            //console.log("Update successful", response);
+            console.log("Update successful", response);
         },
         error: function (error) {
             console.error("Error updating server", error);

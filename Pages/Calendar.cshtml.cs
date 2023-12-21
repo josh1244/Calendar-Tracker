@@ -1,38 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Reflection;
-using System.Security.Cryptography;
 using static Calendar;
-using static System.Net.Mime.MediaTypeNames;
+
+
 
 namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
-        // Properties to hold the date values
-        [BindProperty]
-        public int EditedMonth { get; set; }
-
-        [BindProperty]
-        public int EditedDay { get; set; }
-
-        [BindProperty]
-        public int EditedYear { get; set; }
-
-
         public void OnGet()
         {
             Console.WriteLine("OnGet method executed.");
+
+            // Load Calendar data
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+            HttpContext.Session.SetObject("MyStoredCalendar", MyCalendar);
+
 
             int EditedMonth = DateTime.Now.Month;
             int EditedDay = DateTime.Now.Day;
             int EditedYear = DateTime.Now.Year;
 
-    
-            HttpContext.Session.SetObject("EditedMonth", EditedMonth);
-            HttpContext.Session.SetObject("EditedDay", EditedDay);
-            HttpContext.Session.SetObject("EditedYear", EditedYear);
+
+            HttpContext.Session.SetObject("Month", EditedMonth);
+            HttpContext.Session.SetObject("Day", EditedDay);
+            HttpContext.Session.SetObject("Year", EditedYear);
 
             CalculateDate();
         }
@@ -42,68 +34,79 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine("OnPost method executed.");
         }
 
-        [HttpPost]
-        public IActionResult UpdateDate(int editedMonth, int editedDay, int editedYear)
+        public class UpdateDateModel
+        {
+            public int MonthAJAX { get; set; }
+            public int DayAJAX { get; set; }
+            public int YearAJAX { get; set; }
+        }
+
+
+        public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
         {
             Console.WriteLine("OnPostUpdateDate method executed.");
 
-            
+            int EditedMonth = model.MonthAJAX;
+            int EditedDay = model.DayAJAX;
+            int EditedYear = model.YearAJAX;
 
-            // Convert the abbreviated month name to its numerical representation
-            //string[] Months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-            //int MonthNumber = Array.IndexOf(Months, editedMonth) + 1;
-            EditedMonth = editedMonth;
-            HttpContext.Session.SetObject("EditedMonth", EditedMonth);
+            HttpContext.Session.SetObject("Month", EditedMonth);
+            HttpContext.Session.SetObject("Day", EditedDay);
+            HttpContext.Session.SetObject("Year", EditedYear);
 
-            //int DayNumber = int.Parse(editedDay.Trim(',')); // Remove comma from day
-            EditedDay = editedDay;
-            HttpContext.Session.SetObject("EditedDay", EditedDay);
-
-            //int YearNumber = int.Parse(model.PropertyValue);
-            EditedYear = editedYear;
-            HttpContext.Session.SetObject("EditedYear", EditedYear);
-
-            
-            
-            // Perform any common processing
             CalculateDate();
 
             // Return a JSON response using JsonResult
             return new JsonResult(new { success = true, message = "Update successful" });
         }
 
-        public class UpdateDateModel
-        {
-            public required string PropertyName { get; set; }
-            public required string PropertyValue { get; set; }
-        }
+
 
         public void CalculateDate()
         {
-            EditedMonth = HttpContext.Session.GetObject<int>("EditedMonth");
-            EditedDay = HttpContext.Session.GetObject<int>("EditedDay");
-            EditedYear = HttpContext.Session.GetObject<int>("EditedYear");
+            Console.WriteLine($"CalculateDate executed.");
 
-            Console.WriteLine($"EditedYear: {EditedYear}");
-            Console.WriteLine($"EditedMonth: {EditedMonth}");
-            Console.WriteLine($"EditedDay: {EditedDay}");
+            CalendarMap MyCalendar = HttpContext.Session.GetObject<CalendarMap>("MyStoredCalendar");
+            MyCalendar ??= CalendarMap.LoadFromFile("calendarData.xml"); // if null. Shouldnt be needed
 
-#pragma warning disable IDE0059 // Unnecessary assignment of a value
+            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
+            int EditedDay = HttpContext.Session.GetObject<int>("Day");
+            int EditedYear = HttpContext.Session.GetObject<int>("Year");
+
+
+            // Convert Time to ID
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
-#pragma warning restore IDE0059 // Unnecessary assignment of a value
+            string todayID = ID.DateToID(EditDate);
+
+
+            Console.WriteLine("ID of today is " + todayID);
+            ViewData["todayID"] = todayID;
+
+            // Draw Calendar
+            UI.DrawCalendar(todayID);
+            // Display Notes
+            DayNotes retrievedNotes = MyCalendar.GetDayNotes(todayID);
+            UI.DisplayNotes(retrievedNotes);
+
+
+
+            HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
+            HttpContext.Session.SetObject("todayID", todayID);
+
         }
 
         public void OnGetTerminal()
         {
             // Load Calendar data
             CalendarMap myCalendar = CalendarMap.LoadFromFile("calendarData.xml");
-            DayNotes retrievedNotes;
 
             // Get the current time
             DateTime now = DateTime.Today;
 
             // Convert Time to ID
             string todayID = ID.DateToID(now);
+
+
 
             // Write it to console and page
             Console.WriteLine("ID of today is " + todayID);
@@ -112,7 +115,7 @@ namespace Calendar_Tracker.Pages
             // Draw Calendar
             UI.DrawCalendar(todayID);
             // Display Notes
-            retrievedNotes = myCalendar.GetDayNotes(todayID);
+            DayNotes retrievedNotes = myCalendar.GetDayNotes(todayID);
             UI.DisplayNotes(retrievedNotes);
 
             // Input Date

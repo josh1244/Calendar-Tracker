@@ -4,7 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 // Add session services
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -26,6 +31,9 @@ app.UseAuthorization();
 // Use session
 app.UseSession();
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapRazorPages();
+});
 
 app.Run();
