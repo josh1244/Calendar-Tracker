@@ -62,49 +62,54 @@
     var nextWeekUrl = '@Url.Page("/Calendar", "NextWeek")';
 </script>
 
-    <style>
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                justify-content: center;
-            }
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        justify-content: center;
+    }
 
-            th, td {
-                border: 1px solid black;
-                padding: 8px;
-                text-align: center;
-                justify-content: center;
-            }
-            th {
-                background-color: #f2f2f2;
-                width: 14.28%; /* Set width to distribute evenly across 7 days */
-            }
-            .l-triangle-btn, .r-triangle-btn {
-                position: relative;
-                width: 0;
-                height: 0;
-                border-style: solid;
-                cursor: pointer;
-            }
-             .l-triangle-btn {
-                 margin-right: 10px;
-                 border-width: 20px 30px 20px 0;
-                 border-color: transparent #007bff transparent transparent;
-             }
-             .r-triangle-btn {
-                 margin-left: 10px;
-                 border-width: 20px 0 20px 30px;
-                 border-color: transparent transparent transparent #007bff;
-             }
-            .table-buttons {
-                display: flex;
-                align-items: center;
-                justify-content: space-between; 
-                width: 100%; /* Ensure that the .components-column takes up the full width */
-                flex-grow: 1;
-            }
-             #table-container {
-                flex-grow: 1;
-            }
-    </style>
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+        justify-content: center;
+    }
+    th {
+        background-color: #f2f2f2;
+        width: 14.28%; /* Set width to distribute evenly across 7 days */
+    }
+    .l-triangle-btn, .r-triangle-btn {
+        position: relative;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        cursor: pointer;
+    }
+    .l-triangle-btn {
+        margin-right: 10px;
+        border-width: 20px 30px 20px 0;
+        border-color: transparent #007bff transparent transparent;
+    }
+    .r-triangle-btn {
+        margin-left: 10px;
+        border-width: 20px 0 20px 30px;
+        border-color: transparent transparent transparent #007bff;
+    }
+    .table-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        width: 100%; /* Ensure that the .components-column takes up the full width */
+        flex-grow: 1;
+    }
+    #table-container {
+        flex-grow: 1;
+    }
+    .selected-cell {
+        /*Could be customizable*/
+        background-color: #aedcf3;
+        border: 1px solid black;
+    }
+</style>
 

@@ -13,7 +13,11 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
-        //public WeekModel CurrentWeek { get; set; } = new WeekModel();
+        public class WeekModel
+        {
+            public int[] Days { get; set; } = new int[7];
+        }
+
         public int[] CurrentWeekDays { get; set; } = new int[7];
         public void OnGet()
         {
@@ -47,7 +51,6 @@ namespace Calendar_Tracker.Pages
             public int DayAJAX { get; set; }
             public int YearAJAX { get; set; }
         }
-
 
         public class NextWeekModel
         {
@@ -146,11 +149,6 @@ namespace Calendar_Tracker.Pages
             HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
             HttpContext.Session.SetObject("todayID", todayID);
 
-        }
-
-        public class WeekModel
-        {
-            public int[] Days { get; set; } = new int[7];
         }
     }
 }

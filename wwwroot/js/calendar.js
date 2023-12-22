@@ -4,6 +4,10 @@ var months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+//Setup current week at start
+window.onload = function () {
+    nextWeek(0);
+}
 function makeEditable(element, widthValue, number, typeValue) {
     // Create an input element
     var inputElement = document.createElement("input");
@@ -97,6 +101,9 @@ function cycleMonth(direction) {
     var currentMonth = document.getElementById("editableMonth").innerText;
     var currentIndex = months.indexOf(currentMonth);
 
+    // Increase Year if going from Dec to Jan. Could make this optional with setting
+    //if (currentIndex == 11) document.getElementById("editableYear").innerText ++;
+
     // Cycle through months in the specified direction
     var newMonthIndex = (currentIndex + direction + months.length) % months.length;
     var newMonth = months[newMonthIndex];
@@ -167,15 +174,42 @@ function updateTable(response) {
 
     // Iterate through each day in the 'weeks.days' array and add a cell to the row
     $.each(response, function (dayIndex, day) {
-        newRow.append('<td>' + day + '</td>');
+        // Create a new cell
+        var cell = $('<td></td>');
+
+        // Set the cell content
+        cell.text(day);
+
+        // Add a click event handler to the cell
+        cell.on("click", function () {
+            // Handle the click event
+            handleCellClick(day);
+        });
+
+        // If day is the current day, then highlight it
+        if (day == document.getElementById("editableDay").innerText.slice(0, -1)) {
+            cell.addClass('selected-cell');
+        }
+
+        // Append the cell to the row
+        newRow.append(cell);
     });
 
     // Append the new row to the table body
     tableBody.append(newRow);
 }
 
+function handleCellClick(selectedDay) {
+    // Handle the cell click event, e.g., update the date
+    console.log("Cell clicked: " + selectedDay);
 
-
+    // Update the date with newly selected day
+    var dayChange = selectedDay - document.getElementById("editableDay").innerText.slice(0, -1);
+    document.getElementById("editableDay").innerText = selectedDay + ", ";  // Assuming you want to append a space at the end
+    // Then update other things too.
+    //updateServer();
+    nextWeek(dayChange);
+}
 
 
 
@@ -218,7 +252,6 @@ function updateDate(month, day, year, days) {
     document.getElementById("editableDay").innerText += ",";  // Add comma to it
     document.getElementById("editableYear").innerText = year;
 
-    //updateserver() to update the table with new day values
-    //updateServer();
+    // Update the table with new day values
     updateTable(days);
 }
