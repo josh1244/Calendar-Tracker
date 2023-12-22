@@ -60,7 +60,11 @@ namespace Calendar_Tracker.Pages
             NextWeek(model.Days); //Add or remove one week from current day
             CalculateDate(); // Update Date
 
-            return new JsonResult(new { success = true, message = "Update successful", month = HttpContext.Session.GetObject<int>("Month") , day = HttpContext.Session.GetObject<int>("Day"), year = HttpContext.Session.GetObject<int>("Year") }); //Return new data for date display
+            return new JsonResult(new { success = true, message = "Update successful", 
+                month = HttpContext.Session.GetObject<int>("Month") , 
+                day = HttpContext.Session.GetObject<int>("Day"), 
+                year = HttpContext.Session.GetObject<int>("Year"), 
+                days = CurrentWeekDays }); //Return new data for date display
         }
 
         public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
@@ -103,7 +107,7 @@ namespace Calendar_Tracker.Pages
 
         }
 
-            public void CalculateDate()
+        public void CalculateDate()
         {
             Console.WriteLine($"CalculateDate executed.");
 
@@ -120,17 +124,7 @@ namespace Calendar_Tracker.Pages
 
             //Figure out the days of the week
             int dayOfWeek = (int)EditDate.DayOfWeek;
-            //Weeks = [];
-            /*
-            for (int i = 0; i < 7; i++)
-            {
-                var week = new WeekModel();
-                DateTime prev = EditDate.AddDays(i - dayOfWeek);
-                week.Days.Add((int)prev.Day);
-                //Weeks[i] = (int)prev.Day;
-                Weeks.Add(week);
-            }
-            */
+ 
             // Populate the Days array of the CurrentWeek
             CurrentWeekDays = Enumerable.Range(0, 7)
                 .Select(i => (int)EditDate.AddDays(i - dayOfWeek).Day)
@@ -141,7 +135,8 @@ namespace Calendar_Tracker.Pages
             ViewData["todayID"] = todayID;
 
             // Draw Calendar
-            UI.DrawCalendar(todayID);
+            //UI.DrawCalendar(todayID);
+
             // Display Notes
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(todayID);
             UI.DisplayNotes(retrievedNotes);

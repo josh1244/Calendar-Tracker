@@ -93,6 +93,21 @@ function makeEditable(element, widthValue, number, typeValue) {
     });
 }
 
+function cycleMonth(direction) {
+    var currentMonth = document.getElementById("editableMonth").innerText;
+    var currentIndex = months.indexOf(currentMonth);
+
+    // Cycle through months in the specified direction
+    var newMonthIndex = (currentIndex + direction + months.length) % months.length;
+    var newMonth = months[newMonthIndex];
+
+    // Update the displayed month
+    document.getElementById("editableMonth").innerText = newMonth;
+
+
+    updateServer();
+}
+
 function updateServer() {
     console.log("updateServer");
 
@@ -141,7 +156,6 @@ function updateServer() {
     });
 }
 
-
 function updateTable(response) {
     console.log("UpdateTable function invoked");
 
@@ -160,32 +174,13 @@ function updateTable(response) {
     tableBody.append(newRow);
 }
 
-function updateDate(month, day, year) {
-    console.log("updateDate function invoked");
 
-    //Access month, day year in html and update them to c# values
-    document.getElementById("editableMonth").innerText = months[month - 1];
-    document.getElementById("editableDay").innerText = day;
-    document.getElementById("editableDay").innerText += ",";  // Add comma to it
-    document.getElementById("editableYear").innerText = year;
 
-    //updateserver() to update the table with new day values
-    updateServer();
-}
 
-function cycleMonth(direction) {
-    var currentMonth = document.getElementById("editableMonth").innerText;
-    var currentIndex = months.indexOf(currentMonth);
 
-    // Cycle through months in the specified direction
-    var newMonthIndex = (currentIndex + direction + months.length) % months.length;
-    var newMonth = months[newMonthIndex];
 
-    // Update the displayed month
-    document.getElementById("editableMonth").innerText = newMonth;
 
- 
-   updateServer();}
+
 
 
 function nextWeek(number) {
@@ -202,7 +197,7 @@ function nextWeek(number) {
         success: function (data) {
             if (data.success) {
                 // Send Month, Day, Year from c# to updateDate
-                updateDate(data.month, data.day, data.year);
+                updateDate(data.month, data.day, data.year, data.days);
             } else {
                 console.error("Update failed.");
             }
@@ -212,4 +207,18 @@ function nextWeek(number) {
             console.error(error);
         }
     });
+}
+
+function updateDate(month, day, year, days) {
+    console.log("updateDate function invoked");
+
+    //Access month, day year in html and update them to c# values
+    document.getElementById("editableMonth").innerText = months[month - 1];
+    document.getElementById("editableDay").innerText = day;
+    document.getElementById("editableDay").innerText += ",";  // Add comma to it
+    document.getElementById("editableYear").innerText = year;
+
+    //updateserver() to update the table with new day values
+    //updateServer();
+    updateTable(days);
 }
