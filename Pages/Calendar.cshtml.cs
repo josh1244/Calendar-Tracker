@@ -12,8 +12,8 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
-        public List<WeekModel> Weeks { get; set; } = new List<WeekModel>();
-
+        //public WeekModel CurrentWeek { get; set; } = new WeekModel();
+        public int[] CurrentWeekDays { get; set; } = new int[7];
         public void OnGet()
         {
             Console.WriteLine("OnGet method executed.");
@@ -63,7 +63,7 @@ namespace Calendar_Tracker.Pages
             CalculateDate();
 
             // Return a JSON response using JsonResult
-            return new JsonResult(new { success = true, message = "Update successful", weeks = Weeks });
+            return new JsonResult(new { success = true, message = "Update successful", days = CurrentWeekDays });
         }
 
         public void CalculateDate()
@@ -95,12 +95,10 @@ namespace Calendar_Tracker.Pages
                 Weeks.Add(week);
             }
             */
-            Weeks = Enumerable.Range(0, 7)
-               .Select(i => new WeekModel
-               {
-                   Days = { (int)EditDate.AddDays(i - dayOfWeek).Day }
-               })
-               .ToList();
+            // Populate the Days array of the CurrentWeek
+            CurrentWeekDays = Enumerable.Range(0, 7)
+                .Select(i => (int)EditDate.AddDays(i - dayOfWeek).Day)
+                .ToArray();
 
 
             Console.WriteLine("ID of today is " + todayID);
@@ -121,7 +119,7 @@ namespace Calendar_Tracker.Pages
 
         public class WeekModel
         {
-            public List<int> Days { get; set; } = new List<int>();
+            public int[] Days { get; set; } = new int[7];
         }
     }
 }

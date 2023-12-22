@@ -33,12 +33,9 @@
 
             <tbody id="weekTable">
                 <tr>
-                    @foreach (var week in Model.Weeks)
+                    @foreach (var day in Model.CurrentWeekDays)
                     {
-                        @foreach (var day in week.Days)
-                        {
-                            <td>@day</td>
-                        }
+                        <td>@day</td>
                     }
                 </tr>
             </tbody>

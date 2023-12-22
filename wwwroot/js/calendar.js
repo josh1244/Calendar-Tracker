@@ -118,7 +118,7 @@ function updateServer() {
         success: function (data) {
             if (data.success) {
                 // Update the table with the new data
-                updateTable(data.weeks);
+                updateTable(data.days);
             } else {
                 console.error("Update failed.");
             }
@@ -129,48 +129,27 @@ function updateServer() {
     });
 }
 
-function updateTable(weeks) {
+function updateTable(response) {
     console.log("UpdateTable function invoked");
 
     var tableBody = $('#weekTable');
     tableBody.empty(); // Clear existing rows
 
-    if (tableBody.length === 0) {
-        console.error("Error: Table not found. Make sure the table has the correct ID ('weekTable').");
-        return;
-    }
+    // Create a new row for the week
+    var newRow = $('<tr></tr>');
 
-    // Check if weeks is defined and not an empty array
-    if (weeks && weeks.length > 0) {
-        // Create a new row for the week
-        var newRow = $('<tr></tr>');
+    // Iterate through each day in the 'weeks.days' array and add a cell to the row
+    $.each(response, function (dayIndex, day) {
+        newRow.append('<td>' + day + '</td>');
+    });
 
-        // Iterate through each week in the array
-        $.each(weeks, function (weekIndex, week) {
-            // Check if the week object and its days property are defined
-            if (week && week.days) {
-
-                // Check if the days property is an array
-                if (Array.isArray(week.days)) {
-                    // Iterate through each day in the array and add a cell to the row
-                    $.each(week.days, function (dayIndex, day) {
-                        newRow.append('<td>' + day + '</td>');
-                    }); 
-                    console.log(newRow);
-                    
-                } else {
-                    console.error("Invalid format: 'days' is not an array.");
-                }
-            } else {
-                console.error("Invalid format: 'week' or 'days' is undefined.");
-            }
-        });
-        // Append the new row to the table body
-        tableBody.append(newRow);
-    } else {
-        console.error("Invalid format: 'weeks' is undefined or empty.");
-    }
+    // Append the new row to the table body
+    tableBody.append(newRow);
 }
+
+
+
+
 
 
 
