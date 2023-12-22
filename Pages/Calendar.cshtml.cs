@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Calendar;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -48,6 +49,20 @@ namespace Calendar_Tracker.Pages
         }
 
 
+        public class NextWeekModel
+        {
+            public int Days { get; set; }
+        }
+        public IActionResult OnPostNextWeek([FromBody] NextWeekModel model)
+        {
+            Console.WriteLine("OnPostNextWeek method executed.");
+
+            NextWeek(model.Days); //Add or remove one week from current day
+            CalculateDate(); // Update Date
+
+            return new JsonResult(new { success = true, message = "Update successful", month = HttpContext.Session.GetObject<int>("Month") , day = HttpContext.Session.GetObject<int>("Day"), year = HttpContext.Session.GetObject<int>("Year") }); //Return new data for date display
+        }
+
         public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
         {
             Console.WriteLine("OnPostUpdateDate method executed.");
@@ -66,7 +81,29 @@ namespace Calendar_Tracker.Pages
             return new JsonResult(new { success = true, message = "Update successful", days = CurrentWeekDays });
         }
 
-        public void CalculateDate()
+        public void NextWeek(int days)
+        {
+            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
+            int EditedDay = HttpContext.Session.GetObject<int>("Day");
+            int EditedYear = HttpContext.Session.GetObject<int>("Year");
+
+            DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
+
+
+            DateTime newWeek = EditDate.AddDays(days);
+
+            EditedMonth = newWeek.Month;
+            EditedDay = newWeek.Day;
+            EditedYear = newWeek.Year;
+
+            HttpContext.Session.SetObject("Month", EditedMonth);
+            HttpContext.Session.SetObject("Day", EditedDay);
+            HttpContext.Session.SetObject("Year", EditedYear);
+
+
+        }
+
+            public void CalculateDate()
         {
             Console.WriteLine($"CalculateDate executed.");
 
@@ -76,7 +113,6 @@ namespace Calendar_Tracker.Pages
             int EditedMonth = HttpContext.Session.GetObject<int>("Month");
             int EditedDay = HttpContext.Session.GetObject<int>("Day");
             int EditedYear = HttpContext.Session.GetObject<int>("Year");
-
 
             // Convert Time to ID
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);

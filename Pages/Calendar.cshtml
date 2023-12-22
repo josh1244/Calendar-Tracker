@@ -19,7 +19,9 @@
         <p></p>
 
         <div class="table-buttons">
-            <div class="l-triangle-btn"></div>
+
+            <div class="l-triangle-btn" id="leftButton" onclick="nextWeek(-7)"></div>
+
             <div id="table-container">
                 <table id="tableBody" border="3">
                     <thead>
@@ -47,15 +49,17 @@
                     </tbody>
                 </table>
             </div>
-            <div class="r-triangle-btn"></div>
+            <div class="r-triangle-btn" id="rightButton" onclick="nextWeek(7)"></div>
         </div> 
    </div>
 </form>
 
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="~/js/calendar.js"></script>
 <script>
-    var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")';
+    var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")'
+    var nextWeekUrl = '@Url.Page("/Calendar", "NextWeek")';
 </script>
 
     <style>

@@ -51,6 +51,9 @@ function makeEditable(element, widthValue, number, typeValue) {
             if (newValue === "") {
                 newValue = new Date().getFullYear();  // Default to this year
             }
+            if (newValue.length < 4) {
+                newValue = 1000;  // Default 1000
+            }
         } else if (typeValue === "day") {
             newValue = newValue.replace(/\D/g, '');  // Remove non-numeric characters
 
@@ -93,15 +96,24 @@ function makeEditable(element, widthValue, number, typeValue) {
 function updateServer() {
     console.log("updateServer");
 
-    document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); // Remove comma from day
+    // Remove comma from day
+    document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); 
+
+    // Get max numbers of day allowed in that month on that year
     var maxDaysInMonth = new Date(parseInt(document.getElementById("editableYear").innerText), months.indexOf(document.getElementById("editableMonth").innerText) + 1, 0).getDate();
+
+    // Check is day of month is higher than max 
     if (parseInt(document.getElementById("editableDay").innerText) > maxDaysInMonth) {
-        // Invalid day, set it to default (1)
+        // Invalid day, set it to max allowed
         console.log("invalid day", document.getElementById("editableDay").innerText, " ", maxDaysInMonth);
         document.getElementById("editableDay").innerText = maxDaysInMonth;
     }
+
+    // put day to variable before we add comma back to it.
     var day = document.getElementById("editableDay").innerText;
-    document.getElementById("editableDay").innerText += ",";  // Add the comma to day
+
+    // Add the comma to day
+    document.getElementById("editableDay").innerText += ",";  
 
     $.ajax({
         type: "POST",
@@ -129,6 +141,7 @@ function updateServer() {
     });
 }
 
+
 function updateTable(response) {
     console.log("UpdateTable function invoked");
 
@@ -147,11 +160,18 @@ function updateTable(response) {
     tableBody.append(newRow);
 }
 
+function updateDate(month, day, year) {
+    console.log("updateDate function invoked");
 
+    //Access month, day year in html and update them to c# values
+    document.getElementById("editableMonth").innerText = months[month - 1];
+    document.getElementById("editableDay").innerText = day;
+    document.getElementById("editableDay").innerText += ",";  // Add comma to it
+    document.getElementById("editableYear").innerText = year;
 
-
-
-
+    //updateserver() to update the table with new day values
+    updateServer();
+}
 
 function cycleMonth(direction) {
     var currentMonth = document.getElementById("editableMonth").innerText;
@@ -164,5 +184,32 @@ function cycleMonth(direction) {
     // Update the displayed month
     document.getElementById("editableMonth").innerText = newMonth;
 
-    updateServer();
+ 
+   updateServer();}
+
+
+function nextWeek(number) {
+    console.log("nextWeek function invoked");
+    $.ajax({
+        type: "POST",
+        url: nextWeekUrl,
+        data: JSON.stringify({ Days: number }), // Wrap the number in an object
+        contentType: "application/json", // Set content type to JSON
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+                // Send Month, Day, Year from c# to updateDate
+                updateDate(data.month, data.day, data.year);
+            } else {
+                console.error("Update failed.");
+            }
+        },
+        error: function (error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
 }
