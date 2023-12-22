@@ -35,8 +35,8 @@
         <DayNotes>
           <Exists>true</Exists>
           <DayQuality>8</DayQuality>
-          <SleepQuality>4</SleepQuality>
-          <TookMeds>false</TookMeds>
+          <SleepQuality>9</SleepQuality>
+          <TookMeds>true</TookMeds>
         </DayNotes>
       </value>
     </item>

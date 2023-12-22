@@ -17,11 +17,70 @@
         </b>
 
         <p></p>
+
+        <table id="tableBody" border="3">
+            <thead>
+                <tr>
+                    <th>Sunday</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                </tr>
+            </thead>
+
+            <tbody id="weekTable">
+                <tr>
+                    @foreach (var week in Model.Weeks)
+                    {
+                        @foreach (var day in week.Days)
+                        {
+                            <td>@day</td>
+                        }
+                    }
+                </tr>
+            </tbody>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
     </div>
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="~/js/calendar.js"></script>
 <script>
     var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")';
 </script>
+
+    <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                justify-content: center;
+            }
+
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: center;
+                justify-content: center;
+            }
+            th {
+                background-color: #f2f2f2;
+                width: 14.28%; /* Set width to distribute evenly across 7 days */
+            }
+    </style>
 
