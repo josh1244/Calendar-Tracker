@@ -9,7 +9,7 @@
 
     <div class="text-center">
         <h1 class="display-4">Calendar</h1>
-
+         
         <b>
             <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">@DateTime.Now.ToString("MMM")</span>
             <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">@DateTime.Now.Day,</span>
@@ -18,42 +18,38 @@
 
         <p></p>
 
-        <table id="tableBody" border="3">
-            <thead>
-                <tr>
-                    <th>Sunday</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
-                </tr>
-            </thead>
+        <div class="table-buttons">
+            <div class="l-triangle-btn"></div>
+            <div id="table-container">
+                <table id="tableBody" border="3">
+                    <thead>
+                        <tr>
+                            <th>Sunday</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
+                    </thead>
 
-            <tbody id="weekTable">
-                <tr>
-                    @foreach (var day in Model.CurrentWeekDays)
-                    {
-                        <td>@day</td>
-                    }
-                </tr>
-            </tbody>
+                    <tbody id="weekTable">
+                        <tr>
+                            @foreach (var day in Model.CurrentWeekDays)
+                            {
+                                <td>@day</td>
+                            }
+                        </tr>
+                    </tbody>
 
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
+                    <tbody id="infoTable">
+                    </tbody>
+                </table>
+            </div>
+            <div class="r-triangle-btn"></div>
+        </div> 
+   </div>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -78,6 +74,33 @@
             th {
                 background-color: #f2f2f2;
                 width: 14.28%; /* Set width to distribute evenly across 7 days */
+            }
+            .l-triangle-btn, .r-triangle-btn {
+                position: relative;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                cursor: pointer;
+            }
+             .l-triangle-btn {
+                 margin-right: 10px;
+                 border-width: 20px 30px 20px 0;
+                 border-color: transparent #007bff transparent transparent;
+             }
+             .r-triangle-btn {
+                 margin-left: 10px;
+                 border-width: 20px 0 20px 30px;
+                 border-color: transparent transparent transparent #007bff;
+             }
+            .table-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: space-between; 
+                width: 100%; /* Ensure that the .components-column takes up the full width */
+                flex-grow: 1;
+            }
+             #table-container {
+                flex-grow: 1;
             }
     </style>
 
