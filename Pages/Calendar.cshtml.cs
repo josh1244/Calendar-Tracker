@@ -13,6 +13,11 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
+        [BindProperty]
+        public int SliderValue1 { get; set; }
+        public int SliderValue2 { get; set; }
+        public bool CheckValue3 { get; set; }
+
         public class WeekModel
         {
             public int[] Days { get; set; } = new int[7];

@@ -4,6 +4,9 @@ var months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+let currentIndex = null;
+
+
 //Setup current week at start
 window.onload = function () {
     nextWeek(0);
@@ -183,12 +186,13 @@ function updateTable(response) {
         // Add a click event handler to the cell
         cell.on("click", function () {
             // Handle the click event
-            handleCellClick(day);
+            handleCellClick(dayIndex, day);
         });
 
         // If day is the current day, then highlight it
         if (day == document.getElementById("editableDay").innerText.slice(0, -1)) {
             cell.addClass('selected-cell');
+            currentIndex = dayIndex;
         }
 
         // Append the cell to the row
@@ -199,23 +203,16 @@ function updateTable(response) {
     tableBody.append(newRow);
 }
 
-function handleCellClick(selectedDay) {
+function handleCellClick(index, selectedDay) {
     // Handle the cell click event, e.g., update the date
-    console.log("Cell clicked: " + selectedDay);
+    //console.log("Cell clicked: " + selectedDay);
+    //console.log("currentIndex: " + currentIndex);
+    //console.log("selectedIndex: " + index);
 
-    // Update the date with newly selected day
-    var dayChange = selectedDay - document.getElementById("editableDay").innerText.slice(0, -1);
-    document.getElementById("editableDay").innerText = selectedDay + ", ";  // Assuming you want to append a space at the end
-    // Then update other things too.
-    //updateServer();
-    nextWeek(dayChange);
+    // Calculate the difference in indices
+    let dayDifference = index - currentIndex;
+    nextWeek(dayDifference);
 }
-
-
-
-
-
-
 
 function nextWeek(number) {
     console.log("nextWeek function invoked");
