@@ -61,6 +61,19 @@
         <DayNotes>
           <Exists>true</Exists>
           <DayQuality>8</DayQuality>
+          <SleepQuality>4</SleepQuality>
+          <TookMeds>false</TookMeds>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>0-12-24-2023</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <DayQuality>10</DayQuality>
           <SleepQuality>10</SleepQuality>
           <TookMeds>false</TookMeds>
         </DayNotes>

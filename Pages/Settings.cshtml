@@ -1,0 +1,103 @@
+﻿@page
+@model Calendar_Tracker.Pages.SettingsModel
+@{
+    ViewData["Title"] = "Settings";
+}
+<div class="text-center">
+    <h1>@ViewData["Title"]</h1>
+    <p></p>
+</div>
+
+<div class="center-container">
+    <form id="myForm" method="post">
+        @Html.AntiForgeryToken()
+
+        <div  class="form-container">
+            <div class="text-column">
+                <!-- Text content goes here -->
+                <p>Long Month Names</p>
+            </div>
+
+            <div class="components-column">
+                 <!-- Components go here -->
+                <!-- Short/Long Month Names -->
+                <div class="components-container">
+                    <input id="LongMonthNames" name="LongMonthNames" type="checkbox" asp-for="LongMonthNamesValue">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="text-center">
+            <button type="button" id="submitButton">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    var urlSubmit = '@Url.Page("/Settings", "Submit")'
+
+    $(document).ready(function () { 
+        // Handle the button click event
+        $("#submitButton").click(function () {
+            // Serialize the form data
+            var formData = $("#myForm").serialize();
+
+            // Send an AJAX request to the server
+            $.ajax({
+                type: "POST",
+                url: urlSubmit,
+                data: formData,
+                success: function (data) {
+                    // Handle the success response if needed
+                    console.log("Form submitted successfully");
+                },
+                error: function (error) {
+                    // Handle the error response if needed
+                    console.error("Error submitting form: " + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+
+<style>
+    .text-center {
+        align-items: start;
+        justify-content: center;
+    }
+
+    .center-container {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        margin: 0; /* Remove default margin */
+    }
+
+    .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .text-column {
+        text-align: left;
+        margin-right: 20px; /* Adjust margin between columns */
+    }
+
+    .components-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .components-container {
+        width: 100%;
+        margin-bottom: 15px; /* Adjust spacing between containers */
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
