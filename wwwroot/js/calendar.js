@@ -1,14 +1,14 @@
 ﻿// calendar.js
 
-var months = [
+let months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-let currentIndex = null;
-
+let currentIndex = null
 
 //Setup current week at start
 window.onload = function () {
+    getLongMonthNamesSetting();
     nextWeek(0);
 }
 function makeEditable(element, widthValue, number, typeValue) {
@@ -251,4 +251,34 @@ function updateDate(month, day, year, days) {
 
     // Update the table with new day values
     updateTable(days);
+}
+
+// Function to get the value of LongMonthNames from the XML file
+function getLongMonthNamesSetting() {
+    console.log("getLongMonthNamesSetting ran");
+
+    $.ajax({
+        type: "POST",
+        url: loadSettingsUrl,
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+                // Send Month, Day, Year from c# to updateDate
+                console.log(data.longMonthNamesValue);
+                if (data.longMonthNamesValue) {
+                    // Replace abbreviated month names with full month names
+                    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                }
+            } else {
+                console.error("Update failed.");
+            }
+        },
+        error: function (error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
 }

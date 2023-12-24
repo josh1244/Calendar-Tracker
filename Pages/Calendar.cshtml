@@ -4,6 +4,7 @@
     ViewData["Title"] = "Calendar";
 }
 
+
 <form>
     @Html.AntiForgeryToken()
 
@@ -11,9 +12,9 @@
         <h1>Calendar</h1>
          
         <b>
-            <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">@DateTime.Now.ToString("MMM")</span>
-            <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">@DateTime.Now.Day,</span>
-            <span id="editableYear" onclick="makeEditable(this, `42px`, 4, `year`)" style="cursor: pointer;">@DateTime.Now.Year</span>
+            <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;">Loading</span>
+            <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;"></span>
+            <span id="editableYear" onclick="makeEditable(this, `42px`, 4, `year`)" style="cursor: pointer;"></span>
         </b>
 
         <p></p>
@@ -60,6 +61,7 @@
 <script>
     var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")'
     var nextWeekUrl = '@Url.Page("/Calendar", "NextWeek")';
+    var loadSettingsUrl = '@Url.Page("/Calendar", "LoadSettings")';
 </script>
 
 <style>

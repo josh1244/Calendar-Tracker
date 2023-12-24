@@ -6,6 +6,8 @@ using System.Linq;
 using static Calendar;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Configuration;
+
 
 
 
@@ -68,11 +70,15 @@ namespace Calendar_Tracker.Pages
             NextWeek(model.Days); //Add or remove one week from current day
             CalculateDate(); // Update Date
 
-            return new JsonResult(new { success = true, message = "Update successful", 
-                month = HttpContext.Session.GetObject<int>("Month") , 
-                day = HttpContext.Session.GetObject<int>("Day"), 
-                year = HttpContext.Session.GetObject<int>("Year"), 
-                days = CurrentWeekDays }); //Return new data for date display
+            return new JsonResult(new
+            {
+                success = true,
+                message = "Update successful",
+                month = HttpContext.Session.GetObject<int>("Month"),
+                day = HttpContext.Session.GetObject<int>("Day"),
+                year = HttpContext.Session.GetObject<int>("Year"),
+                days = CurrentWeekDays
+            }); //Return new data for date display
         }
 
         public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
@@ -89,7 +95,6 @@ namespace Calendar_Tracker.Pages
 
             CalculateDate();
 
-            // Return a JSON response using JsonResult
             return new JsonResult(new { success = true, message = "Update successful", days = CurrentWeekDays });
         }
 
@@ -132,7 +137,7 @@ namespace Calendar_Tracker.Pages
 
             //Figure out the days of the week
             int dayOfWeek = (int)EditDate.DayOfWeek;
- 
+
             // Populate the Days array of the CurrentWeek
             CurrentWeekDays = Enumerable.Range(0, 7)
                 .Select(i => (int)EditDate.AddDays(i - dayOfWeek).Day)
@@ -154,6 +159,16 @@ namespace Calendar_Tracker.Pages
             HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
             HttpContext.Session.SetObject("todayID", todayID);
 
+        }
+
+        public IActionResult OnPostLoadSettings()
+        {
+            Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+            //Set Options from config file
+            bool longMonthNamesValue = currentSettings.LongMonthNamesOption;
+
+            return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });
         }
     }
 }

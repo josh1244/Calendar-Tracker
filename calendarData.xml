@@ -74,8 +74,8 @@
         <DayNotes>
           <Exists>true</Exists>
           <DayQuality>10</DayQuality>
-          <SleepQuality>10</SleepQuality>
-          <TookMeds>false</TookMeds>
+          <SleepQuality>7</SleepQuality>
+          <TookMeds>true</TookMeds>
         </DayNotes>
       </value>
     </item>
