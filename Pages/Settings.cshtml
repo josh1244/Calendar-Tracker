@@ -16,6 +16,11 @@
             <div class="text-column">
                 <!-- Text content goes here -->
                 <p>Long Month Names</p>
+
+                <p>Add Tracker</p>
+
+                
+
             </div>
 
             <div class="components-column">
@@ -24,7 +29,51 @@
                 <div class="components-container">
                     <input id="LongMonthNames" name="LongMonthNames" type="checkbox" asp-for="LongMonthNamesValue">
                 </div>
+
+
+
+                <!-- Plus Button to Add Tracker Fields -->
+                <div class="components-container">
+                    <button type="button" id="addTrackerButton">+</button>
+                </div>
+
+                
             </div>
+        </div>
+
+       
+        <!--  Trackers -->
+        <div>
+            @if (Model.Trackers != null && Model.Trackers.Any())
+            {
+                for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
+                {
+                    if (Model.Trackers.TryGetValue(i, out var tracker))
+                    {
+                            <div class="components-container" id="trackerFields@i">
+                                    <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
+                                    <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
+                                    <select name="Trackers[@i].Type" class="tracker-select">
+                                    <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
+                                    <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
+                                    <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
+                                    <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
+                                </select>
+                            </div>
+                    }
+                }
+            }
+            else
+            {
+            <p>No trackers found.</p>
+            }
+        </div>
+
+
+
+        <!-- Tracker Name and Tracker Type pairs -->
+        <div class="tracker-container" id="trackerNameAndType">
+            <!-- This container will hold the dynamically added tracker name and type pairs -->
         </div>
 
         <!-- Submit button -->
@@ -40,10 +89,15 @@
     var urlSubmit = '@Url.Page("/Settings", "Submit")'
 
     $(document).ready(function () { 
+        // Initialize trackerCount within the Razor syntax block
+        let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
+
         // Handle the button click event
         $("#submitButton").click(function () {
             // Serialize the form data
             var formData = $("#myForm").serialize();
+
+            console.log("Form Data: " + JSON.stringify(formData));
 
             // Send an AJAX request to the server
             $.ajax({
@@ -59,6 +113,33 @@
                     console.error("Error submitting form: " + error.responseText);
                 }
             });
+        });
+
+        // Handle the button click event to add tracker fields
+        $("#addTrackerButton").click(function () {
+            trackerCount++;
+
+            // Create unique IDs for the new tracker fields
+            var trackerIdId = 'trackerId' + trackerCount;
+            var trackerNameId = 'trackerName' + trackerCount;
+            var trackerTypeId = 'trackerType' + trackerCount;
+
+            // Create new input fields for tracker id (hidden), name, and type with unique IDs
+            var trackerIdInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Id" class="tracker-id" id="' + trackerIdId + '" value="' + trackerCount + '" />');
+            var trackerNameInput = $('<input type="text" name="Trackers[' + trackerCount + '].Name" placeholder="Tracker Name" class="tracker-name" id="' + trackerNameId + '" />');
+            var trackerTypeSelect = $('<select name="Trackers[' + trackerCount + '].Type" class="tracker-select" id="' + trackerTypeId + '"></select>');
+
+            // Add options to the dropdown (you can customize these options)
+            trackerTypeSelect.append('<option value="Slider">Slider</option>');
+            trackerTypeSelect.append('<option value="Checkbox">Checkbox</option>');
+            trackerTypeSelect.append('<option value="Text">Text</option>');
+            trackerTypeSelect.append('<option value="Dropdown">Dropdown</option>');
+
+            // Append the new fields to the container
+            $("#trackerNameAndType").append('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
+            $("#trackerFields" + trackerCount).append(trackerIdInput);
+            $("#trackerFields" + trackerCount).append(trackerNameInput);
+            $("#trackerFields" + trackerCount).append(trackerTypeSelect);
         });
     });
 </script>
@@ -99,5 +180,25 @@
         margin-bottom: 15px; /* Adjust spacing between containers */
         text-align: center;
         vertical-align: middle;
+    }
+
+
+    .tracker-container {
+        width: 100%;
+        margin-bottom: 15px;
+        text-align: center;
+        vertical-align: middle;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tracker-name {
+        width: 50%; /* Adjust the width as needed */
+        margin-left: 10px;
+        margin-right: 10px; /* Adjust the margin for spacing between name and select */
+    }
+
+    .tracker-select {
+        align-items: center;
     }
 </style>

@@ -1,12 +1,22 @@
 ﻿using Newtonsoft.Json;
 using System.Reflection.PortableExecutable;
 using System.Xml.Serialization;
+using static Calendar_Tracker.Pages.SettingsModel;
 
 
 [Serializable]
 public class Options // Class to manage the Options
 {
+    [Serializable] 
+    public class TrackerData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
+
     public bool LongMonthNamesOption { get; set; }
+    public SerializableDictionary<int, TrackerData> TrackersOption { get; set; } = new SerializableDictionary<int, TrackerData>();
 
     public Options()
     {
@@ -22,8 +32,10 @@ public class Options // Class to manage the Options
             // Return a new CalendarMap object
             return new Options();
         }
+
         using TextReader reader = new StreamReader(fileName);
         var serializer = new XmlSerializer(typeof(Options));
+
         // Check if the file is empty
         if (reader.Peek() == -1)
         {
@@ -33,18 +45,28 @@ public class Options // Class to manage the Options
         else
         {
             // Deserialize the Options object from the file
-            object deserializedObject = serializer.Deserialize(reader)!;
+            try
+            {
+                object deserializedObject = serializer.Deserialize(reader)!;
 
-            if (deserializedObject is Options calendarMap)
-            {
-                // Successfully deserialized into a Options object
-                return calendarMap;
+                if (deserializedObject is Options calendarMap)
+                {
+                    // Successfully deserialized into a Options object
+                    return calendarMap;
+                }
+                else
+                {
+                    // Handling the case where deserialization was not successful
+                    return new Options();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Handling the case where deserialization was not successful
+                // Log or handle the exception
+                Console.WriteLine($"Error deserializing from file: {ex.Message}");
                 return new Options();
             }
+
         }
     }
 

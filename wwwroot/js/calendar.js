@@ -195,9 +195,18 @@ function updateTable(response) {
             currentIndex = dayIndex;
         }
 
+        // If day is in a different month, then make it grey
+        console.log(Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)));
+        if (Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)) >= 10 ) {
+            cell.addClass('grey-cell');
+        }
+
+
         // Append the cell to the row
         newRow.append(cell);
     });
+
+    console.log("hello");
 
     // Append the new row to the table body
     tableBody.append(newRow);
@@ -255,8 +264,6 @@ function updateDate(month, day, year, days) {
 
 // Function to get the value of LongMonthNames from the XML file
 function getLongMonthNamesSetting() {
-    console.log("getLongMonthNamesSetting ran");
-
     $.ajax({
         type: "POST",
         url: loadSettingsUrl,
@@ -267,7 +274,7 @@ function getLongMonthNamesSetting() {
         success: function (data) {
             if (data.success) {
                 // Send Month, Day, Year from c# to updateDate
-                console.log(data.longMonthNamesValue);
+                console.log(`Long Month Names is "${longMonthNamesValue}"`);
                 if (data.longMonthNamesValue) {
                     // Replace abbreviated month names with full month names
                     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

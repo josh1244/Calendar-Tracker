@@ -79,5 +79,18 @@
         </DayNotes>
       </value>
     </item>
+    <item>
+      <key>
+        <string>0-12-31-2023</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <DayQuality>9</DayQuality>
+          <SleepQuality>9</SleepQuality>
+          <TookMeds>false</TookMeds>
+        </DayNotes>
+      </value>
+    </item>
   </days>
 </CalendarMap>
