@@ -16,7 +16,7 @@
 
 <div class="center-container">
     <form method="post">
-        <div  class="form-container">
+        <div class="form-container">
             <div class="text-column">
                 <!-- Text content goes here -->
                 <p>Day Quality: <span>@Model.SliderValue1</span></p>
@@ -45,60 +45,77 @@
         </div>
 
 
-
-        <!--  Trackers -->
-        <div>
-            @if (Model.Trackers != null && Model.Trackers.Any())
-            {
-                for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
+        <div class="form-container">
+            <!--  Tracker Text -->
+            <div class="text-column">
+                @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-                    if (Model.Trackers.TryGetValue(i, out var tracker))
+                
+                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
-                        <div class="form-container" id="trackerFields@(i)">
-                            <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
-                            <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
-                            <p class="text-column">@tracker.Name: <span>@tracker.Id</span></p>
-
-                             <div class="components-column">
-                                @switch (tracker.Type)
-                                {
-                                    case "Slider":
-                                                <div class="components-container">
-                                                    <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, Trackers[@i].Id)">
-                                                    <output style="width: 30px;" id="(Trackers[@i].Name)Output">@Model.SliderValue1</output>
-                                                </div>
-                                        break;
-
-                                    case "Checkbox":
-                                                <div class="components-container">
-                                                <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="checkbox" @(Model.CheckValue3 ? "checked" : "") oninput="updateOutput(this.checked, 3)">
-                                                </div>
-                                        break;
-
-                                    case "Text":
-                                                <div class="components-container">
-                                                    <input type="text" name="Trackers[@i].Name" placeholder="Text" class="tracker-name" value="@tracker.Name" />
-                                                </div>
-                                        break;
-
-                                    case "Dropdown":
-                                                <div class="components-container">
-                                                    <!-- Dropdown implementation here -->
-                                                </div>
-                                        break;
-                                    default:
-                                               <p>Tracker type undefined.</p>
-                                        break;
-                                }
+                        if (Model.Trackers.TryGetValue(i, out var tracker))
+                        {
+                            <div id="trackerFields@(i)">
+                                <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
+                                <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
+                                <p class="text-column">@tracker.Name: <span>@tracker.Id</span></p>
                             </div>
-                        </div>
+                        }
                     }
                 }
-            }
-            else
-            {
-            <p>No trackers found.</p>
-            }
+                else
+                {
+                <p>No trackers found.</p>
+                }
+            </div>
+
+            <!--  Tracker Components -->
+            <div class="components-column">
+                @if (Model.Trackers != null && Model.Trackers.Any())
+                {
+
+                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
+                    {
+                        if (Model.Trackers.TryGetValue(i, out var tracker))
+                        {
+                            @switch (tracker.Type)
+                            {
+                                case "Slider":
+                                    <div class="components-container">
+                                        <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, Trackers[@i].Id)">
+                                        <output style="width: 30px;" id="(Trackers[@i].Name)Output">@Model.SliderValue1</output>
+                                    </div>
+                                    break;
+
+                                case "Checkbox":
+                                    <div class="components-container">
+                                    <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="checkbox" @(Model.CheckValue3 ? "checked" : "") oninput="updateOutput(this.checked, 3)">
+                                    </div>
+                                    break;
+
+                                case "Text":
+                                    <div class="components-container">
+                                        <input type="text" name="Trackers[@i].Name" placeholder="Text" class="tracker-name" value="@tracker.Name" />
+                                    </div>
+                                    break;
+
+                                case "Dropdown":
+                                    <div class="components-container">
+                                        <!-- Dropdown implementation here -->
+                                    </div>
+                                    break;
+                                default:
+                                    <p>Tracker type undefined.</p>
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                <p>No trackers found.</p>
+                }
+            </div>
         </div>
 
         <!-- Submit button -->
