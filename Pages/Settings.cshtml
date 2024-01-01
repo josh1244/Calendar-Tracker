@@ -50,15 +50,21 @@
                 {
                     if (Model.Trackers.TryGetValue(i, out var tracker))
                     {
-                            <div class="components-container" id="trackerFields@i">
-                                    <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
-                                    <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
-                                    <select name="Trackers[@i].Type" class="tracker-select">
+                            <div class="components-container" id="trackerFields@(i)">
+                                <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
+                                <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
+                                <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
+                                <select name="Trackers[@i].Type" class="tracker-select">
                                     <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
                                     <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
                                     <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
                                     <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
                                 </select>
+
+                                
+                                <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
+                                
+                                
                             </div>
                     }
                 }
@@ -86,11 +92,27 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    var urlSubmit = '@Url.Page("/Settings", "Submit")'
+    var urlSubmit = '@Url.Page("/Settings", "Submit")';
+
+    
+
+    function removeTracker(currentTrackerCount) {
+        return function () {
+            // Remove the corresponding tracker fields
+            $("#trackerFields" + currentTrackerCount).remove();
+        };
+    }
 
     $(document).ready(function () { 
         // Initialize trackerCount within the Razor syntax block
         let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
+
+        // Handle the button click event to add tracker fields
+        $(".minusTrackerButton").click(function () {
+                console.log("minusTrackerButton");
+                let number = $(this).attr("name");
+                $("#trackerFields" + number).remove();
+        });
 
         // Handle the button click event
         $("#submitButton").click(function () {
@@ -120,29 +142,40 @@
             trackerCount++;
 
             // Create unique IDs for the new tracker fields
-            var trackerIdId = 'trackerId' + trackerCount;
+            var trackerId = 'trackerId' + trackerCount;
+            var trackerOrder = 'trackerOrder' + trackerCount;
             var trackerNameId = 'trackerName' + trackerCount;
             var trackerTypeId = 'trackerType' + trackerCount;
 
             // Create new input fields for tracker id (hidden), name, and type with unique IDs
-            var trackerIdInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Id" class="tracker-id" id="' + trackerIdId + '" value="' + trackerCount + '" />');
+            var trackerIdInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Id" class="tracker-id" id="' + trackerId + '" value="' + trackerCount + '" />');
+            var trackerOrderInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Order" class="tracker-order" id="' + trackerOrder + '" value="' + trackerCount + '" />');
             var trackerNameInput = $('<input type="text" name="Trackers[' + trackerCount + '].Name" placeholder="Tracker Name" class="tracker-name" id="' + trackerNameId + '" />');
             var trackerTypeSelect = $('<select name="Trackers[' + trackerCount + '].Type" class="tracker-select" id="' + trackerTypeId + '"></select>');
-
+            
             // Add options to the dropdown (you can customize these options)
             trackerTypeSelect.append('<option value="Slider">Slider</option>');
             trackerTypeSelect.append('<option value="Checkbox">Checkbox</option>');
             trackerTypeSelect.append('<option value="Text">Text</option>');
             trackerTypeSelect.append('<option value="Dropdown">Dropdown</option>');
 
+            var trackerMinusButton = $('<button type="button" id="minusTrackerButton" class="small-btn minusTrackerButton">-</button>');
+
             // Append the new fields to the container
             $("#trackerNameAndType").append('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
             $("#trackerFields" + trackerCount).append(trackerIdInput);
+            $("#trackerFields" + trackerCount).append(trackerOrderInput);
             $("#trackerFields" + trackerCount).append(trackerNameInput);
             $("#trackerFields" + trackerCount).append(trackerTypeSelect);
+            $("#trackerFields" + trackerCount).append(trackerMinusButton);
+
+            // Attach click event handler to the minus button
+            trackerMinusButton.click(removeTracker(trackerCount));
         });
     });
 </script>
+
+
 
 
 <style>
@@ -200,5 +233,9 @@
 
     .tracker-select {
         align-items: center;
+    }
+
+    .small-btn {
+        margin:10px;
     }
 </style>
