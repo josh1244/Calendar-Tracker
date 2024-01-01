@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LongMonthNamesOption>true</LongMonthNamesOption>
-  <TrackersOption />
+  <TrackersOption>
+    <item>
+      <key>
+        <int>0</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>0</Id>
+          <Order>0</Order>
+          <Name>Day Quality</Name>
+          <Type>Slider</Type>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>1</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>1</Id>
+          <Order>1</Order>
+          <Name>Sleep Quality</Name>
+          <Type>Slider</Type>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>2</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>2</Id>
+          <Order>2</Order>
+          <Name>Took Medication</Name>
+          <Type>Checkbox</Type>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>3</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>3</Id>
+          <Order>3</Order>
+          <Name>Rex is not here</Name>
+          <Type>Text</Type>
+        </TrackerData>
+      </value>
+    </item>
+  </TrackersOption>
 </Options>

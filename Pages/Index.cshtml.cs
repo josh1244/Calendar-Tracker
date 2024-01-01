@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using static Calendar;
+using static Options;
 
 /*
 public static class SessionExtensions
@@ -30,7 +31,7 @@ public class IndexModel : PageModel
     public int SliderValue1 { get; set; }
     public int SliderValue2 { get; set; }
     public bool CheckValue3 { get; set; }
-
+    public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
 
 
 
@@ -55,6 +56,15 @@ public class IndexModel : PageModel
 
         // Retrieve or create a new DayNotes object
         DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
+
+
+
+        Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+        // Set Options from config file
+        Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
+        Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
+
 
         //Set Sliders
         if (RetrievedNotes.Exists)
