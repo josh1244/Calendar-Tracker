@@ -18,7 +18,7 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine("OnGet method executed.");
 
             
-            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
             // Get the current time
             DateTime now = DateTime.Today;
@@ -89,11 +89,19 @@ namespace Calendar_Tracker.Pages
         public IActionResult OnPostSubmit([FromForm] FormData model)
         {
             Console.WriteLine("OnPostSubmit method executed.");
-            
+
             if (!ModelState.IsValid)
             {
-                // Log or handle validation errors
-                Console.WriteLine("Model state is not valid.");
+                foreach (var modelStateValue in ModelState.Values)
+                {
+                    foreach (var error in modelStateValue.Errors)
+                    {
+                        // Log or print the error messages
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+
+                // Handle the errors or return an error response
                 return BadRequest(ModelState);
             }
 
@@ -101,7 +109,7 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine($"Received FormData: {JsonConvert.SerializeObject(model.TrackersValues)}");
 
          
-            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
             // Get the current time
             DateTime now = DateTime.Today;
@@ -147,7 +155,7 @@ namespace Calendar_Tracker.Pages
 
             // Save to file
             Console.Write("Saving to file...");
-            CalendarMap.SaveToFile("calendarData.xml", newCalendar);
+            CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
             Console.WriteLine("Save complete.");
 
             // Log values for debugging

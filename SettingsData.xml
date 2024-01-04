@@ -41,5 +41,18 @@
         </TrackerData>
       </value>
     </item>
+    <item>
+      <key>
+        <int>6</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>6</Id>
+          <Order>6</Order>
+          <Name>Exercise</Name>
+          <Type>Text</Type>
+        </TrackerData>
+      </value>
+    </item>
   </TrackersOption>
 </Options>

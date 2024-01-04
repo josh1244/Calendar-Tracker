@@ -8,10 +8,10 @@ public class Calendar
     public class TrackerComponentData
     {
         public int Id { get; set; }
-        public int SliderValue { get; set; }
-        public bool CheckboxValue { get; set; }
-        public string TextValue { get; set; }
-        public string DropdownValue { get; set; }
+        public int? SliderValue { get; set; }
+        public bool? CheckboxValue { get; set; }
+        public string? TextValue { get; set; }
+        public string? DropdownValue { get; set; }
     }
 
     public class DayNotes // Class DayNotes to keep notes

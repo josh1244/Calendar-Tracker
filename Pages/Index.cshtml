@@ -59,19 +59,13 @@
                                         <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" value="@trackerSliderValue">
                                         <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
 
-                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
-                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
-                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
 
                                 case "Checkbox":
                                     <div class="components-container">
-                                        <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" asp-for="@trackerCheckboxValue" />
+                                        <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" checked="@(trackerCheckboxValue ?? false)" />
 
-                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
-                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
-                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
 
@@ -79,9 +73,7 @@
                                     <div class="components-container">
                                         <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-name" value="@trackerTextValue" />
                                     
-                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
-                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
-                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
+                                        
                                     </div>
                                     break;
 
@@ -89,10 +81,7 @@
                                     <div class="components-container">
                                         <p>Dropdown not implemented yet!</p>
 
-                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
-                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
-                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
-                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
+                                       
                                     </div>
                                     break;
                                 default:
@@ -124,8 +113,19 @@
     $(document).ready(function () {
         // Handle the button click event
         $("#submitButton").click(function () {
+            // Modify checkbox values before submitting
+            $('input[type="checkbox"]').each(function () {
+                if ($(this).is(':checked')) {
+                    $(this).val('true');
+                } else {
+                    // Optionally, set a default value when the checkbox is not checked
+                    $(this).val('false');
+                }
+            });
+            
             // Serialize the form data
             var formData = $("#myForm").serialize();
+
 
             console.log("Form Data: " + JSON.stringify(formData));
 
@@ -150,6 +150,16 @@
         $("input[type='range']").on("input", function () {
             var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
+        });
+
+        // Handle Ctrl+S keypress event
+        $(document).keydown(function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                // Trigger the click event on the submit button
+                $("#submitButton").click();
+                // Prevent the default browser save behavior
+                e.preventDefault();
+            }
         });
     });
 </script>

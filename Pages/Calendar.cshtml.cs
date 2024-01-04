@@ -31,7 +31,7 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine("OnGet method executed.");
 
             // Load Calendar data
-            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
             HttpContext.Session.SetObject("MyStoredCalendar", MyCalendar);
 
 
@@ -125,7 +125,7 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine($"CalculateDate executed.");
 
             CalendarMap MyCalendar = HttpContext.Session.GetObject<CalendarMap>("MyStoredCalendar");
-            MyCalendar ??= CalendarMap.LoadFromFile("calendarData.xml"); // if null. Shouldnt be needed
+            MyCalendar ??= CalendarMap.LoadFromFile("CalendarData.xml"); // if null. Shouldnt be needed
 
             int EditedMonth = HttpContext.Session.GetObject<int>("Month");
             int EditedDay = HttpContext.Session.GetObject<int>("Day");

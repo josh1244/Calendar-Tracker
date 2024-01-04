@@ -16,10 +16,8 @@
               <value>
                 <TrackerComponentData>
                   <Id>3</Id>
-                  <SliderValue>6</SliderValue>
-                  <CheckboxValue>false</CheckboxValue>
-                  <TextValue>NA</TextValue>
-                  <DropdownValue>NA</DropdownValue>
+                  <SliderValue>3</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
             </item>
@@ -31,9 +29,7 @@
                 <TrackerComponentData>
                   <Id>4</Id>
                   <SliderValue>8</SliderValue>
-                  <CheckboxValue>false</CheckboxValue>
-                  <TextValue>NA</TextValue>
-                  <DropdownValue>NA</DropdownValue>
+                  <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
             </item>
@@ -44,10 +40,21 @@
               <value>
                 <TrackerComponentData>
                   <Id>5</Id>
-                  <SliderValue>-1</SliderValue>
+                  <SliderValue xsi:nil="true" />
                   <CheckboxValue>true</CheckboxValue>
-                  <TextValue>NA</TextValue>
-                  <DropdownValue>NA</DropdownValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>None yet.</TextValue>
                 </TrackerComponentData>
               </value>
             </item>
