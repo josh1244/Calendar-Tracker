@@ -16,7 +16,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>3</Id>
-                  <SliderValue>3</SliderValue>
+                  <SliderValue>7</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -54,7 +54,7 @@
                   <Id>6</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <TextValue>None yet.</TextValue>
+                  <TextValue>10 minutes of Rowing</TextValue>
                 </TrackerComponentData>
               </value>
             </item>

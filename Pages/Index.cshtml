@@ -8,7 +8,11 @@
 
 <div class="text-center">
     <h1>Hello Josh!</h1>
-    <b>Today is @DateTime.Now.ToString("MMM dd, yyyy")</b>
+    <b>
+        <span>Today is </span>
+        <span id="Month">@DateTime.Now.ToString("MMM")</span>
+        <span>@DateTime.Now.ToString(" d, yyyy")</span>
+    </b>
     <p></p>
 </div>
 
@@ -109,6 +113,14 @@
 
 <script>
     var urlSubmit = '@Url.Page("/Index", "Submit")';
+    var loadSettingsUrl = '@Url.Page("/Calendar", "LoadSettings")';
+
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    //Setup Month Setting at start
+    window.onload = function () {
+        getLongMonthNamesSetting();
+    }
 
     $(document).ready(function () {
         // Handle the button click event
@@ -162,6 +174,36 @@
             }
         });
     });
+
+    // Function to get the value of LongMonthNames from the XML file
+    function getLongMonthNamesSetting() {
+        $.ajax({
+            type: "POST",
+            url: loadSettingsUrl,
+            headers: {
+                RequestVerificationToken:
+                    $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            success: function (data) {
+                if (data.success) {
+                    // Send Month, Day, Year from c# to updateDate
+                    if (data.longMonthNamesValue) {
+                        // Replace abbreviated month names with full month names
+                        months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    }
+                    // Get the month number (0 to 11)
+                    var currentMonth = new Date().getMonth();
+                    document.getElementById("Month").innerText = months[currentMonth];
+                } else {
+                    console.error("Update failed.");
+                }
+            },
+            error: function (error) {
+                // Handle errors
+                console.error(error);
+            }
+        });
+    }
 </script>
 
 

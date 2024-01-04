@@ -1,8 +1,6 @@
 ﻿// calendar.js
 
-let months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-];
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 let currentIndex = null
 
@@ -274,7 +272,6 @@ function getLongMonthNamesSetting() {
         success: function (data) {
             if (data.success) {
                 // Send Month, Day, Year from c# to updateDate
-                console.log(`Long Month Names is "${longMonthNamesValue}"`);
                 if (data.longMonthNamesValue) {
                     // Replace abbreviated month names with full month names
                     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

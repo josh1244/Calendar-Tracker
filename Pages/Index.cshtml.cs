@@ -164,5 +164,15 @@ namespace Calendar_Tracker.Pages
             
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
+
+        public IActionResult OnPostLoadSettings()
+        {
+            Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+            //Set Options from config file
+            bool longMonthNamesValue = currentSettings.LongMonthNamesOption;
+
+            return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });
+        }
     }
 }
