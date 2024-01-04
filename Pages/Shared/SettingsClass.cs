@@ -3,7 +3,6 @@ using System.Reflection.PortableExecutable;
 using System.Xml.Serialization;
 using static Calendar_Tracker.Pages.SettingsModel;
 
-
 [Serializable]
 public class Options // Class to manage the Options
 {

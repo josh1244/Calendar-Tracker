@@ -1,28 +1,29 @@
 ﻿using Newtonsoft.Json;
 using System.Reflection.PortableExecutable;
 using System.Xml.Serialization;
-//using static Calendar;
 
 
-#pragma warning disable CA1050 // Declare types in namespaces
 public class Calendar
-#pragma warning restore CA1050 // Declare types in namespaces
 {
-    [Serializable]
+    public class TrackerComponentData
+    {
+        public int Id { get; set; }
+        public int SliderValue { get; set; }
+        public bool CheckboxValue { get; set; }
+        public string TextValue { get; set; }
+        public string DropdownValue { get; set; }
+    }
+
     public class DayNotes // Class DayNotes to keep notes
     {
         public bool Exists { get; set; }
-        public int DayQuality { get; set; }
-        public int SleepQuality { get; set; }
-        public bool TookMeds { get; set; }
+        public SerializableDictionary<int, TrackerComponentData> TrackersData { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+
 
         // Define a constructor for DayNotes
         public DayNotes()
         {
             Exists = false;
-            DayQuality = 0;
-            SleepQuality = 0;
-            TookMeds = false;
         }
     }
 
@@ -32,7 +33,7 @@ public class Calendar
 
         public CalendarMap()
         {
-            days = []; //new SerializableDictionary<string, DayNotes>();
+            days = new SerializableDictionary<string, DayNotes>();
         }
 
         // Function to add a day with notes to the calendar
@@ -53,7 +54,6 @@ public class Calendar
         // Function to get notes for a specific day
         public DayNotes GetDayNotes(string id)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             if (days.TryGetValue(id, out DayNotes value))
             {
                 // Key was in dictionary; "value" contains corresponding value
@@ -66,7 +66,6 @@ public class Calendar
                 days.Add(id, newNotes);
                 return newNotes;
             }
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         }
 
 

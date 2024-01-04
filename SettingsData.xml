@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <LongMonthNamesOption>true</LongMonthNamesOption>
+  <LongMonthNamesOption>false</LongMonthNamesOption>
   <TrackersOption>
     <item>
       <key>
-        <int>0</int>
+        <int>3</int>
       </key>
       <value>
         <TrackerData>
-          <Id>0</Id>
-          <Order>0</Order>
+          <Id>3</Id>
+          <Order>3</Order>
           <Name>Day Quality</Name>
-          <Type>Slider</Type>
-        </TrackerData>
-      </value>
-    </item>
-    <item>
-      <key>
-        <int>1</int>
-      </key>
-      <value>
-        <TrackerData>
-          <Id>1</Id>
-          <Order>1</Order>
-          <Name>Sleep Quality</Name>
           <Type>Slider</Type>
         </TrackerData>
       </value>
@@ -36,6 +23,19 @@
         <TrackerData>
           <Id>4</Id>
           <Order>4</Order>
+          <Name>Sleep Quality</Name>
+          <Type>Slider</Type>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>5</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>5</Id>
+          <Order>5</Order>
           <Name>Took Medication</Name>
           <Type>Checkbox</Type>
         </TrackerData>

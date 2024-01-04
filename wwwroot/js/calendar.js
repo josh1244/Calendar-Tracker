@@ -14,7 +14,7 @@ window.onload = function () {
 function makeEditable(element, widthValue, number, typeValue) {
     // Create an input element
     var inputElement = document.createElement("input");
-    inputElement.type = "text";
+    inputElement.type = "text"; //Maybe change to number?
     inputElement.value = element.innerText;
 
     if (typeValue === "day") {

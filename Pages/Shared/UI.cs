@@ -8,9 +8,17 @@ internal class UI
     {
         if (notes.Exists)
         {
-            Console.WriteLine("Day Quality: " + notes.DayQuality);
-            Console.WriteLine("Sleep Quality: " + notes.SleepQuality);
-            Console.WriteLine("Took Meds: " + (notes.TookMeds ? "Yes" : "No"));
+            Console.WriteLine("Trackers:");
+            foreach (var trackerData in notes.TrackersData.Values)
+            {
+                //Console.WriteLine($"Tracker {trackerData.Id}:");
+                //Console.WriteLine($"  Slider Value: {trackerData.SliderValue}");
+                //Console.WriteLine($"  Checkbox Value: {trackerData.CheckboxValue}");
+                //Console.WriteLine($"  Text Value: {trackerData.TextValue}");
+                //Console.WriteLine($"  Dropdown Value: {trackerData.DropdownValue}");
+                //Console.WriteLine($"  Value Exists: {trackerData.ValueExists}");
+            }
+
             Console.WriteLine();
         }
         else

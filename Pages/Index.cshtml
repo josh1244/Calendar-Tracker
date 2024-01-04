@@ -4,9 +4,7 @@
     ViewData["Title"] = "Josh's Calendar Tracker";
 }
 
-<!DOCTYPE html>
-<html>
-<body>
+
 
 <div class="text-center">
     <h1>Hello Josh!</h1>
@@ -15,57 +13,28 @@
 </div>
 
 <div class="center-container">
-    <form method="post">
-        <div class="form-container">
-            <div class="text-column">
-                <!-- Text content goes here -->
-                <p>Day Quality: <span>@Model.SliderValue1</span></p>
-                <p>Sleep Quality: <span>@Model.SliderValue2</span></p>
-                <p>Took Medication: <span>@Model.CheckValue3</span></p>
-            </div>
-
-            <div class="components-column">
-                <!-- DayQuality -->
-                <div class="components-container">
-                    <input id="DayQuality" name="DayQuality" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, 1)">
-                    <output style="width: 30px;" id="output1">@Model.SliderValue1</output>
-                </div>
-
-                <!-- SleepQuality -->
-                <div class="components-container">
-                    <input id="SleepQuality" name="SleepQuality" type="range" min="0" max="10" value="@Model.SliderValue2" oninput="updateOutput(this.value, 2)">
-                    <output style="width: 30px;" id="output2">@Model.SliderValue2</output>
-                </div>
-
-                <!-- TookMeds -->
-                <div class="components-container">
-                    <input id="TookMeds" name="TookMeds" type="checkbox" @(Model.CheckValue3 ? "checked" : "") oninput="updateOutput(this.checked, 3)">
-                </div>
-            </div>
-        </div>
-
-
+    <form id="myForm" method="post">
+        @Html.AntiForgeryToken()
         <div class="form-container">
             <!--  Tracker Text -->
             <div class="text-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-                
+
                     for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
                         {
-                            <div id="trackerFields@(i)">
-                                <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
-                                <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
-                                <p class="text-column">@tracker.Name: <span>@tracker.Id</span></p>
-                            </div>
+                                        <div>
+                                            <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
+                                            <p class="text-column">@tracker.Name</p>
+                                        </div>
                         }
                     }
                 }
                 else
                 {
-                <p>No trackers found.</p>
+                    <p>No trackers found.</p>
                 }
             </div>
 
@@ -78,30 +47,52 @@
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
                         {
+                            var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : 0;
+                            var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
+                            var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
+                            var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
+
                             @switch (tracker.Type)
                             {
                                 case "Slider":
                                     <div class="components-container">
-                                        <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="range" min="0" max="10" value="@Model.SliderValue1" oninput="updateOutput(this.value, Trackers[@i].Id)">
-                                        <output style="width: 30px;" id="(Trackers[@i].Name)Output">@Model.SliderValue1</output>
+                                        <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" value="@trackerSliderValue">
+                                        <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
+
+                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
+                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
+                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
 
                                 case "Checkbox":
                                     <div class="components-container">
-                                    <input id="Trackers[@i].Name" name="Trackers[@i].Name" type="checkbox" @(Model.CheckValue3 ? "checked" : "") oninput="updateOutput(this.checked, 3)">
+                                        <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" asp-for="@trackerCheckboxValue" />
+
+                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
+                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
+                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
 
                                 case "Text":
                                     <div class="components-container">
-                                        <input type="text" name="Trackers[@i].Name" placeholder="Text" class="tracker-name" value="@tracker.Name" />
+                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-name" value="@trackerTextValue" />
+                                    
+                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
+                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
+                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
 
                                 case "Dropdown":
                                     <div class="components-container">
-                                        <!-- Dropdown implementation here -->
+                                        <p>Dropdown not implemented yet!</p>
+
+                                        <input type="hidden" name="TrackersValues[@i].SliderValue" value="-1">
+                                        <input type="hidden" name="TrackersValues[@i].CheckboxValue" value="false">
+                                        <input type="hidden" name="TrackersValues[@i].TextValue" value="NA">
+                                        <input type="hidden" name="TrackersValues[@i].DropdownValue" value="NA">
                                     </div>
                                     break;
                                 default:
@@ -113,35 +104,54 @@
                 }
                 else
                 {
-                <p>No trackers found.</p>
+                    <p>No trackers found.</p>
                 }
             </div>
         </div>
 
         <!-- Submit button -->
         <div class="text-center">
-            <button type="button" id="submitButton">NewSubmit</button>
-        </div>
-
-        <p></p>
-
-        <!-- Old Submit button -->
-        <div class="text-center">
-            <input type="submit" name="Submit" value="OldSubmit">
+            <button type="button" id="submitButton">Submit</button>
         </div>
     </form>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    var urlSubmit = '@Url.Page("/Settings", "Submit")';
+    var urlSubmit = '@Url.Page("/Index", "Submit")';
 
-    function updateOutput(Value, Number) 
-    {
-        document.getElementById("output" + Number).innerHTML = Value;
-        console.log("output" + Number + Value);
-    }
+    $(document).ready(function () {
+        // Handle the button click event
+        $("#submitButton").click(function () {
+            // Serialize the form data
+            var formData = $("#myForm").serialize();
+
+            console.log("Form Data: " + JSON.stringify(formData));
+
+            // Send an AJAX request to the server
+            $.ajax({
+                type: "POST",
+                url: urlSubmit,
+                data: formData, 
+                success: function (data) {
+                    // Handle the success response if needed
+                    console.log("Form submitted successfully");
+                },
+                error: function (error) {
+                    // Handle the error response if needed
+                    console.error("Error submitting form: " + error.responseText);
+                }
+            });
+        });
+
+
+         // Attach input event listeners for sliders
+        $("input[type='range']").on("input", function () {
+            var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
+            document.getElementById(trackerName + " Output").innerHTML = $(this).val();
+        });
+    });
 </script>
 
 
@@ -182,7 +192,3 @@
         vertical-align: middle;
     }
 </style>
-
-
-</body>
-</html>

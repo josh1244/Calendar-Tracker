@@ -4,9 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 
 [XmlRoot("dictionary")]
-#pragma warning disable CA1050 // Declare types in namespaces
 public class SerializableDictionary<TKey, TValue>
-#pragma warning restore CA1050 // Declare types in namespaces
     : Dictionary<TKey, TValue>, IXmlSerializable
     where TKey : notnull
 {
@@ -39,20 +37,20 @@ public class SerializableDictionary<TKey, TValue>
             reader.ReadStartElement("item");
 
             reader.ReadStartElement("key");
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+
             TKey key = (TKey)keySerializer.Deserialize(reader);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
             reader.ReadEndElement();
 
             reader.ReadStartElement("value");
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+
             TValue value = (TValue)valueSerializer.Deserialize(reader);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
             reader.ReadEndElement();
 
-#pragma warning disable CS8604 // Possible null reference argument.
+
             this.Add(key, value);
-#pragma warning restore CS8604 // Possible null reference argument.
+
 
             reader.ReadEndElement();
             reader.MoveToContent();

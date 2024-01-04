@@ -1,171 +1,160 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using System;
-using System.Globalization;
 using static Calendar;
 using static Options;
 
-/*
-public static class SessionExtensions
+
+namespace Calendar_Tracker.Pages
 {
-    public static T GetObject<T>(this ISession session, string key)
+    public class IndexModel : PageModel
     {
-        var data = session.GetString(key);
-        return data == null ? default : JsonConvert.DeserializeObject<T>(data);
-    }
+        public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
+        public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
 
-    public static void SetObject(this ISession session, string key, object value)
-    {
-        session.SetString(key, JsonConvert.SerializeObject(value));
-    }
-}
-*/
-
-#pragma warning disable CA1050 // Declare types in namespaces
-public class IndexModel : PageModel
-#pragma warning restore CA1050 // Declare types in namespaces
-{
-    [BindProperty]
-    public int SliderValue1 { get; set; }
-    public int SliderValue2 { get; set; }
-    public bool CheckValue3 { get; set; }
-    public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
-
-
-
-
-
-
-
-
-
-
-    public void OnGet()
-    {
-        Console.WriteLine("OnGet method executed.");
-
-        CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
-
-        // Get the current time
-        DateTime now = DateTime.Today;
-
-        // Convert Time to ID
-        string Id = ID.DateToID(now);
-
-        // Retrieve or create a new DayNotes object
-        DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
-
-
-
-        Options currentSettings = Options.LoadFromFile("SettingsData.xml");
-
-        // Set Options from config file
-        Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
-        Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
-
-
-        //Set Sliders
-        if (RetrievedNotes.Exists)
+        public void OnGet()
         {
-            SliderValue1 = RetrievedNotes.DayQuality;
-            SliderValue2 = RetrievedNotes.SleepQuality;
-            CheckValue3 = RetrievedNotes.TookMeds;
-        }
-        else
-        {
-            // Only set the initial value if it hasn't been set yet
-            SliderValue1 = -1; // Set initial value to DayNote's value;
-            SliderValue2 = -1; // Set initial value to DayNote's value
-            CheckValue3 = false; // Set initial value to DayNote's value
-        }
-    }
+            Console.WriteLine("OnGet method executed.");
 
-    public void OnPost()
-    {
-        Console.WriteLine("OnPost method executed.");
+            
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
 
-        UpdateNotesAndSave();
-    }
+            // Get the current time
+            DateTime now = DateTime.Today;
 
-    private void UpdateNotesAndSave()
-    {
-        Console.WriteLine("UpdateNotesAndSave method executed.");
-        CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+            // Convert Time to ID
+            string Id = ID.DateToID(now);
 
-        // Get the current time
-        DateTime now = DateTime.Today;
+            // Retrieve or create a new DayNotes object
+            DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
-        // Convert Time to ID
-        string Id = ID.DateToID(now);
+            Options currentSettings = Options.LoadFromFile("SettingsData.xml");
 
-        // Retrieve or create a new DayNotes object
-        DayNotes note = MyCalendar.GetDayNotes(Id);
+            // Set Options from config file
+            Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
+            Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
 
-        // Update Note in calendar
-        if (!string.IsNullOrEmpty(Request.Form["Submit"]))
-        {
-            if (int.TryParse(Request.Form["DayQuality"], out int sliderValue1))
+
+            // Populate TrackersValues or perform necessary initialization
+            TrackersValues = RetrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
+
+            
+            
+            // Iterate through all trackers and update settings and values
+            foreach (var (trackerId, trackerValues) in TrackersValues)
             {
-                note.Exists = true;
-                note.DayQuality = sliderValue1;
-                Console.WriteLine($"dayQuality: {sliderValue1}");
-            }
+                // Assuming you have corresponding properties in TrackerComponentData
+                var newTrackerData = new TrackerComponentData
+                {
+                    Id = trackerValues.Id,
+                    SliderValue = trackerValues.SliderValue,
+                    CheckboxValue = trackerValues.CheckboxValue,
+                    TextValue = trackerValues.TextValue,
+                    DropdownValue = trackerValues.DropdownValue,
+                    //ValueExists = trackerValues.ValueExists
+                };
 
-            if (int.TryParse(Request.Form["SleepQuality"], out int sliderValue2))
-            {
-                note.Exists = true;
-                note.SleepQuality = sliderValue2;
-                Console.WriteLine($"sleepQuality: {sliderValue2}");
+                if (RetrievedNotes.Exists)
+                {
+                    if (RetrievedNotes.TrackersData.TryGetValue(trackerValues.Id, out var existingTrackerData))
+                    {
+                        // Tracker already exists, update its values
+                        existingTrackerData.SliderValue = newTrackerData.SliderValue;
+                        existingTrackerData.CheckboxValue = newTrackerData.CheckboxValue;
+                        existingTrackerData.TextValue = newTrackerData.TextValue;
+                        existingTrackerData.DropdownValue = newTrackerData.DropdownValue;
+                        //existingTrackerData.ValueExists = newTrackerData.ValueExists;
+                    }
+                    else
+                    {
+                        // Tracker doesn't exist, add a new one
+                        RetrievedNotes.TrackersData.Add(trackerValues.Id, newTrackerData);
+                    }
+                }
             }
-
-            // Check if the checkbox is checked
-            string? tookMedsValue = Request.Form["TookMeds"];
-            if (tookMedsValue == "on")
-            {
-                note.Exists = true;
-                note.TookMeds = true;
-                Console.WriteLine("tookMeds: true");
-            }
-            else
-            {
-                // Checkbox is unchecked
-                note.Exists = true;
-                note.TookMeds = false; // Set to your default value for unchecked state
-                Console.WriteLine("tookMeds: false");
-            }
+            Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
+            
         }
 
-        // Update MyCalendar
-        CalendarMap newCalendar = MyCalendar;
-        newCalendar.AddDay(Id, note);
-
-        // Retrieve notes for day
-        note = newCalendar.GetDayNotes(Id);
-
-        // Save to file
-        Console.Write("Saving to file...");
-        CalendarMap.SaveToFile("calendarData.xml", newCalendar);
-        Console.WriteLine("Save complete.");
-
-        // Log values for debugging
-        Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
-        Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
-
-        //Set Sliders
-        if (note.Exists)
+        public void OnPost()
         {
-            SliderValue1 = note.DayQuality;
-            SliderValue2 = note.SleepQuality;
-            CheckValue3 = note.TookMeds;
+            Console.WriteLine("OnPost method executed.");
         }
-        else
+
+        public class FormData
         {
-            // Only set the initial value if it hasn't been set yet
-            SliderValue1 = -1; // Set initial value to DayNote's value;
-            SliderValue2 = -1; // Set initial value to DayNote's value
-            CheckValue3 = false; // Set initial value to DayNote's value
+            public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+        }
+        public IActionResult OnPostSubmit([FromForm] FormData model)
+        {
+            Console.WriteLine("OnPostSubmit method executed.");
+            
+            if (!ModelState.IsValid)
+            {
+                // Log or handle validation errors
+                Console.WriteLine("Model state is not valid.");
+                return BadRequest(ModelState);
+            }
+
+            // Output received data to the console for debugging
+            Console.WriteLine($"Received FormData: {JsonConvert.SerializeObject(model.TrackersValues)}");
+
+         
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("calendarData.xml");
+
+            // Get the current time
+            DateTime now = DateTime.Today;
+
+            // Convert Time to ID
+            string Id = ID.DateToID(now);
+
+            // Retrieve or create a new DayNotes object
+            DayNotes note = MyCalendar.GetDayNotes(Id);
+
+            // Update Note in calendar
+            if (model != null && model.TrackersValues != null && note != null && note.TrackersData != null)
+            {
+                note.Exists = true;
+
+                foreach (var trackerData in model.TrackersValues.Values)
+                {
+                    if (note.TrackersData.TryGetValue(trackerData.Id, out var existingTrackerData))
+                    {
+                        // Debugging output
+                        Console.WriteLine($"Updating tracker with Id {trackerData.Id}");
+
+                        // Tracker already exists, update its values
+                        existingTrackerData.SliderValue = trackerData.SliderValue;
+                        existingTrackerData.CheckboxValue = trackerData.CheckboxValue;
+                        existingTrackerData.TextValue = trackerData.TextValue;
+                        existingTrackerData.DropdownValue = trackerData.DropdownValue;
+                    }
+                    else
+                    {
+                        // Tracker not found, create a new entry
+                        note.TrackersData[trackerData.Id] = trackerData;
+
+                        // Debugging output
+                        Console.WriteLine($"Created a new tracker with Id {trackerData.Id}");
+                    }
+                }
+            }
+
+            // Update MyCalendar
+            CalendarMap newCalendar = MyCalendar;
+            newCalendar.AddDay(Id, note);
+
+            // Save to file
+            Console.Write("Saving to file...");
+            CalendarMap.SaveToFile("calendarData.xml", newCalendar);
+            Console.WriteLine("Save complete.");
+
+            // Log values for debugging
+            Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
+            Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
+            
+            return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
     }
 }
