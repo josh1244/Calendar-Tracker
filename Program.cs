@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,9 +25,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 // Use session
@@ -35,5 +35,12 @@ app.UseEndpoints(endpoints =>
 {
     _ = endpoints.MapRazorPages();
 });
+
+// Open the default web browser in non-development mode
+if (!app.Environment.IsDevelopment())
+{
+    var url = "http://localhost:5000"; // Change this URL as needed
+    Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+}
 
 app.Run();

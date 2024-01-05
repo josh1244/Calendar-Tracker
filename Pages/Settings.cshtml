@@ -173,6 +173,16 @@
             // Attach click event handler to the minus button
             trackerMinusButton.click(removeTracker(trackerCount));
         });
+
+        // Handle Ctrl+S keypress event
+        $(document).keydown(function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                // Trigger the click event on the submit button
+                $("#submitButton").click();
+                // Prevent the default browser save behavior
+                e.preventDefault();
+            }
+        });
     });
 </script>
 

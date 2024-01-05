@@ -54,5 +54,18 @@
         </TrackerData>
       </value>
     </item>
+    <item>
+      <key>
+        <int>7</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>7</Id>
+          <Order>7</Order>
+          <Name>Example Tracker</Name>
+          <Type>Checkbox</Type>
+        </TrackerData>
+      </value>
+    </item>
   </TrackersOption>
 </Options>
