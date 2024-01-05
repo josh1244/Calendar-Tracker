@@ -145,7 +145,8 @@ function updateServer() {
             MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
             DayAJAX: day,
             YearAJAX: parseInt(document.getElementById("editableYear").innerText),
-        }), contentType: 'application/json',
+        }),
+        contentType: 'application/json',
         headers: {
             RequestVerificationToken:
                 $('input:hidden[name="__RequestVerificationToken"]').val()

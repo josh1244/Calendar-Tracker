@@ -16,7 +16,6 @@ namespace Calendar_Tracker.Pages
         public void OnGet()
         {
             Console.WriteLine("OnGet method executed.");
-
             
             CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 

@@ -7,6 +7,9 @@ using static Calendar;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.Extensions.Configuration;
+using static Options;
+using Newtonsoft.Json;
+using System.Globalization;
 
 
 
@@ -15,10 +18,9 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
-        [BindProperty]
-        public int SliderValue1 { get; set; }
-        public int SliderValue2 { get; set; }
-        public bool CheckValue3 { get; set; }
+        public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
+        public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+        public Options currentSettings { get; set; }
 
         public class WeekModel
         {
@@ -45,6 +47,16 @@ namespace Calendar_Tracker.Pages
             HttpContext.Session.SetObject("Year", EditedYear);
 
             CalculateDate();
+
+            // Get the current time
+            //DateTime now = DateTime.Today;
+            // Convert Time to ID
+            //string Id = ID.DateToID(now);
+            // Retrieve or create a new DayNotes object
+            
+            currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+            LoadTrackers();
         }
 
         public void OnPost()
@@ -152,13 +164,78 @@ namespace Calendar_Tracker.Pages
 
             // Display Notes
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(todayID);
-            UI.DisplayNotes(retrievedNotes);
-
 
 
             HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
             HttpContext.Session.SetObject("todayID", todayID);
 
+            LoadTrackers();
+            //Cause html to regenerate trackers form
+        }
+
+        public void LoadTrackers()
+        {
+            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
+            int EditedDay = HttpContext.Session.GetObject<int>("Day");
+            int EditedYear = HttpContext.Session.GetObject<int>("Year");
+
+            DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
+
+            // Convert Time to ID
+            string Id = ID.DateToID(EditDate);
+
+            CalendarMap MyCalendar = HttpContext.Session.GetObject<CalendarMap>("MyStoredCalendar");
+
+            DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
+
+            // Retrieve or create a new DayNotes object
+            RetrievedNotes = MyCalendar.GetDayNotes(Id);
+
+            currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+            // Set Options from config file
+            Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
+            Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
+
+
+            // Populate TrackersValues or perform necessary initialization
+            TrackersValues = RetrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
+
+
+
+            // Iterate through all trackers and update settings and values
+            foreach (var (trackerId, trackerValues) in TrackersValues)
+            {
+                // Assuming you have corresponding properties in TrackerComponentData
+                var newTrackerData = new TrackerComponentData
+                {
+                    Id = trackerValues.Id,
+                    SliderValue = trackerValues.SliderValue,
+                    CheckboxValue = trackerValues.CheckboxValue,
+                    TextValue = trackerValues.TextValue,
+                    DropdownValue = trackerValues.DropdownValue,
+                    //ValueExists = trackerValues.ValueExists
+                };
+
+                if (RetrievedNotes.Exists)
+                {
+                    if (RetrievedNotes.TrackersData.TryGetValue(trackerValues.Id, out var existingTrackerData))
+                    {
+                        // Tracker already exists, update its values
+                        existingTrackerData.SliderValue = newTrackerData.SliderValue;
+                        existingTrackerData.CheckboxValue = newTrackerData.CheckboxValue;
+                        existingTrackerData.TextValue = newTrackerData.TextValue;
+                        existingTrackerData.DropdownValue = newTrackerData.DropdownValue;
+                        //existingTrackerData.ValueExists = newTrackerData.ValueExists;
+                    }
+                    else
+                    {
+                        // Tracker doesn't exist, add a new one
+                        RetrievedNotes.TrackersData.Add(trackerValues.Id, newTrackerData);
+                    }
+                }
+            }
+            Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
         }
 
         public IActionResult OnPostLoadSettings()
