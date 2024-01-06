@@ -198,10 +198,6 @@ namespace Calendar_Tracker.Pages
 
             // Display Notes
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(todayID);
-
-
-            HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
-            HttpContext.Session.SetObject("todayID", todayID);
         }
 
         public IActionResult OnPostLoadTrackers([FromBody] UpdateDateModel model)
