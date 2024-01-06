@@ -10,6 +10,7 @@ namespace Calendar_Tracker.Pages
     public class SettingsModel : PageModel
     {
         [BindProperty]
+        public string? GreetingValue { get; set; }
         public bool LongMonthNamesValue { get; set; }
 
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
@@ -21,6 +22,7 @@ namespace Calendar_Tracker.Pages
             Options currentSettings = Options.LoadFromFile("SettingsData.xml");
 
             // Set Options from config file
+            GreetingValue = currentSettings.GreetingOption;
             LongMonthNamesValue = currentSettings.LongMonthNamesOption;
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
             Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
@@ -33,6 +35,7 @@ namespace Calendar_Tracker.Pages
 
         public class FormData
         {
+            public string? GreetingValue { get; set; }
             public bool LongMonthNames { get; set; }
             public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         }
@@ -49,7 +52,8 @@ namespace Calendar_Tracker.Pages
             }
 
             Options currentSettings = new();
-            
+
+            currentSettings.GreetingOption = model.GreetingValue;
             currentSettings.LongMonthNamesOption = model.LongMonthNames;
             currentSettings.TrackersOption = model.Trackers;
 

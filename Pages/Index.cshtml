@@ -7,7 +7,7 @@
 
 
 <div class="text-center">
-    <h1>Hello Josh!</h1>
+    <h1>@Model.GreetingValue</h1>
     <b>
         <span>Today is </span>
         <span id="Month">@DateTime.Now.ToString("MMM")</span>
@@ -113,11 +113,11 @@
 
 <script>
     var urlSubmit = '@Url.Page("/Index", "Submit")';
-    var loadSettingsUrl = '@Url.Page("/Calendar", "LoadSettings")';
+    var loadSettingsUrl = '@Url.Page("/Index", "LoadSettings")';
 
     let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    //Setup Month Setting at start
+    // Setup Month Setting at start
     window.onload = function () {
         getLongMonthNamesSetting();
     }

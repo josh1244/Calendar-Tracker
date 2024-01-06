@@ -12,6 +12,7 @@ namespace Calendar_Tracker.Pages
     {
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+        public string? GreetingValue { get; set; }
 
         public void OnGet()
         {
@@ -29,6 +30,9 @@ namespace Calendar_Tracker.Pages
             DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
             Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+
+            // Setup Greeting
+            GreetingValue = currentSettings.GreetingOption;
 
             // Set Options from config file
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();

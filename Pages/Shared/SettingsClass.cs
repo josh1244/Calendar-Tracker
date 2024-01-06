@@ -11,15 +11,17 @@ public class Options // Class to manage the Options
     {
         public int Id { get; set; }
         public int Order { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
     }
 
+    public string? GreetingOption { get; set; }
     public bool LongMonthNamesOption { get; set; }
     public SerializableDictionary<int, TrackerData> TrackersOption { get; set; } = new SerializableDictionary<int, TrackerData>();
 
     public Options()
     {
+        GreetingOption = "Hello!";
         LongMonthNamesOption = false;
     }
 

@@ -15,7 +15,8 @@
 
         <div  class="form-container">
             <div class="text-column">
-                <!-- Text content goes here -->
+                <p>Greeting</p>
+
                 <p>Long Month Names</p>
 
                 <p>Add Tracker</p>
@@ -25,7 +26,11 @@
             </div>
 
             <div class="components-column">
-                 <!-- Components go here -->
+                <!-- Greeting -->
+                <div class="components-container">
+                    <input type="text" id="GreetingValue" name="GreetingValue" placeholder="Hello!" value="@Model.GreetingValue" />
+                </div>
+
                 <!-- Short/Long Month Names -->
                 <div class="components-container">
                     <input id="LongMonthNames" name="LongMonthNames" type="checkbox" asp-for="LongMonthNamesValue">
@@ -117,6 +122,13 @@
 
         // Handle the button click event
         $("#submitButton").click(function () {
+
+            // Check if GreetingValue is empty
+            if ($("#GreetingValue").val() === "") {
+                // Assign the placeholder value to GreetingValue
+                $("#GreetingValue").val($("#GreetingValue").attr("placeholder"));
+            }
+
             // Serialize the form data
             var formData = $("#myForm").serialize();
 

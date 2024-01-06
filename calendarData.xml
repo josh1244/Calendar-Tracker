@@ -54,7 +54,7 @@
                   <Id>6</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <TextValue>None yet.</TextValue>
+                  <TextValue>None yet</TextValue>
                 </TrackerComponentData>
               </value>
             </item>
