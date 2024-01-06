@@ -190,14 +190,6 @@
             });
         });
 
-        // Attach input event listeners for sliders
-        $("input[type='range']").on("input", function () {
-            var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
-            document.getElementById(trackerName + " Output").innerHTML = $(this).val();
-        });
-
-
-
         // Handle the button click event to add tracker fields
         $("#addTrackerButton").click(function () {
             @if (Model.Trackers != null && Model.Trackers.Any())

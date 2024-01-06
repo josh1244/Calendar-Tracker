@@ -260,10 +260,20 @@ function updateTable(response) {
                         // Additional logic to handle different tracker types and their values
                         switch (tracker.type) {
                             case "Slider":
-                                var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" value="' + (trackerData ? trackerData.sliderValue : 0) + '">');
-                                var sliderOutput = $('<output style="width: 30px;" id="' + tracker.name + ' Output">' + (trackerData ? trackerData.sliderValue : 0) + '</output>');
+                                var initialSliderValue = (trackerData && trackerData.sliderValue !== null) ? trackerData.sliderValue : 0;
+                                var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" value="' + initialSliderValue + '">');
+                                var sliderOutput = $('<output style="width: 30px;" id="' + tracker.name + ' Output">' + initialSliderValue + '</output>');
                                 trackerComponentsDiv.append(sliderInput);
                                 trackerComponentsDiv.append(sliderOutput);
+
+                                // Attach input event listener for the slider
+                                sliderInput.on("input", function () {
+                                    var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
+                                    var outputId = tracker.name + " Output";
+
+                                    // Update the value displayed next to the slider dynamically
+                                    document.getElementById(trackerName + " Output").innerHTML = $(this).val();
+                                });
                                 break;
 
                             case "Checkbox":
