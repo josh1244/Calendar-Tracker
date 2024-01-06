@@ -195,7 +195,7 @@ function updateTable(response) {
         }
 
         // If day is in a different month, then make it grey
-        console.log(Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)));
+        //console.log(Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)));
         if (Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)) >= 10 ) {
             cell.addClass('grey-cell');
         }
@@ -205,10 +205,114 @@ function updateTable(response) {
         newRow.append(cell);
     });
 
-    console.log("hello");
 
     // Append the new row to the table body
     tableBody.append(newRow);
+
+    //Update Trackers
+    // Update Trackers
+    $.ajax({
+        type: "POST",
+        url: LoadTrackersUrl,
+        data: JSON.stringify({
+            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
+            DayAJAX: parseInt(document.getElementById("editableDay").innerText.slice(0, -1)),
+            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
+        }),
+        contentType: 'application/json',
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+                // Use data.trackers and data.trackersData to dynamically generate HTML
+                if (data.trackers && Object.keys(data.trackers).length > 0 && data.trackersData) {
+                    // Clear existing content
+                    $('#trackersContainer').empty();
+
+                    // Loop through trackers and generate HTML for Tracker Text
+                    var trackerTextContainer = $('<div class="text-column">');
+                    Object.keys(data.trackers).forEach(function (trackerId) {
+                        var tracker = data.trackers[trackerId];
+
+                        var trackerTextDiv = $('<div>');
+                        var trackerTextIdInput = $('<input type="hidden" name="TrackersValues[' + trackerId + '].Id" class="tracker-id" value="' + tracker.id + '" />');
+                        var trackerTextParagraph = $('<p class="text-column">' + tracker.name + '</p>');
+
+                        // Append elements to the text container
+                        trackerTextDiv.append(trackerTextIdInput);
+                        trackerTextDiv.append(trackerTextParagraph);
+                        trackerTextContainer.append(trackerTextDiv);
+                    });
+
+                    // Append Tracker Text container to main container
+                    $('#trackersContainer').append(trackerTextContainer);
+
+                    // Loop through trackers and generate HTML for Tracker Components
+                    var trackerComponentsContainer = $('<div class="components-column">');
+                    Object.keys(data.trackers).forEach(function (trackerId) {
+                        var tracker = data.trackers[trackerId];
+                        var trackerData = data.trackersData[trackerId];
+
+                        var trackerComponentsDiv = $('<div class="components-container">');
+
+                        // Additional logic to handle different tracker types and their values
+                        switch (tracker.type) {
+                            case "Slider":
+                                var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" value="' + (trackerData ? trackerData.sliderValue : 0) + '">');
+                                var sliderOutput = $('<output style="width: 30px;" id="' + tracker.name + ' Output">' + (trackerData ? trackerData.sliderValue : 0) + '</output>');
+                                trackerComponentsDiv.append(sliderInput);
+                                trackerComponentsDiv.append(sliderOutput);
+                                break;
+
+                            case "Checkbox":
+                                // Check if checkboxValue is true, otherwise default to false
+                                var isChecked = (trackerData && trackerData.checkboxValue === true);
+                                var checkboxInput = $('<input type="checkbox" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].CheckboxValue">');
+
+                                // Set the 'checked' attribute based on the boolean value
+                                if (isChecked) {
+                                    checkboxInput.attr('checked', 'checked');
+                                }
+
+                                trackerComponentsDiv.append(checkboxInput);
+                                break;
+
+                            case "Text":
+                                // Check if textValue is null, display default text
+                                var textValue = (trackerData && trackerData.textValue !== null) ? trackerData.textValue : "";
+                                var textInput = $('<input type="text" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].TextValue" placeholder="Text" class="tracker-name" value="' + textValue + '">');
+                                trackerComponentsDiv.append(textInput);
+                                break;
+
+                            case "Dropdown":
+                                trackerComponentsDiv.append($('<p>Dropdown not implemented yet!</p>'));
+                                break;
+
+                            default:
+                                trackerComponentsDiv.append($('<p>Tracker type undefined.</p>'));
+                                break;
+                        }
+
+                        // Append Tracker Components div to the components container
+                        trackerComponentsContainer.append(trackerComponentsDiv);
+                    });
+
+                    // Append Tracker Components container to main container
+                    $('#trackersContainer').append(trackerComponentsContainer);
+                } else {
+                    // Handle case where no trackers are found
+                    $('#trackersContainer').html('<p>No trackers found.</p>');
+                }
+            } else {
+                console.error("Update failed.");
+            }
+        },
+        error: function (error) {
+            console.error("Error updating server", error);
+        }
+    });
 }
 
 function handleCellClick(index, selectedDay) {

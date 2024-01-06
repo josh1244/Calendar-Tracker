@@ -3,6 +3,311 @@
   <days>
     <item>
       <key>
+        <string>6-01-06-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Tuesday. I just edited this</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>0-12-31-2023</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Sunday 31</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>1-01-01-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Monday 1</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>2-01-02-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Tu 2</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>3-01-03-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Wed 3</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
         <string>4-01-04-2024</string>
       </key>
       <value>
@@ -16,7 +321,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>3</Id>
-                  <SliderValue>8</SliderValue>
+                  <SliderValue>0</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -28,7 +333,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>4</Id>
-                  <SliderValue>8</SliderValue>
+                  <SliderValue>0</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -41,7 +346,7 @@
                 <TrackerComponentData>
                   <Id>5</Id>
                   <SliderValue xsi:nil="true" />
-                  <CheckboxValue>true</CheckboxValue>
+                  <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
             </item>
@@ -54,32 +359,7 @@
                   <Id>6</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <TextValue>10 minutes of Rowing</TextValue>
-                </TrackerComponentData>
-              </value>
-            </item>
-            <item>
-              <key>
-                <int>7</int>
-              </key>
-              <value>
-                <TrackerComponentData>
-                  <Id>7</Id>
-                  <SliderValue xsi:nil="true" />
-                  <CheckboxValue>true</CheckboxValue>
-                </TrackerComponentData>
-              </value>
-            </item>
-            <item>
-              <key>
-                <int>8</int>
-              </key>
-              <value>
-                <TrackerComponentData>
-                  <Id>8</Id>
-                  <SliderValue xsi:nil="true" />
-                  <CheckboxValue xsi:nil="true" />
-                  <TextValue>Wow!</TextValue>
+                  <TextValue>Thur4</TextValue>
                 </TrackerComponentData>
               </value>
             </item>
@@ -89,7 +369,7 @@
     </item>
     <item>
       <key>
-        <string>5-01-05-2024</string>
+        <string>0-02-04-2024</string>
       </key>
       <value>
         <DayNotes>
@@ -102,7 +382,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>3</Id>
-                  <SliderValue>2</SliderValue>
+                  <SliderValue>0</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -114,7 +394,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>4</Id>
-                  <SliderValue>4</SliderValue>
+                  <SliderValue>0</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -127,7 +407,7 @@
                 <TrackerComponentData>
                   <Id>5</Id>
                   <SliderValue xsi:nil="true" />
-                  <CheckboxValue>true</CheckboxValue>
+                  <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
             </item>
@@ -140,19 +420,129 @@
                   <Id>6</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <TextValue>None</TextValue>
+                  <TextValue>Sun 6</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>1-02-05-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
             </item>
             <item>
               <key>
-                <int>7</int>
+                <int>4</int>
               </key>
               <value>
                 <TrackerComponentData>
-                  <Id>7</Id>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
                   <SliderValue xsi:nil="true" />
-                  <CheckboxValue>true</CheckboxValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Mon 5</TextValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+    <item>
+      <key>
+        <string>2-02-06-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>0</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <TextValue>Tues 6</TextValue>
                 </TrackerComponentData>
               </value>
             </item>

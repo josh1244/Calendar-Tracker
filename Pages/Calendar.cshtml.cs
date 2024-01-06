@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using static Options;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Reflection;
 
 
 
@@ -21,6 +22,7 @@ namespace Calendar_Tracker.Pages
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
         public Options currentSettings { get; set; }
+
 
         public class WeekModel
         {
@@ -41,7 +43,6 @@ namespace Calendar_Tracker.Pages
             int EditedDay = DateTime.Now.Day;
             int EditedYear = DateTime.Now.Year;
 
-
             HttpContext.Session.SetObject("Month", EditedMonth);
             HttpContext.Session.SetObject("Day", EditedDay);
             HttpContext.Session.SetObject("Year", EditedYear);
@@ -56,7 +57,7 @@ namespace Calendar_Tracker.Pages
             
             currentSettings = Options.LoadFromFile("SettingsData.xml");
 
-            LoadTrackers();
+            //LoadTrackers(new DateTime(EditedYear, EditedMonth, EditedDay));
         }
 
         public void OnPost()
@@ -110,6 +111,95 @@ namespace Calendar_Tracker.Pages
             return new JsonResult(new { success = true, message = "Update successful", days = CurrentWeekDays });
         }
 
+        public class FormData
+        {
+            public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+        }
+        public IActionResult OnPostSubmit([FromForm] FormData model)
+        {
+            Console.WriteLine("OnPostSubmit method executed.");
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var modelStateValue in ModelState.Values)
+                {
+                    foreach (var error in modelStateValue.Errors)
+                    {
+                        // Log or print the error messages
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+
+                // Handle the errors or return an error response
+                return BadRequest(ModelState);
+            }
+
+            // Output received data to the console for debugging
+            //Console.WriteLine($"Received FormData: {JsonConvert.SerializeObject(model.TrackersValues)}");
+
+            Console.WriteLine("Loading from file...");
+            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
+
+
+            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
+            int EditedDay = HttpContext.Session.GetObject<int>("Day");
+            int EditedYear = HttpContext.Session.GetObject<int>("Year");
+
+            DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
+
+            // Convert Time to ID
+            string Id = ID.DateToID(EditDate);
+
+            Console.WriteLine(Id);
+
+            // Retrieve or create a new DayNotes object
+            DayNotes note = MyCalendar.GetDayNotes(Id);
+
+            // Update Note in calendar
+            if (model != null && model.TrackersValues != null && note != null && note.TrackersData != null)
+            {
+                note.Exists = true;
+
+                foreach (var trackerData in model.TrackersValues.Values)
+                {
+                    if (note.TrackersData.TryGetValue(trackerData.Id, out var existingTrackerData))
+                    {
+                        // Debugging output
+                        Console.WriteLine($"Updating tracker with Id {trackerData.Id}");
+
+                        // Tracker already exists, update its values
+                        existingTrackerData.SliderValue = trackerData.SliderValue;
+                        existingTrackerData.CheckboxValue = trackerData.CheckboxValue;
+                        existingTrackerData.TextValue = trackerData.TextValue;
+                        existingTrackerData.DropdownValue = trackerData.DropdownValue;
+                    }
+                    else
+                    {
+                        // Tracker not found, create a new entry
+                        note.TrackersData[trackerData.Id] = trackerData;
+
+                        // Debugging output
+                        Console.WriteLine($"Created a new tracker with Id {trackerData.Id}");
+                    }
+                }
+            }
+
+            // Update MyCalendar
+            CalendarMap newCalendar = MyCalendar;
+            newCalendar.AddDay(Id, note);
+
+            // Save to file
+            Console.Write("Saving to file...");
+            CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
+            Console.WriteLine("Save complete.");
+
+            // Log values for debugging
+            //Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
+            //Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
+
+            return new JsonResult(new { success = true, message = "Form submitted successfully" });
+        }
+
         public void NextWeek(int days)
         {
             int EditedMonth = HttpContext.Session.GetObject<int>("Month");
@@ -128,8 +218,6 @@ namespace Calendar_Tracker.Pages
             HttpContext.Session.SetObject("Month", EditedMonth);
             HttpContext.Session.SetObject("Day", EditedDay);
             HttpContext.Session.SetObject("Year", EditedYear);
-
-
         }
 
         public void CalculateDate()
@@ -169,15 +257,23 @@ namespace Calendar_Tracker.Pages
             HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
             HttpContext.Session.SetObject("todayID", todayID);
 
-            LoadTrackers();
+            //LoadTrackers();
             //Cause html to regenerate trackers form
+            // Reload trackers based on the updated date
+            //LoadTrackers(new DateTime(EditedYear, EditedMonth, EditedDay));
         }
 
-        public void LoadTrackers()
+        public IActionResult OnPostLoadTrackers([FromBody] UpdateDateModel model)
         {
-            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
-            int EditedDay = HttpContext.Session.GetObject<int>("Day");
-            int EditedYear = HttpContext.Session.GetObject<int>("Year");
+            Console.WriteLine("OnPostLoadTrackers");
+
+            int EditedMonth = model.MonthAJAX;
+            int EditedDay = model.DayAJAX;
+            int EditedYear = model.YearAJAX;
+
+            //int EditedMonth = HttpContext.Session.GetObject<int>("Month");
+            //int EditedDay = HttpContext.Session.GetObject<int>("Day");
+            //int EditedYear = HttpContext.Session.GetObject<int>("Year");
 
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
 
@@ -195,7 +291,7 @@ namespace Calendar_Tracker.Pages
 
             // Set Options from config file
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
-            Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
+            //Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
 
 
             // Populate TrackersValues or perform necessary initialization
@@ -235,7 +331,21 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-            Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
+            //Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
+
+
+
+            Console.WriteLine("Pretend Trackers Updated------------------------------------------");
+            //return new JsonResult(new { success = true, message = "Update successful" });
+
+            // Return only the necessary data for dynamic HTML generation
+            return new JsonResult(new
+            {
+                success = true,
+                message = "Update successful",
+                trackers = Trackers,
+                trackersData = RetrievedNotes.TrackersData
+            });
         }
 
         public IActionResult OnPostLoadSettings()

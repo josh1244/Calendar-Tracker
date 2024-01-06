@@ -60,7 +60,7 @@
 <div class="center-container">
     <form id="myForm" method="post">
         @Html.AntiForgeryToken()
-        <div class="form-container">
+        <div id="trackersContainer" class="form-container">
             <!--  Tracker Text -->
             <div class="text-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
@@ -79,7 +79,7 @@
                 }
                 else
                 {
-                    <p>No trackers found.</p>
+                    <p>Loading</p>
                 }
             </div>
 
@@ -138,7 +138,7 @@
                 }
                 else
                 {
-                    <p>No trackers found.</p>
+                    <p>Loading</p>
                 }
             </div>
         </div>
@@ -150,12 +150,13 @@
     </form>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+    let trackerCount = 1;
     var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")'
     var nextWeekUrl = '@Url.Page("/Calendar", "NextWeek")';
-    var urlSubmit = '@Url.Page("/Index", "Submit")';
+    var LoadTrackersUrl = '@Url.Page("/Calendar", "LoadTrackers")';
+    var urlSubmit = '@Url.Page("/Calendar", "Submit")';
     var loadSettingsUrl = '@Url.Page("/Calendar", "LoadSettings")';
 
     $(document).ready(function () {
@@ -195,6 +196,50 @@
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
         });
 
+
+
+        // Handle the button click event to add tracker fields
+        $("#addTrackerButton").click(function () {
+            @if (Model.Trackers != null && Model.Trackers.Any())
+            {
+                for (int i = 0; i < Model.Trackers.Count; i++)
+                {
+                    var tracker = Model.Trackers[i];
+
+                    <text>
+                        // JavaScript code here
+                        var trackerCount = @i; // Inject C# loop variable into JavaScript
+                        var trackerName = "@tracker.Name"; // Inject C# tracker name into JavaScript
+                        var trackerId = "@tracker.Id"; // Inject C# tracker Id into JavaScript
+
+                        // Your JavaScript logic using the injected variables
+                        // Increment trackerCount and use other injected variables
+                        trackerCount++;
+
+                        var trackerTextColumn = $('<div class="text-column">');
+                        var trackerTextId = $('<input type="hidden" name="TrackersValues[' + trackerCount + '].Id" class="tracker-id" value="' + trackerId + '" />');
+                        var trackerTextName = $('<p class="text-column">' + trackerName + '</p>');
+                        var trackerTextColumnEnd = $('</div>');
+
+                        // Append the new fields to the container
+                        var trackerFieldsContainer = $('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
+                        trackerFieldsContainer.append(trackerTextColumn);
+                        trackerFieldsContainer.append(trackerTextId);
+                        trackerFieldsContainer.append(trackerTextName);
+                        trackerFieldsContainer.append(trackerTextColumnEnd);
+
+                        $("#trackersContainer").append(trackerFieldsContainer);
+                    </text>
+                }
+            }
+        });
+
+
+
+
+
+
+
         // Handle Ctrl+S keypress event
         $(document).keydown(function (e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -207,61 +252,3 @@
     });
 </script>
 <script src="~/js/calendar.js"></script>
-
-
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        justify-content: center;
-    }
-
-    th, td {
-        border: 1px solid black;
-        padding: 8px;
-        text-align: center;
-        justify-content: center;
-    }
-    th {
-        background-color: #f2f2f2;
-        width: 14.28%; /* Set width to distribute evenly across 7 days */
-    }
-    .l-triangle-btn, .r-triangle-btn {
-        position: relative;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        cursor: pointer;
-    }
-    .l-triangle-btn {
-        margin-right: 10px;
-        border-width: 20px 30px 20px 0;
-        border-color: transparent #007bff transparent transparent;
-    }
-    .r-triangle-btn {
-        margin-left: 10px;
-        border-width: 20px 0 20px 30px;
-        border-color: transparent transparent transparent #007bff;
-    }
-    .table-buttons {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; 
-        width: 100%; /* Ensure that the .components-column takes up the full width */
-        flex-grow: 1;
-    }
-    #table-container {
-        flex-grow: 1;
-    }
-    .selected-cell {
-        /*Could be customizable*/
-        background-color: #aedcf3;
-        border: 1px solid black;
-    }
-    .grey-cell {
-        /*Could be customizable*/
-        background-color: #dee8fa;
-        border: 1px solid black;
-    }
-</style>
-

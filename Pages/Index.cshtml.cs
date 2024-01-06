@@ -32,7 +32,7 @@ namespace Calendar_Tracker.Pages
 
             // Set Options from config file
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
-            Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
+            //Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
 
 
             // Populate TrackersValues or perform necessary initialization
@@ -72,7 +72,7 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-            Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
+            //Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
             
         }
 
