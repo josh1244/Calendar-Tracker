@@ -1,18 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using static Calendar;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.Extensions.Configuration;
 using static Options;
-using Newtonsoft.Json;
-using System.Globalization;
-using System.Reflection;
-
-
 
 
 namespace Calendar_Tracker.Pages
@@ -21,8 +10,12 @@ namespace Calendar_Tracker.Pages
     {
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
-        public Options currentSettings { get; set; }
+        public Options? currentSettings { get; set; }
 
+        private static CalendarMap? MyCalendar;
+        private static int EditedMonth;
+        private static int EditedDay;
+        private static int EditedYear;
 
         public class WeekModel
         {
@@ -35,29 +28,17 @@ namespace Calendar_Tracker.Pages
             Console.WriteLine("OnGet method executed.");
 
             // Load Calendar data
-            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
-            HttpContext.Session.SetObject("MyStoredCalendar", MyCalendar);
+            MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
-
-            int EditedMonth = DateTime.Now.Month;
-            int EditedDay = DateTime.Now.Day;
-            int EditedYear = DateTime.Now.Year;
-
-            HttpContext.Session.SetObject("Month", EditedMonth);
-            HttpContext.Session.SetObject("Day", EditedDay);
-            HttpContext.Session.SetObject("Year", EditedYear);
+            Console.WriteLine(EditedYear);
+            EditedMonth = DateTime.Now.Month;
+            EditedDay = DateTime.Now.Day;
+            EditedYear = DateTime.Now.Year;
+            Console.WriteLine(EditedYear);
 
             CalculateDate();
 
-            // Get the current time
-            //DateTime now = DateTime.Today;
-            // Convert Time to ID
-            //string Id = ID.DateToID(now);
-            // Retrieve or create a new DayNotes object
-            
             currentSettings = Options.LoadFromFile("SettingsData.xml");
-
-            //LoadTrackers(new DateTime(EditedYear, EditedMonth, EditedDay));
         }
 
         public void OnPost()
@@ -87,9 +68,9 @@ namespace Calendar_Tracker.Pages
             {
                 success = true,
                 message = "Update successful",
-                month = HttpContext.Session.GetObject<int>("Month"),
-                day = HttpContext.Session.GetObject<int>("Day"),
-                year = HttpContext.Session.GetObject<int>("Year"),
+                month = EditedMonth,
+                day = EditedDay,
+                year = EditedYear,
                 days = CurrentWeekDays
             }); //Return new data for date display
         }
@@ -98,13 +79,9 @@ namespace Calendar_Tracker.Pages
         {
             Console.WriteLine("OnPostUpdateDate method executed.");
 
-            int EditedMonth = model.MonthAJAX;
-            int EditedDay = model.DayAJAX;
-            int EditedYear = model.YearAJAX;
-
-            HttpContext.Session.SetObject("Month", EditedMonth);
-            HttpContext.Session.SetObject("Day", EditedDay);
-            HttpContext.Session.SetObject("Year", EditedYear);
+            EditedMonth = model.MonthAJAX;
+            EditedDay = model.DayAJAX;
+            EditedYear = model.YearAJAX;
 
             CalculateDate();
 
@@ -133,17 +110,6 @@ namespace Calendar_Tracker.Pages
                 // Handle the errors or return an error response
                 return BadRequest(ModelState);
             }
-
-            // Output received data to the console for debugging
-            //Console.WriteLine($"Received FormData: {JsonConvert.SerializeObject(model.TrackersValues)}");
-
-            Console.WriteLine("Loading from file...");
-            CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
-
-
-            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
-            int EditedDay = HttpContext.Session.GetObject<int>("Day");
-            int EditedYear = HttpContext.Session.GetObject<int>("Year");
 
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
 
@@ -193,45 +159,26 @@ namespace Calendar_Tracker.Pages
             CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
             Console.WriteLine("Save complete.");
 
-            // Log values for debugging
-            //Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
-            //Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
-
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
 
         public void NextWeek(int days)
         {
-            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
-            int EditedDay = HttpContext.Session.GetObject<int>("Day");
-            int EditedYear = HttpContext.Session.GetObject<int>("Year");
-
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
-
 
             DateTime newWeek = EditDate.AddDays(days);
 
             EditedMonth = newWeek.Month;
             EditedDay = newWeek.Day;
             EditedYear = newWeek.Year;
-
-            HttpContext.Session.SetObject("Month", EditedMonth);
-            HttpContext.Session.SetObject("Day", EditedDay);
-            HttpContext.Session.SetObject("Year", EditedYear);
         }
 
         public void CalculateDate()
         {
             Console.WriteLine($"CalculateDate executed.");
 
-            CalendarMap MyCalendar = HttpContext.Session.GetObject<CalendarMap>("MyStoredCalendar");
-            MyCalendar ??= CalendarMap.LoadFromFile("CalendarData.xml"); // if null. Shouldnt be needed
-
-            int EditedMonth = HttpContext.Session.GetObject<int>("Month");
-            int EditedDay = HttpContext.Session.GetObject<int>("Day");
-            int EditedYear = HttpContext.Session.GetObject<int>("Year");
-
             // Convert Time to ID
+            Console.WriteLine(EditedYear);
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
             string todayID = ID.DateToID(EditDate);
 
@@ -242,7 +189,6 @@ namespace Calendar_Tracker.Pages
             CurrentWeekDays = Enumerable.Range(0, 7)
                 .Select(i => (int)EditDate.AddDays(i - dayOfWeek).Day)
                 .ToArray();
-
 
             Console.WriteLine("ID of today is " + todayID);
             ViewData["todayID"] = todayID;
@@ -256,31 +202,20 @@ namespace Calendar_Tracker.Pages
 
             HttpContext.Session.SetObject("retrievedNotes", retrievedNotes);
             HttpContext.Session.SetObject("todayID", todayID);
-
-            //LoadTrackers();
-            //Cause html to regenerate trackers form
-            // Reload trackers based on the updated date
-            //LoadTrackers(new DateTime(EditedYear, EditedMonth, EditedDay));
         }
 
         public IActionResult OnPostLoadTrackers([FromBody] UpdateDateModel model)
         {
             Console.WriteLine("OnPostLoadTrackers");
 
-            int EditedMonth = model.MonthAJAX;
-            int EditedDay = model.DayAJAX;
-            int EditedYear = model.YearAJAX;
-
-            //int EditedMonth = HttpContext.Session.GetObject<int>("Month");
-            //int EditedDay = HttpContext.Session.GetObject<int>("Day");
-            //int EditedYear = HttpContext.Session.GetObject<int>("Year");
+            EditedMonth = model.MonthAJAX;
+            EditedDay = model.DayAJAX;
+            EditedYear = model.YearAJAX;
 
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
 
             // Convert Time to ID
             string Id = ID.DateToID(EditDate);
-
-            CalendarMap MyCalendar = HttpContext.Session.GetObject<CalendarMap>("MyStoredCalendar");
 
             DayNotes RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
@@ -310,7 +245,6 @@ namespace Calendar_Tracker.Pages
                     CheckboxValue = trackerValues.CheckboxValue,
                     TextValue = trackerValues.TextValue,
                     DropdownValue = trackerValues.DropdownValue,
-                    //ValueExists = trackerValues.ValueExists
                 };
 
                 if (RetrievedNotes.Exists)
@@ -322,7 +256,6 @@ namespace Calendar_Tracker.Pages
                         existingTrackerData.CheckboxValue = newTrackerData.CheckboxValue;
                         existingTrackerData.TextValue = newTrackerData.TextValue;
                         existingTrackerData.DropdownValue = newTrackerData.DropdownValue;
-                        //existingTrackerData.ValueExists = newTrackerData.ValueExists;
                     }
                     else
                     {
@@ -331,9 +264,6 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-            //Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
-
-
 
             Console.WriteLine("Pretend Trackers Updated------------------------------------------");
             //return new JsonResult(new { success = true, message = "Update successful" });
