@@ -256,14 +256,20 @@ function updateTable(response) {
                         switch (tracker.type) {
                             case "Slider":
                                 var initialSliderValue = (trackerData && trackerData.sliderValue !== null) ? trackerData.sliderValue : "";
-                                var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" value="' + initialSliderValue + '">');
+                                var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" class="tracker-component" value="' + initialSliderValue + '">');
                                 var sliderOutput = $('<output style="width: 30px;" id="' + tracker.name + ' Output">' + initialSliderValue + '</output>');
+
+                                if (!initialSliderValue) {
+                                    sliderInput.addClass("grayout");
+                                }
 
                                 trackerComponentsDiv.append(sliderInput);
                                 trackerComponentsDiv.append(sliderOutput);
 
                                 // Attach input event listener for the slider
                                 sliderInput.on("input", function () {
+                                    $(this).removeClass("grayout");
+
                                     var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
                                     var outputId = tracker.name + " Output";
 
