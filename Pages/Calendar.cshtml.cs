@@ -8,9 +8,9 @@ namespace Calendar_Tracker.Pages
 {
     public class CalendarModel : PageModel
     {
-        public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
-        public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
-        public Options? currentSettings { get; set; }
+        public SerializableDictionary<int, TrackerData> Trackers { get; set; } = [];
+        public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = [];
+        public Options? CurrentSettings { get; set; }
 
         private static CalendarMap? MyCalendar;
         private static int EditedMonth;
@@ -25,26 +25,18 @@ namespace Calendar_Tracker.Pages
         public int[] CurrentWeekDays { get; set; } = new int[7];
         public void OnGet()
         {
-            Console.WriteLine("OnGet method executed.");
-
             // Load Calendar data
             MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
-            Console.WriteLine(EditedYear);
             EditedMonth = DateTime.Now.Month;
             EditedDay = DateTime.Now.Day;
             EditedYear = DateTime.Now.Year;
-            Console.WriteLine(EditedYear);
 
             CalculateDate();
 
-            currentSettings = Options.LoadFromFile("SettingsData.xml");
+            CurrentSettings = Options.LoadFromFile("SettingsData.xml");
         }
 
-        public void OnPost()
-        {
-            Console.WriteLine("OnPost method executed.");
-        }
 
         public class UpdateDateModel
         {
@@ -59,8 +51,6 @@ namespace Calendar_Tracker.Pages
         }
         public IActionResult OnPostNextWeek([FromBody] NextWeekModel model)
         {
-            Console.WriteLine("OnPostNextWeek method executed.");
-
             NextWeek(model.Days); //Add or remove one week from current day
             CalculateDate(); // Update Date
 
@@ -77,8 +67,6 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
         {
-            Console.WriteLine("OnPostUpdateDate method executed.");
-
             EditedMonth = model.MonthAJAX;
             EditedDay = model.DayAJAX;
             EditedYear = model.YearAJAX;
@@ -90,12 +78,10 @@ namespace Calendar_Tracker.Pages
 
         public class FormData
         {
-            public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
+            public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = [];
         }
         public IActionResult OnPostSubmit([FromForm] FormData model)
         {
-            Console.WriteLine("OnPostSubmit method executed.");
-
             if (!ModelState.IsValid)
             {
                 foreach (var modelStateValue in ModelState.Values)
@@ -130,9 +116,6 @@ namespace Calendar_Tracker.Pages
                 {
                     if (note.TrackersData.TryGetValue(trackerData.Id, out var existingTrackerData))
                     {
-                        // Debugging output
-                        Console.WriteLine($"Updating tracker with Id {trackerData.Id}");
-
                         // Tracker already exists, update its values
                         existingTrackerData.SliderValue = trackerData.SliderValue;
                         existingTrackerData.CheckboxValue = trackerData.CheckboxValue;
@@ -143,9 +126,6 @@ namespace Calendar_Tracker.Pages
                     {
                         // Tracker not found, create a new entry
                         note.TrackersData[trackerData.Id] = trackerData;
-
-                        // Debugging output
-                        Console.WriteLine($"Created a new tracker with Id {trackerData.Id}");
                     }
                 }
             }
@@ -155,9 +135,7 @@ namespace Calendar_Tracker.Pages
             newCalendar.AddDay(Id, note);
 
             // Save to file
-            Console.Write("Saving to file...");
             CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
-            Console.WriteLine("Save complete.");
 
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
@@ -175,10 +153,7 @@ namespace Calendar_Tracker.Pages
 
         public void CalculateDate()
         {
-            Console.WriteLine($"CalculateDate executed.");
-
             // Convert Time to ID
-            Console.WriteLine(EditedYear);
             DateTime EditDate = new(EditedYear, EditedMonth, EditedDay);
             string todayID = ID.DateToID(EditDate);
 
@@ -190,11 +165,8 @@ namespace Calendar_Tracker.Pages
                 .Select(i => (int)EditDate.AddDays(i - dayOfWeek).Day)
                 .ToArray();
 
-            Console.WriteLine("ID of today is " + todayID);
+            //Console.WriteLine("ID of today is " + todayID);
             ViewData["todayID"] = todayID;
-
-            // Draw Calendar
-            //UI.DrawCalendar(todayID);
 
             // Display Notes
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(todayID);
@@ -202,8 +174,6 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostLoadTrackers([FromBody] UpdateDateModel model)
         {
-            Console.WriteLine("OnPostLoadTrackers");
-
             EditedMonth = model.MonthAJAX;
             EditedDay = model.DayAJAX;
             EditedYear = model.YearAJAX;
@@ -218,17 +188,13 @@ namespace Calendar_Tracker.Pages
             // Retrieve or create a new DayNotes object
             RetrievedNotes = MyCalendar.GetDayNotes(Id);
 
-            currentSettings = Options.LoadFromFile("SettingsData.xml");
+            CurrentSettings = Options.LoadFromFile("SettingsData.xml");
 
             // Set Options from config file
-            Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
-            //Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
-
+            Trackers = CurrentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
 
             // Populate TrackersValues or perform necessary initialization
             TrackersValues = RetrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
-
-
 
             // Iterate through all trackers and update settings and values
             foreach (var (trackerId, trackerValues) in TrackersValues)
@@ -260,9 +226,6 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-
-            Console.WriteLine("Pretend Trackers Updated------------------------------------------");
-            //return new JsonResult(new { success = true, message = "Update successful" });
 
             // Return only the necessary data for dynamic HTML generation
             return new JsonResult(new

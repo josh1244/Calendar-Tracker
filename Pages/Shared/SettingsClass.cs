@@ -68,7 +68,6 @@ public class Options // Class to manage the Options
                 Console.WriteLine($"Error deserializing from file: {ex.Message}");
                 return new Options();
             }
-
         }
     }
 

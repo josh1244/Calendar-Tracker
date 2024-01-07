@@ -4,8 +4,6 @@
     ViewData["Title"] = "Josh's Calendar Tracker";
 }
 
-
-
 <div class="text-center">
     <h1>@Model.GreetingValue</h1>
     <b>
@@ -24,15 +22,14 @@
             <div class="text-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-
                     for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
                         {
-                                        <div>
-                                            <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
-                                            <p class="text-column">@tracker.Name</p>
-                                        </div>
+                            <div>
+                                <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
+                                <p class="text-column">@tracker.Name</p>
+                            </div>
                         }
                     }
                 }
@@ -46,7 +43,6 @@
             <div class="components-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-
                     for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
@@ -75,9 +71,7 @@
 
                                 case "Text":
                                     <div class="components-container">
-                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-name" value="@trackerTextValue" />
-                                    
-                                        
+                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-textbox" value="@trackerTextValue" />
                                     </div>
                                     break;
 
@@ -110,7 +104,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <script>
     var urlSubmit = '@Url.Page("/Index", "Submit")';
     var loadSettingsUrl = '@Url.Page("/Index", "LoadSettings")';
@@ -138,9 +131,6 @@
             // Serialize the form data
             var formData = $("#myForm").serialize();
 
-
-            console.log("Form Data: " + JSON.stringify(formData));
-
             // Send an AJAX request to the server
             $.ajax({
                 type: "POST",
@@ -157,8 +147,7 @@
             });
         });
 
-
-         // Attach input event listeners for sliders
+        // Attach input event listeners for sliders
         $("input[type='range']").on("input", function () {
             var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
@@ -205,42 +194,3 @@
         });
     }
 </script>
-
-
-<style>
-    .text-center {
-        align-items: start;
-        justify-content: center;
-    }
-
-    .center-container {
-        display: flex;
-        align-items: start;
-        justify-content: center;
-        margin: 0; /* Remove default margin */
-    }
-
-    .form-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .text-column {
-        text-align: left;
-        margin-right: 20px; /* Adjust margin between columns */
-    }
-
-    .components-column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .components-container {
-        width: 100%;
-        margin-bottom: 15px; /* Adjust spacing between containers */
-        text-align: center;
-        vertical-align: middle;
-    }
-</style>

@@ -15,9 +15,7 @@ namespace Calendar_Tracker.Pages
         public string? GreetingValue { get; set; }
 
         public void OnGet()
-        {
-            Console.WriteLine("OnGet method executed.");
-            
+        {            
             CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
             // Get the current time
@@ -36,14 +34,10 @@ namespace Calendar_Tracker.Pages
 
             // Set Options from config file
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
-            //Console.WriteLine($"Loaded Trackers: {JsonConvert.SerializeObject(Trackers)}");
-
 
             // Populate TrackersValues or perform necessary initialization
             TrackersValues = RetrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
 
-            
-            
             // Iterate through all trackers and update settings and values
             foreach (var (trackerId, trackerValues) in TrackersValues)
             {
@@ -55,7 +49,6 @@ namespace Calendar_Tracker.Pages
                     CheckboxValue = trackerValues.CheckboxValue,
                     TextValue = trackerValues.TextValue,
                     DropdownValue = trackerValues.DropdownValue,
-                    //ValueExists = trackerValues.ValueExists
                 };
 
                 if (RetrievedNotes.Exists)
@@ -67,7 +60,6 @@ namespace Calendar_Tracker.Pages
                         existingTrackerData.CheckboxValue = newTrackerData.CheckboxValue;
                         existingTrackerData.TextValue = newTrackerData.TextValue;
                         existingTrackerData.DropdownValue = newTrackerData.DropdownValue;
-                        //existingTrackerData.ValueExists = newTrackerData.ValueExists;
                     }
                     else
                     {
@@ -76,13 +68,6 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-            //Console.WriteLine($"Loaded TrackersValues: {JsonConvert.SerializeObject(RetrievedNotes.TrackersData)}");
-            
-        }
-
-        public void OnPost()
-        {
-            Console.WriteLine("OnPost method executed.");
         }
 
         public class FormData
@@ -108,10 +93,6 @@ namespace Calendar_Tracker.Pages
                 return BadRequest(ModelState);
             }
 
-            // Output received data to the console for debugging
-            Console.WriteLine($"Received FormData: {JsonConvert.SerializeObject(model.TrackersValues)}");
-
-         
             CalendarMap MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
 
             // Get the current time
@@ -132,9 +113,6 @@ namespace Calendar_Tracker.Pages
                 {
                     if (note.TrackersData.TryGetValue(trackerData.Id, out var existingTrackerData))
                     {
-                        // Debugging output
-                        Console.WriteLine($"Updating tracker with Id {trackerData.Id}");
-
                         // Tracker already exists, update its values
                         existingTrackerData.SliderValue = trackerData.SliderValue;
                         existingTrackerData.CheckboxValue = trackerData.CheckboxValue;
@@ -157,14 +135,8 @@ namespace Calendar_Tracker.Pages
             newCalendar.AddDay(Id, note);
 
             // Save to file
-            Console.Write("Saving to file...");
             CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
-            Console.WriteLine("Save complete.");
 
-            // Log values for debugging
-            Console.WriteLine($"note: {JsonConvert.SerializeObject(note)}");
-            Console.WriteLine($"newCalendar: {JsonConvert.SerializeObject(newCalendar)}");
-            
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
 

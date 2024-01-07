@@ -28,7 +28,7 @@
             <div class="components-column">
                 <!-- Greeting -->
                 <div class="components-container">
-                    <input type="text" id="GreetingValue" name="GreetingValue" placeholder="Hello!" value="@Model.GreetingValue" />
+                    <input type="text" id="GreetingValue" name="GreetingValue" class="tracker-name" placeholder="Hello!" value="@Model.GreetingValue" />
                 </div>
 
                 <!-- Short/Long Month Names -->
@@ -47,7 +47,10 @@
             </div>
         </div>
 
-       
+        <div class="center-container">
+            <b>Trackers</b>
+        </div>
+
         <!--  Trackers -->
         <div>
             @if (Model.Trackers != null && Model.Trackers.Any())
@@ -69,8 +72,6 @@
 
                                 
                                 <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
-                                
-                                
                             </div>
                     }
                 }
@@ -80,8 +81,6 @@
             <p>No trackers found.</p>
             }
         </div>
-
-
 
         <!-- Tracker Name and Tracker Type pairs -->
         <div class="tracker-container" id="trackerNameAndType">
@@ -96,11 +95,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <script>
     var urlSubmit = '@Url.Page("/Settings", "Submit")';
-
-    
 
     function removeTracker(currentTrackerCount) {
         return function () {
@@ -198,67 +194,3 @@
     });
 </script>
 
-
-
-
-<style>
-    .text-center {
-        align-items: start;
-        justify-content: center;
-    }
-
-    .center-container {
-        display: flex;
-        align-items: start;
-        justify-content: center;
-        margin: 0; /* Remove default margin */
-    }
-
-    .form-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .text-column {
-        text-align: left;
-        margin-right: 20px; /* Adjust margin between columns */
-    }
-
-    .components-column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .components-container {
-        width: 100%;
-        margin-bottom: 15px; /* Adjust spacing between containers */
-        text-align: center;
-        vertical-align: middle;
-    }
-
-
-    .tracker-container {
-        width: 100%;
-        margin-bottom: 15px;
-        text-align: center;
-        vertical-align: middle;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .tracker-name {
-        width: 50%; /* Adjust the width as needed */
-        margin-left: 10px;
-        margin-right: 10px; /* Adjust the margin for spacing between name and select */
-    }
-
-    .tracker-select {
-        align-items: center;
-    }
-
-    .small-btn {
-        margin:10px;
-    }
-</style>

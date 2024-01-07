@@ -65,7 +65,6 @@
             <div class="text-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-
                     for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
@@ -87,7 +86,6 @@
             <div class="components-column">
                 @if (Model.Trackers != null && Model.Trackers.Any())
                 {
-
                     for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
@@ -103,30 +101,24 @@
                                     <div class="components-container">
                                         <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" value="@trackerSliderValue">
                                         <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
-
                                     </div>
                                     break;
 
                                 case "Checkbox":
                                     <div class="components-container">
                                         <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" checked="@(trackerCheckboxValue ?? false)" />
-
                                     </div>
                                     break;
 
                                 case "Text":
                                     <div class="components-container">
-                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-name" value="@trackerTextValue" />
-
-
+                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-textbox" value="@trackerTextValue" />
                                     </div>
                                     break;
 
                                 case "Dropdown":
                                     <div class="components-container">
                                         <p>Dropdown not implemented yet!</p>
-
-
                                     </div>
                                     break;
                                 default:
@@ -225,12 +217,6 @@
                 }
             }
         });
-
-
-
-
-
-
 
         // Handle Ctrl+S keypress event
         $(document).keydown(function (e) {

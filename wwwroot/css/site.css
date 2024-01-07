@@ -117,3 +117,37 @@ th {
     background-color: #dee8fa;
     border: 1px solid black;
 }
+
+.tracker-container {
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracker-name {
+    width: 50%; /* Adjust the width as needed */
+    margin-left: 10px;
+    margin-right: 10px; /* Adjust the margin for spacing between name and select */
+}
+
+.tracker-textbox {
+    width: 80%; /* Adjust the width as needed */
+    margin-left: 10px;
+    margin-right: 10px; /* Adjust the margin for spacing between name and select */
+}
+
+.tracker-select {
+    align-items: center;
+}
+
+.small-btn {
+    margin: 10px;
+}
+
+.grayout {
+    opacity: 0.6;
+    filter: grayscale(100%);
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GreetingOption>Hello  Josh!</GreetingOption>
-  <LongMonthNamesOption>true</LongMonthNamesOption>
+  <GreetingOption>Hello!</GreetingOption>
+  <LongMonthNamesOption>false</LongMonthNamesOption>
   <TrackersOption>
     <item>
       <key>

@@ -117,8 +117,6 @@ function cycleMonth(direction) {
 }
 
 function updateServer() {
-    console.log("updateServer");
-
     // Remove comma from day
     document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); 
 
@@ -166,8 +164,6 @@ function updateServer() {
 }
 
 function updateTable(response) {
-    console.log("UpdateTable function invoked");
-
     var tableBody = $('#weekTable');
     tableBody.empty(); // Clear existing rows
 
@@ -194,8 +190,7 @@ function updateTable(response) {
             currentIndex = dayIndex;
         }
 
-        // If day is in a different month, then make it grey
-        //console.log(Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)));
+        // If day is in a different month, then make it grey;
         if (Math.abs(day - document.getElementById("editableDay").innerText.slice(0, -1)) >= 10 ) {
             cell.addClass('grey-cell');
         }
@@ -260,9 +255,10 @@ function updateTable(response) {
                         // Additional logic to handle different tracker types and their values
                         switch (tracker.type) {
                             case "Slider":
-                                var initialSliderValue = (trackerData && trackerData.sliderValue !== null) ? trackerData.sliderValue : 0;
+                                var initialSliderValue = (trackerData && trackerData.sliderValue !== null) ? trackerData.sliderValue : "";
                                 var sliderInput = $('<input id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].SliderValue" type="range" min="0" max="10" value="' + initialSliderValue + '">');
                                 var sliderOutput = $('<output style="width: 30px;" id="' + tracker.name + ' Output">' + initialSliderValue + '</output>');
+
                                 trackerComponentsDiv.append(sliderInput);
                                 trackerComponentsDiv.append(sliderOutput);
 
@@ -292,7 +288,7 @@ function updateTable(response) {
                             case "Text":
                                 // Check if textValue is null, display default text
                                 var textValue = (trackerData && trackerData.textValue !== null) ? trackerData.textValue : "";
-                                var textInput = $('<input type="text" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].TextValue" placeholder="Text" class="tracker-name" value="' + textValue + '">');
+                                var textInput = $('<input type="text" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].TextValue" placeholder="Text" class="tracker-textbox" value="' + textValue + '">');
                                 trackerComponentsDiv.append(textInput);
                                 break;
 
@@ -327,9 +323,6 @@ function updateTable(response) {
 
 function handleCellClick(index, selectedDay) {
     // Handle the cell click event, e.g., update the date
-    //console.log("Cell clicked: " + selectedDay);
-    //console.log("currentIndex: " + currentIndex);
-    //console.log("selectedIndex: " + index);
 
     // Calculate the difference in indices
     let dayDifference = index - currentIndex;
@@ -337,7 +330,6 @@ function handleCellClick(index, selectedDay) {
 }
 
 function nextWeek(number) {
-    console.log("nextWeek function invoked");
     $.ajax({
         type: "POST",
         url: nextWeekUrl,
@@ -363,8 +355,6 @@ function nextWeek(number) {
 }
 
 function updateDate(month, day, year, days) {
-    console.log("updateDate function invoked");
-
     //Access month, day year in html and update them to c# values
     document.getElementById("editableMonth").innerText = months[month - 1];
     document.getElementById("editableDay").innerText = day;
