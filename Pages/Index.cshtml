@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Josh's Calendar Tracker";
 }
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <div class="text-center">
     <h1>@Model.GreetingValue</h1>
@@ -47,16 +48,22 @@
                     {
                         if (Model.Trackers.TryGetValue(i, out var tracker))
                         {
-                            var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : 0;
+                            var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : null;
                             var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
                             var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
                             var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
 
+                            var classvalue = "";
+                            if (trackerSliderValue == null)
+                            {
+                                classvalue = "grayout";
+                            }
                             @switch (tracker.Type)
                             {
                                 case "Slider":
                                     <div class="components-container">
-                                        <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" value="@trackerSliderValue">
+                                        <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" class="@classvalue" value="@trackerSliderValue">
+                                        
                                         <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
 
                                     </div>
@@ -149,6 +156,7 @@
 
         // Attach input event listeners for sliders
         $("input[type='range']").on("input", function () {
+            $(this).removeClass("grayout");
             var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
         });

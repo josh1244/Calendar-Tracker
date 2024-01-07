@@ -299,7 +299,25 @@ function updateTable(response) {
                                 break;
 
                             case "Dropdown":
-                                trackerComponentsDiv.append($('<p>Dropdown not implemented yet!</p>'));
+                                var dropdownInput = $('<select id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].DropdownValue" class="tracker-component"></select>');
+
+                                // Add options to the dropdown (you can customize these options)
+                                dropdownInput.append('<option value="Option1">Option 1</option>');
+                                dropdownInput.append('<option value="Option2">Option 2</option>');
+                                dropdownInput.append('<option value="Option3">Option 3</option>');
+
+                                // Set the selected option based on the data
+                                if (trackerData && trackerData.dropdownValue) {
+                                    dropdownInput.val(trackerData.dropdownValue);
+                                }
+
+                                trackerComponentsDiv.append(dropdownInput);
+
+                                // Attach change event listener for the dropdown
+                                dropdownInput.on("change", function () {
+                                    // Remove the "grayout" class when the dropdown value changes
+                                    $(this).removeClass("grayout");
+                                });
                                 break;
 
                             default:

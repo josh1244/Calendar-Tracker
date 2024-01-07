@@ -55,5 +55,18 @@
         </TrackerData>
       </value>
     </item>
+    <item>
+      <key>
+        <int>7</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>7</Id>
+          <Order>7</Order>
+          <Name>Test</Name>
+          <Type>Dropdown</Type>
+        </TrackerData>
+      </value>
+    </item>
   </TrackersOption>
 </Options>
