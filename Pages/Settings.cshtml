@@ -73,6 +73,10 @@
                             <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
                             
                             <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-default-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
+
+                            <div name="Trackers[@i].DropdownComponent" id="trackerDropdown@(i)" class="components-container  tracker-dropdown-component" style="display: none;">
+                                <button type="button" name="@i" id="trackerDropdownButton[@i]" class="small-btn tracker-dropdown-button">Add Dropdown Option</button>
+                            </div>
                         </div>
                     }
                 }
@@ -106,6 +110,32 @@
         };
     }
 
+    function AddDropdownOption(Id) {
+        return function () {
+            // Add option to dropdown
+            let optionCount = document.getElementById("trackerDropdown" + Id).childElementCount;
+            console.log(optionCount);
+            console.log(Id);
+
+            // Create unique IDs for the new option fields
+            var optionId = 'optionId' + optionCount;
+            var optionTextId = 'trackerText' + optionCount;
+             
+            // Create new option fields for option id (hidden) and text
+            var optionIdInput = $('<input type="hidden" name="Trackers[' + optionCount + '].Id" class="" id="' + Id + '" value="' + optionCount + '" />');
+            var optionNameInput = $('<input type="text" name="Trackers[' + optionCount + '].Name" placeholder="Option" class="dropdown-option" id="' + Id + '" />');
+
+            var optionMinusButton = $('<button type="button" id="minusOptionButton" class="small-btn minusOptionButton">-</button>');
+
+            // Append the new fields to the container
+            $("#trackerDropdown" + Id).append('<div class="components-container" id="' + Id + 'DropdownOption' + optionCount + '"></div>');
+            $("#" + Id + "DropdownOption" + optionCount).append(optionIdInput);
+            $("#" + Id + "DropdownOption" + optionCount).append(optionNameInput);
+            $("#" + Id + "DropdownOption" + optionCount).append(optionMinusButton);
+
+        };
+    }
+
     $(document).ready(function () { 
         // Handle the visibility of default text input when the page loads
         $("select[name^='Trackers[']").each(function () {
@@ -120,6 +150,7 @@
         function toggleDefaultTextInputVisibility(trackerTypeDropdown) {
             var trackerIndex = trackerTypeDropdown.attr("name").match(/\[(\d+)\]/)[1];
             var defaultTextInput = $("#trackerText" + trackerIndex);
+            var DropdownComponent = $("#trackerDropdown" + trackerIndex);
 
             // Toggle visibility of the text input based on the selected type
             if (trackerTypeDropdown.val() === 'Text') {
@@ -127,15 +158,25 @@
             } else {
                 defaultTextInput.hide();
             }
+            if (trackerTypeDropdown.val() === 'Dropdown') {
+                DropdownComponent.show();
+            } else {
+                DropdownComponent.hide();
+            }
         }
-        
+
+        // Handle the button click event to add options to dropdown component
+        $(".tracker-dropdown-button").click(function () {
+            let number = $(this).attr("name"); // Get Id of tracker
+            AddDropdownOption(number)();
+        });
+
         
         // Initialize trackerCount within the Razor syntax block
         let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
 
         // Handle the button click event to add tracker fields
         $(".minusTrackerButton").click(function () {
-                console.log("minusTrackerButton");
                 let number = $(this).attr("name");
                 $("#trackerFields" + number).remove();
         });
@@ -180,6 +221,7 @@
             var trackerNameId = 'trackerName' + trackerCount;
             var trackerTypeId = 'trackerType' + trackerCount;
             var trackerTextId = 'trackerText' + trackerCount;
+            var trackerDropdownId = 'trackerDropdown' + trackerCount;
 
             // Create new input fields for tracker id (hidden), name, and type with unique IDs
             var trackerIdInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Id" class="tracker-id" id="' + trackerId + '" value="' + trackerCount + '" />');
@@ -195,7 +237,10 @@
 
             var trackerMinusButton = $('<button type="button" id="minusTrackerButton" class="small-btn minusTrackerButton">-</button>');
            
-            var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-default-text" id="' + trackerTextId + '" style="display: none;" />'); // Text input for "Text" type
+            var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-default-text" id="' + trackerTextId + '" style="display: none;" />');
+
+            var trackerDefaultDropdownComponent = $('<div name="Trackers[' + trackerCount + '].DropdownComponent" class="components-container tracker-dropdown-component" id="' + trackerDropdownId + '" style="display: none;"/>');
+            var trackerDefaultDropdownComponentButton = $('<button type="button" name="trackerCount" id="trackerDropdownButton[' + trackerDropdownId + ']" class="small-btn tracker-dropdown-button"/>Add Dropdown Option</button>');
 
             // Append the new fields to the container
             $("#trackerNameAndType").append('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
@@ -208,6 +253,13 @@
             // Append the default text input
             $("#trackerFields" + trackerCount).append(trackerDefaultTextInput);
 
+            // Append the dropdown component
+            trackerDefaultDropdownComponent.append(trackerDefaultDropdownComponentButton);
+            $("#trackerFields" + trackerCount).append(trackerDefaultDropdownComponent);
+            //$("#trackerFields" + trackerCount).append(trackerDefaultDropdownComponentButton);
+
+            // Attach click event handler to the dropdown component button
+            trackerDefaultDropdownComponentButton.click(AddDropdownOption(trackerCount));
 
             // Attach click event handler to the minus button
             trackerMinusButton.click(removeTracker(trackerCount));
@@ -219,6 +271,11 @@
                     $("#" + trackerTextId).show();
                 } else {
                     $("#" + trackerTextId).hide();
+                }
+                if ($(this).val() === 'Dropdown') {
+                    $("#" + trackerDropdownId).show();
+                } else {
+                    $("#" + trackerDropdownId).hide();
                 }
             });
         });

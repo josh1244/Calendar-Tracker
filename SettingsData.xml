@@ -56,5 +56,55 @@
         </TrackerData>
       </value>
     </item>
+    <item>
+      <key>
+        <int>7</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>7</Id>
+          <Order>7</Order>
+          <Name>test1</Name>
+          <Type>Dropdown</Type>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>1</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>1</Id>
+          <Order>0</Order>
+          <Name>1</Name>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>2</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>2</Id>
+          <Order>0</Order>
+          <Name>2</Name>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>8</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>8</Id>
+          <Order>8</Order>
+          <Name>test2</Name>
+          <Type>Dropdown</Type>
+        </TrackerData>
+      </value>
+    </item>
   </TrackersOption>
 </Options>

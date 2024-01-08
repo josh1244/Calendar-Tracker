@@ -14,6 +14,7 @@ public class Options // Class to manage the Options
         public string? Name { get; set; }
         public string? Type { get; set; }
         public string? DefaultText { get; set; }
+        public List<string>? DropdownOptions { get; set; }
     }
 
     public string? GreetingOption { get; set; }
