@@ -67,10 +67,23 @@
           <Name>test</Name>
           <Type>Dropdown</Type>
           <DropdownOptions>
-            <string>1</string>
-            <string>two</string>
-            <string>...</string>
+            <string>Stormy</string>
+            <string>Dog</string>
+            <string>Woof</string>
           </DropdownOptions>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>8</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>8</Id>
+          <Order>8</Order>
+          <Name>jgh</Name>
+          <Type>Dropdown</Type>
         </TrackerData>
       </value>
     </item>

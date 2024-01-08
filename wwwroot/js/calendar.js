@@ -301,25 +301,30 @@ function updateTable(response) {
                                 break;
 
                             case "Dropdown":
+                                // Check if dropdownValue is null, display default text
+                                var dropdownValue = (trackerData && trackerData.dropdownValue !== null) ? trackerData.dropdownValue : "";
                                 var dropdownInput = $('<select id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].DropdownValue" class="tracker-component"></select>');
 
-                                // Add options to the dropdown (you can customize these options)
-                                dropdownInput.append('<option value="Option1">Option 1</option>');
-                                dropdownInput.append('<option value="Option2">Option 2</option>');
-                                dropdownInput.append('<option value="Option3">Option 3</option>');
+                                // Add options to the dropdown based on tracker.DropdownOptions
+                                if (tracker && tracker.dropdownOptions && tracker.dropdownOptions.length > 0) {
+                                    // Loop through each option in tracker.DropdownOptions and add it to the dropdown
+                                    for (var i = 0; i < tracker.dropdownOptions.length; i++) {
+                                        var option = $('<option value="' + tracker.dropdownOptions[i] + '">' + tracker.dropdownOptions[i] + '</option>');
 
-                                // Set the selected option based on the data
-                                if (trackerData && trackerData.dropdownValue) {
-                                    dropdownInput.val(trackerData.dropdownValue);
+                                        // Set the selected attribute based on the value
+                                        if (tracker.dropdownOptions[i] === dropdownValue) {
+                                            option.prop('selected', true);
+                                        }
+
+                                        dropdownInput.append(option);
+                                    }
+                                } else {
+                                    // If no options are available, you can add a default option or leave it empty
+                                    dropdownInput.append('<option value="" selected>Define options in settings.</option>');
                                 }
 
+                                // Append the dropdown input to the trackerComponentsDiv
                                 trackerComponentsDiv.append(dropdownInput);
-
-                                // Attach change event listener for the dropdown
-                                dropdownInput.on("change", function () {
-                                    // Remove the "grayout" class when the dropdown value changes
-                                    $(this).removeClass("grayout");
-                                });
                                 break;
 
                             default:
