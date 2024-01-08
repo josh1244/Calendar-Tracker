@@ -70,10 +70,9 @@
                                 <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
                             </select>
 
-                            <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
-
-                                
                             <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
+                            
+                            <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-default-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
                         </div>
                     }
                 }
@@ -194,9 +193,9 @@
             trackerTypeSelect.append('<option value="Text">Text</option>');
             trackerTypeSelect.append('<option value="Dropdown">Dropdown</option>');
 
-            var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-text" id="' + trackerTextId + '" style="display: none;" />'); // Text input for "Text" type
-
             var trackerMinusButton = $('<button type="button" id="minusTrackerButton" class="small-btn minusTrackerButton">-</button>');
+           
+            var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-default-text" id="' + trackerTextId + '" style="display: none;" />'); // Text input for "Text" type
 
             // Append the new fields to the container
             $("#trackerNameAndType").append('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
