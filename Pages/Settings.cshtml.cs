@@ -45,6 +45,28 @@ namespace Calendar_Tracker.Pages
             currentSettings.LongMonthNamesOption = model.LongMonthNames;
             currentSettings.TrackersOption = model.Trackers;
 
+            foreach (var trackerEntry in model.Trackers)
+            {
+                Console.WriteLine($"Tracker Id: {trackerEntry.Key}");
+
+                var trackerData = trackerEntry.Value;
+                Console.WriteLine($"  Order: {trackerData.Order}");
+                Console.WriteLine($"  Name: {trackerData.Name}");
+                Console.WriteLine($"  Type: {trackerData.Type}");
+                Console.WriteLine($"  DefaultText: {trackerData.DefaultText}");
+
+                if (trackerData.DropdownOptions != null)
+                {
+                    Console.WriteLine("  Dropdown Options:");
+                    foreach (var option in trackerData.DropdownOptions)
+                    {
+                        Console.WriteLine($"    {option}");
+                    }
+                }
+            }
+
+
+
             // Save to file
             Options.SaveToFile("SettingsData.xml", currentSettings);
 

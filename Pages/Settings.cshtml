@@ -76,6 +76,18 @@
 
                             <div name="Trackers[@i].DropdownComponent" id="trackerDropdown@(i)" class="components-container  tracker-dropdown-component" style="display: none;">
                                 <button type="button" name="@i" id="trackerDropdownButton[@i]" class="small-btn tracker-dropdown-button">Add Dropdown Option</button>
+                                @if (tracker.DropdownOptions != null && tracker.DropdownOptions.Any())
+                                {
+                                    // Loop through each existing dropdown option and add it
+                                    for (int j = 0; j < tracker.DropdownOptions.Count; j++)
+                                    {
+                                        <div class="components-container" id="@(i)DropdownOption@(j)">
+                                            <input type="hidden" id="@(i)" value="@(j)" />
+                                            <input type="text" name="Trackers[@i].DropdownOptions[@j]" placeholder="Option" class="dropdown-option" id="@(i)" value="@tracker.DropdownOptions[j]" />
+                                            <button type="button" id="minusOptionButton" class="small-btn minusOptionButton">-</button>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     }
@@ -113,7 +125,7 @@
     function AddDropdownOption(Id) {
         return function () {
             // Add option to dropdown
-            let optionCount = document.getElementById("trackerDropdown" + Id).childElementCount;
+            let optionCount = document.getElementById("trackerDropdown" + Id).childElementCount - 1;
             console.log(optionCount);
             console.log(Id);
 
@@ -122,10 +134,10 @@
             var optionTextId = 'trackerText' + optionCount;
              
             // Create new option fields for option id (hidden) and text
-            var optionIdInput = $('<input type="hidden" name="Trackers[' + optionCount + '].Id" class="" id="' + Id + '" value="' + optionCount + '" />');
-            var optionNameInput = $('<input type="text" name="Trackers[' + optionCount + '].Name" placeholder="Option" class="dropdown-option" id="' + Id + '" />');
+            var optionIdInput = $('<input type="hidden" class="" id="' + Id + '" value="' + optionCount + '" />');
+            var optionNameInput = $('<input type="text" name="Trackers[' + Id + '].DropdownOptions[' + optionCount + ']" placeholder="Option" class="dropdown-option" id="' + Id + '" />');
 
-            var optionMinusButton = $('<button type="button" id="minusOptionButton" class="small-btn minusOptionButton">-</button>');
+            var optionMinusButton = $('<button type="button" id="minusOptionButton"  class="small-btn minusOptionButton">-</button>');
 
             // Append the new fields to the container
             $("#trackerDropdown" + Id).append('<div class="components-container" id="' + Id + 'DropdownOption' + optionCount + '"></div>');
@@ -135,6 +147,12 @@
 
         };
     }
+
+    $(document).on("click", ".minusOptionButton", function () {
+        console.log("Clicked minusOptionButton");
+        console.log($(this).parent());
+        $(this).parent().remove();
+    });
 
     $(document).ready(function () { 
         // Handle the visibility of default text input when the page loads
@@ -171,7 +189,6 @@
             AddDropdownOption(number)();
         });
 
-        
         // Initialize trackerCount within the Razor syntax block
         let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
 
@@ -180,6 +197,7 @@
                 let number = $(this).attr("name");
                 $("#trackerFields" + number).remove();
         });
+
 
         // Handle the button click event
         $("#submitButton").click(function () {
