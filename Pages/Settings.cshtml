@@ -59,20 +59,22 @@
                 {
                     if (Model.Trackers.TryGetValue(i, out var tracker))
                     {
-                            <div class="components-container" id="trackerFields@(i)">
-                                <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
-                                <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
-                                <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
-                                <select name="Trackers[@i].Type" class="tracker-select">
-                                    <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
-                                    <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
-                                    <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
-                                    <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
-                                </select>
+                        <div class="components-container" id="trackerFields@(i)">
+                            <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
+                            <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
+                            <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
+                            <select name="Trackers[@i].Type" class="tracker-select">
+                                <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
+                                <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
+                                <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
+                                <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
+                            </select>
+
+                            <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
 
                                 
-                                <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
-                            </div>
+                            <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
+                        </div>
                     }
                 }
             }
@@ -106,6 +108,29 @@
     }
 
     $(document).ready(function () { 
+        // Handle the visibility of default text input when the page loads
+        $("select[name^='Trackers[']").each(function () {
+            toggleDefaultTextInputVisibility($(this));
+        });
+
+        // Handle the change event of the tracker type dropdown
+        $("select[name^='Trackers[']").change(function () {
+            toggleDefaultTextInputVisibility($(this));
+        });
+
+        function toggleDefaultTextInputVisibility(trackerTypeDropdown) {
+            var trackerIndex = trackerTypeDropdown.attr("name").match(/\[(\d+)\]/)[1];
+            var defaultTextInput = $("#trackerText" + trackerIndex);
+
+            // Toggle visibility of the text input based on the selected type
+            if (trackerTypeDropdown.val() === 'Text') {
+                defaultTextInput.show();
+            } else {
+                defaultTextInput.hide();
+            }
+        }
+        
+        
         // Initialize trackerCount within the Razor syntax block
         let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
 
@@ -155,18 +180,21 @@
             var trackerOrder = 'trackerOrder' + trackerCount;
             var trackerNameId = 'trackerName' + trackerCount;
             var trackerTypeId = 'trackerType' + trackerCount;
+            var trackerTextId = 'trackerText' + trackerCount;
 
             // Create new input fields for tracker id (hidden), name, and type with unique IDs
             var trackerIdInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Id" class="tracker-id" id="' + trackerId + '" value="' + trackerCount + '" />');
             var trackerOrderInput = $('<input type="hidden" name="Trackers[' + trackerCount + '].Order" class="tracker-order" id="' + trackerOrder + '" value="' + trackerCount + '" />');
             var trackerNameInput = $('<input type="text" name="Trackers[' + trackerCount + '].Name" placeholder="Tracker Name" class="tracker-name" id="' + trackerNameId + '" />');
             var trackerTypeSelect = $('<select name="Trackers[' + trackerCount + '].Type" class="tracker-select" id="' + trackerTypeId + '"></select>');
-            
+
             // Add options to the dropdown (you can customize these options)
             trackerTypeSelect.append('<option value="Slider">Slider</option>');
             trackerTypeSelect.append('<option value="Checkbox">Checkbox</option>');
             trackerTypeSelect.append('<option value="Text">Text</option>');
             trackerTypeSelect.append('<option value="Dropdown">Dropdown</option>');
+
+            var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-text" id="' + trackerTextId + '" style="display: none;" />'); // Text input for "Text" type
 
             var trackerMinusButton = $('<button type="button" id="minusTrackerButton" class="small-btn minusTrackerButton">-</button>');
 
@@ -178,8 +206,22 @@
             $("#trackerFields" + trackerCount).append(trackerTypeSelect);
             $("#trackerFields" + trackerCount).append(trackerMinusButton);
 
+            // Append the default text input
+            $("#trackerFields" + trackerCount).append(trackerDefaultTextInput);
+
+
             // Attach click event handler to the minus button
             trackerMinusButton.click(removeTracker(trackerCount));
+
+            // Attach change event handler to the tracker type dropdown
+            trackerTypeSelect.change(function () {
+                // Toggle visibility of the text input based on the selected type
+                if ($(this).val() === 'Text') {
+                    $("#" + trackerTextId).show();
+                } else {
+                    $("#" + trackerTextId).hide();
+                }
+            });
         });
 
         // Handle Ctrl+S keypress event

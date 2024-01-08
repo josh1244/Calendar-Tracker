@@ -746,6 +746,43 @@
                 </TrackerComponentData>
               </value>
             </item>
+            <item>
+              <key>
+                <int>7</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>7</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <DropdownValue>Option1</DropdownValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>8</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>8</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>9</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>9</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
           </TrackersData>
         </DayNotes>
       </value>

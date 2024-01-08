@@ -13,6 +13,7 @@ public class Options // Class to manage the Options
         public int Order { get; set; }
         public string? Name { get; set; }
         public string? Type { get; set; }
+        public string? DefaultText { get; set; }
     }
 
     public string? GreetingOption { get; set; }

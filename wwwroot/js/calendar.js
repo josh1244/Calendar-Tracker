@@ -294,7 +294,9 @@ function updateTable(response) {
                             case "Text":
                                 // Check if textValue is null, display default text
                                 var textValue = (trackerData && trackerData.textValue !== null) ? trackerData.textValue : "";
-                                var textInput = $('<input type="text" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].TextValue" placeholder="Text" class="tracker-textbox" value="' + textValue + '">');
+                                var defaultTextValue = (tracker && tracker.defaultText !== null) ? tracker.defaultText : "";
+
+                                var textInput = $('<input type="text" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].TextValue" placeholder="' + defaultTextValue + '" class="tracker-textbox" value="' + textValue + '">');
                                 trackerComponentsDiv.append(textInput);
                                 break;
 

@@ -61,78 +61,7 @@
     <form id="myForm" method="post">
         @Html.AntiForgeryToken()
         <div id="trackersContainer" class="form-container">
-            <!--  Tracker Text -->
-            <div class="text-column">
-                @if (Model.Trackers != null && Model.Trackers.Any())
-                {
-                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
-                    {
-                        if (Model.Trackers.TryGetValue(i, out var tracker))
-                        {
-                            <div>
-                                <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
-                                <p class="text-column">@tracker.Name</p>
-                            </div>
-                        }
-                    }
-                }
-                else
-                {
-                    <p>Loading</p>
-                }
-            </div>
-
-            <!--  Tracker Components -->
-            <div class="components-column">
-                @if (Model.Trackers != null && Model.Trackers.Any())
-                {
-                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
-                    {
-                        if (Model.Trackers.TryGetValue(i, out var tracker))
-                        {
-                            var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : 0;
-                            var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
-                            var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
-                            var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
-
-                            @switch (tracker.Type)
-                            {
-                                case "Slider":
-                                    <div class="components-container">
-                                        <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" value="@trackerSliderValue">
-                                        <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
-                                    </div>
-                                    break;
-
-                                case "Checkbox":
-                                    <div class="components-container">
-                                        <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" checked="@(trackerCheckboxValue ?? false)" />
-                                    </div>
-                                    break;
-
-                                case "Text":
-                                    <div class="components-container">
-                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="Text" class="tracker-textbox" value="@trackerTextValue" />
-                                    </div>
-                                    break;
-
-                                case "Dropdown":
-                                    <div class="components-container">
-                                        <p>Dropdown not implemented yet!</p>
-                                    </div>
-                                    break;
-                                default:
-                                    <p>Tracker type undefined.</p>
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    <p>Loading</p>
-                }
-            </div>
+            <p>Loading</p>
         </div>
 
         <!-- Submit button -->
@@ -180,42 +109,6 @@
                     console.error("Error submitting form: " + error.responseText);
                 }
             });
-        });
-
-        // Handle the button click event to add tracker fields
-        $("#addTrackerButton").click(function () {
-            @if (Model.Trackers != null && Model.Trackers.Any())
-            {
-                for (int i = 0; i < Model.Trackers.Count; i++)
-                {
-                    var tracker = Model.Trackers[i];
-
-                    <text>
-                        // JavaScript code here
-                        var trackerCount = @i; // Inject C# loop variable into JavaScript
-                        var trackerName = "@tracker.Name"; // Inject C# tracker name into JavaScript
-                        var trackerId = "@tracker.Id"; // Inject C# tracker Id into JavaScript
-
-                        // Your JavaScript logic using the injected variables
-                        // Increment trackerCount and use other injected variables
-                        trackerCount++;
-
-                        var trackerTextColumn = $('<div class="text-column">');
-                        var trackerTextId = $('<input type="hidden" name="TrackersValues[' + trackerCount + '].Id" class="tracker-id" value="' + trackerId + '" />');
-                        var trackerTextName = $('<p class="text-column">' + trackerName + '</p>');
-                        var trackerTextColumnEnd = $('</div>');
-
-                        // Append the new fields to the container
-                        var trackerFieldsContainer = $('<div class="components-container" id="trackerFields' + trackerCount + '"></div>');
-                        trackerFieldsContainer.append(trackerTextColumn);
-                        trackerFieldsContainer.append(trackerTextId);
-                        trackerFieldsContainer.append(trackerTextName);
-                        trackerFieldsContainer.append(trackerTextColumnEnd);
-
-                        $("#trackersContainer").append(trackerFieldsContainer);
-                    </text>
-                }
-            }
         });
 
         // Handle Ctrl+S keypress event
