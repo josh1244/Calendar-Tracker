@@ -303,7 +303,7 @@ function updateTable(response) {
                             case "Dropdown":
                                 // Check if dropdownValue is null, display default text
                                 var dropdownValue = (trackerData && trackerData.dropdownValue !== null) ? trackerData.dropdownValue : "";
-                                var dropdownInput = $('<select id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].DropdownValue" class="tracker-component"></select>');
+                                var dropdownInput = $('<select id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].DropdownValue" class="tracker-dropdown"></select>');
 
                                 // Add options to the dropdown based on tracker.DropdownOptions
                                 if (tracker && tracker.dropdownOptions && tracker.dropdownOptions.length > 0) {
@@ -320,7 +320,7 @@ function updateTable(response) {
                                     }
                                 } else {
                                     // If no options are available, you can add a default option or leave it empty
-                                    dropdownInput.append('<option value="" selected>Define options in settings.</option>');
+                                    dropdownInput.append('<option value="" selected>Add in Settings</option>');
                                 }
 
                                 // Append the dropdown input to the trackerComponentsDiv

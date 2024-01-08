@@ -144,6 +144,12 @@ th {
     margin-right: 10px; /* Adjust the margin for spacing between name and select */
 }
 
+.tracker-dropdown {
+    width: 80%; /* Adjust the width as needed */
+    margin-left: 10px;
+    margin-right: 10px; /* Adjust the margin for spacing between name and select */
+}
+
 .tracker-select {
     align-items: center;
 }

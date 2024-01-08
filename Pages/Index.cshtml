@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Josh's Calendar Tracker";
 }
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <div class="text-center">
     <h1>@Model.GreetingValue</h1>
@@ -21,79 +20,69 @@
         <div class="form-container">
             <!--  Tracker Text -->
             <div class="text-column">
-                @if (Model.Trackers != null && Model.Trackers.Any())
+                @if (!Model.Trackers.Any())
                 {
-                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
-                    {
-                        if (Model.Trackers.TryGetValue(i, out var tracker))
-                        {
-                            <div>
-                                <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
-                                <p class="text-column">@tracker.Name</p>
-                            </div>
-                        }
-                    }
+                    <p>No trackers found.</p>
                 }
                 else
                 {
-                    <p>No trackers found.</p>
+                    @foreach (var (i, tracker) in Model.Trackers)
+                    {
+                        <div>
+                            <input type="hidden" name="TrackersValues[@i].Id" class="tracker-id" value="@tracker.Id" />
+                            <p class="text-column">@tracker.Name</p>
+                        </div>
+                    }
                 }
             </div>
 
             <!--  Tracker Components -->
             <div class="components-column">
-                @if (Model.Trackers != null && Model.Trackers.Any())
+                @if (Model.Trackers.Any())
                 {
-                    for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
+                    @foreach (var (i, tracker) in Model.Trackers)
                     {
-                        if (Model.Trackers.TryGetValue(i, out var tracker))
-                        {
-                            var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : null;
-                            var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
-                            var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
-                            var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
+                        var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : null;
+                        var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
+                        var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
+                        var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
 
-                            var classvalue = "";
-                            if (trackerSliderValue == null)
-                            {
-                                classvalue = "grayout";
-                            }
+                        var classvalue = trackerSliderValue == null ? "grayout" : "";
+                        <div class="components-container">
                             @switch (tracker.Type)
                             {
                                 case "Slider":
-                                    <div class="components-container">
-                                        <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" class="@classvalue" value="@trackerSliderValue">
-                                        
-                                        <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
-
-                                    </div>
+                                    <input id="@tracker.Name" name="TrackersValues[@i].SliderValue" type="range" min="0" max="10" class="@classvalue" value="@trackerSliderValue">
+                                    <output style="width: 30px;" id="@tracker.Name Output">@trackerSliderValue</output>
                                     break;
 
                                 case "Checkbox":
-                                    <div class="components-container">
-                                        <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" checked="@(trackerCheckboxValue ?? false)" />
-
-                                    </div>
+                                    <input type="checkbox" id="@tracker.Name" name="TrackersValues[@i].CheckboxValue" checked="@(trackerCheckboxValue ?? false)" />
                                     break;
 
                                 case "Text":
-                                    <div class="components-container">
-                                        <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="@tracker.DefaultText" class="tracker-textbox" value="@trackerTextValue" />
-                                    </div>
+                                    <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="@tracker.DefaultText" class="tracker-textbox" value="@trackerTextValue" />
                                     break;
 
                                 case "Dropdown":
-                                    <div class="components-container">
-                                        <p>Dropdown not implemented yet!</p>
+                                    var dropdownOptions = tracker.DropdownOptions;
 
-                                       
+                                    if (!dropdownOptions.Any())
+                                    {
+                                        dropdownOptions = new List<string>();
+                                        dropdownOptions.Add("Add in Settings"); // Add default element
+                                    }
+                                    <div>
+                                        @Html.DropDownListFor(model => model.TrackersValues[i].DropdownValue, new SelectList(dropdownOptions), new { @class = "tracker-dropdown" })
                                     </div>
                                     break;
+
+
                                 default:
                                     <p>Tracker type undefined.</p>
                                     break;
                             }
-                        }
+                        </div>
                     }
                 }
                 else
@@ -117,38 +106,23 @@
 
     let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    // Setup Month Setting at start
-    window.onload = function () {
-        getLongMonthNamesSetting();
-    }
-
     $(document).ready(function () {
         // Handle the button click event
         $("#submitButton").click(function () {
-            // Modify checkbox values before submitting
             $('input[type="checkbox"]').each(function () {
-                if ($(this).is(':checked')) {
-                    $(this).val('true');
-                } else {
-                    // Optionally, set a default value when the checkbox is not checked
-                    $(this).val('false');
-                }
+                $(this).val($(this).is(':checked').toString());
             });
-            
-            // Serialize the form data
+
             var formData = $("#myForm").serialize();
 
-            // Send an AJAX request to the server
             $.ajax({
                 type: "POST",
                 url: urlSubmit,
-                data: formData, 
+                data: formData,
                 success: function (data) {
-                    // Handle the success response if needed
                     console.log("Form submitted successfully");
                 },
                 error: function (error) {
-                    // Handle the error response if needed
                     console.error("Error submitting form: " + error.responseText);
                 }
             });
@@ -157,38 +131,34 @@
         // Attach input event listeners for sliders
         $("input[type='range']").on("input", function () {
             $(this).removeClass("grayout");
-            var trackerName = $(this).attr("id"); // Get the trackerName from the slider's ID
+            var trackerName = $(this).attr("id");
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
         });
 
         // Handle Ctrl+S keypress event
         $(document).keydown(function (e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                // Trigger the click event on the submit button
                 $("#submitButton").click();
-                // Prevent the default browser save behavior
                 e.preventDefault();
             }
         });
+
+        // Setup Month Setting at start
+        getLongMonthNamesSetting();
     });
 
-    // Function to get the value of LongMonthNames from the XML file
     function getLongMonthNamesSetting() {
         $.ajax({
             type: "POST",
             url: loadSettingsUrl,
             headers: {
-                RequestVerificationToken:
-                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
             },
             success: function (data) {
                 if (data.success) {
-                    // Send Month, Day, Year from c# to updateDate
                     if (data.longMonthNamesValue) {
-                        // Replace abbreviated month names with full month names
                         months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     }
-                    // Get the month number (0 to 11)
                     var currentMonth = new Date().getMonth();
                     document.getElementById("Month").innerText = months[currentMonth];
                 } else {
@@ -196,7 +166,6 @@
                 }
             },
             error: function (error) {
-                // Handle errors
                 console.error(error);
             }
         });

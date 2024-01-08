@@ -4,13 +4,11 @@
     ViewData["Title"] = "Calendar";
 }
 
-
 <form>
     @Html.AntiForgeryToken()
 
     <div class="text-center">
         <h1>Calendar</h1>
-         
         <b>
             <span id="editableMonth" onclick="cycleMonth(1)" style="cursor: pointer;"></span>
             <span id="editableDay" onclick="makeEditable(this, `26px`, 2, `day`)" style="cursor: pointer;">@DateTime.Now.ToString("MMM d, yyyy")</span>
@@ -20,9 +18,7 @@
         <p></p>
 
         <div class="table-buttons">
-
             <div class="l-triangle-btn" id="leftButton" onclick="nextWeek(-7)"></div>
-
             <div id="table-container">
                 <table id="tableBody" border="3">
                     <thead>
@@ -36,7 +32,6 @@
                             <th>Saturday</th>
                         </tr>
                     </thead>
-
                     <tbody id="weekTable">
                         <tr>
                             @foreach (var day in Model.CurrentWeekDays)
@@ -45,14 +40,13 @@
                             }
                         </tr>
                     </tbody>
-
                     <tbody id="infoTable">
                     </tbody>
                 </table>
             </div>
             <div class="r-triangle-btn" id="rightButton" onclick="nextWeek(7)"></div>
-        </div> 
-   </div>
+        </div>
+    </div>
 </form>
 
 <p></p>
@@ -73,8 +67,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    let trackerCount = 1;
-    var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")'
+    var updateDateUrl = '@Url.Page("/Calendar", "UpdateDate")';
     var nextWeekUrl = '@Url.Page("/Calendar", "NextWeek")';
     var LoadTrackersUrl = '@Url.Page("/Calendar", "LoadTrackers")';
     var urlSubmit = '@Url.Page("/Calendar", "Submit")';
@@ -85,12 +78,7 @@
         $("#submitButton").click(function () {
             // Modify checkbox values before submitting
             $('input[type="checkbox"]').each(function () {
-                if ($(this).is(':checked')) {
-                    $(this).val('true');
-                } else {
-                    // Optionally, set a default value when the checkbox is not checked
-                    $(this).val('false');
-                }
+                $(this).val($(this).is(':checked').toString());
             });
 
             // Serialize the form data

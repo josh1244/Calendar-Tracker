@@ -802,7 +802,7 @@
               <value>
                 <TrackerComponentData>
                   <Id>3</Id>
-                  <SliderValue>8</SliderValue>
+                  <SliderValue>9</SliderValue>
                   <CheckboxValue xsi:nil="true" />
                 </TrackerComponentData>
               </value>
@@ -827,7 +827,7 @@
                 <TrackerComponentData>
                   <Id>5</Id>
                   <SliderValue xsi:nil="true" />
-                  <CheckboxValue xsi:nil="true" />
+                  <CheckboxValue>true</CheckboxValue>
                 </TrackerComponentData>
               </value>
             </item>
@@ -853,7 +853,7 @@
                   <Id>7</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <DropdownValue>Dog</DropdownValue>
+                  <DropdownValue>Woof</DropdownValue>
                 </TrackerComponentData>
               </value>
             </item>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GreetingOption>Hello!</GreetingOption>
+  <GreetingOption>Hello Josh!</GreetingOption>
   <LongMonthNamesOption>false</LongMonthNamesOption>
   <TrackersOption>
     <item>
@@ -53,37 +53,6 @@
           <Name>Exercise</Name>
           <Type>Text</Type>
           <DefaultText>None</DefaultText>
-        </TrackerData>
-      </value>
-    </item>
-    <item>
-      <key>
-        <int>7</int>
-      </key>
-      <value>
-        <TrackerData>
-          <Id>7</Id>
-          <Order>7</Order>
-          <Name>test</Name>
-          <Type>Dropdown</Type>
-          <DropdownOptions>
-            <string>Stormy</string>
-            <string>Dog</string>
-            <string>Woof</string>
-          </DropdownOptions>
-        </TrackerData>
-      </value>
-    </item>
-    <item>
-      <key>
-        <int>8</int>
-      </key>
-      <value>
-        <TrackerData>
-          <Id>8</Id>
-          <Order>8</Order>
-          <Name>jgh</Name>
-          <Type>Dropdown</Type>
         </TrackerData>
       </value>
     </item>
