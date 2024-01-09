@@ -16,6 +16,7 @@ namespace Calendar_Tracker.Pages
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
         public Options? CurrentSettings { get; set; }
         public List<string>? Configurations { get; set; }
+        public static string? selectedConfiguration { get; set; }
 
         public int[] CurrentWeekDays { get; set; } = new int[7];
 
@@ -26,10 +27,43 @@ namespace Calendar_Tracker.Pages
 
         public void OnGet()
         {
-            CurrentSettings = Options.LoadFromFile("Settings.xml");
-            Configurations = CurrentSettings.Configurations;
+            Config config = null;
+            try
+            {
+                config = Config.LoadConfigFromFile("Settings.xml");
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (e.g., log the error) and provide a default configuration
+                Console.WriteLine("Error loading configuration file: " + ex.Message);
+            }
 
-            MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
+            // If the file was successfully loaded, use the configurations from the loaded config object
+            if (config != null)
+            {
+                Configurations = config.Configurations;
+            }
+            else
+            {
+                // If the file was not loaded, provide a default configuration
+                Configurations = new List<string> { "DefaultConfiguration" };
+            }
+
+            // Retrieve the selected configuration from the query parameters
+            selectedConfiguration = HttpContext.Request.Query["configuration"];
+            Console.WriteLine(selectedConfiguration);
+
+            selectedConfiguration ??= Configurations[0];
+
+
+            Console.WriteLine(selectedConfiguration);
+
+            MyCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
+
+            CurrentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
+            Trackers = CurrentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
+
+
             EditedMonth = DateTime.Now.Month;
             EditedDay = DateTime.Now.Day;
             EditedYear = DateTime.Now.Year;
@@ -116,7 +150,7 @@ namespace Calendar_Tracker.Pages
             CalendarMap newCalendar = MyCalendar;
             newCalendar.AddDay(id, note);
 
-            CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
+            CalendarMap.SaveToFile(selectedConfiguration + ".xml", newCalendar);
 
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
@@ -149,12 +183,15 @@ namespace Calendar_Tracker.Pages
             EditedMonth = model.MonthAJAX;
             EditedDay = model.DayAJAX;
             EditedYear = model.YearAJAX;
+            Console.WriteLine(EditedMonth + "" + EditedDay + "" + EditedYear);
 
             DateTime editDate = new DateTime(EditedYear, EditedMonth, EditedDay);
             string id = ID.DateToID(editDate);
 
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(id);
-            CurrentSettings = Options.LoadFromFile("Settings.xml");
+
+
+            CurrentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
 
             Trackers = CurrentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
             TrackersValues = retrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
@@ -197,7 +234,7 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostLoadSettings()
         {
-            Options currentSettings = Options.LoadFromFile("Settings.xml");
+            Options currentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
             bool longMonthNamesValue = currentSettings.LongMonthNamesOption;
 
             return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });

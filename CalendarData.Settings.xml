@@ -77,8 +77,4 @@
       </value>
     </item>
   </TrackersOption>
-  <Configurations>
-    <string>CalendarData</string>
-    <string>StormyData</string>
-  </Configurations>
 </Options>

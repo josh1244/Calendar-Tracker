@@ -1,14 +1,15 @@
 ﻿// calendar.js
 
-let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-let currentIndex = null
+if (typeof months === 'undefined') {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+}
+var currentIndex = null;
 
 //Setup current week at start
-window.onload = function () {
+$(document).ready(function () {
     getLongMonthNamesSetting();
     nextWeek(0);
-}
+});
 function makeEditable(element, widthValue, number, typeValue) {
     // Create an input element
     var inputElement = document.createElement("input");
@@ -136,13 +137,27 @@ function updateServer() {
     // Add the comma to day
     document.getElementById("editableDay").innerText += ",";  
 
+    console.log(months.indexOf(document.getElementById("editableMonth").innerText));
+
+    if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
+        console.log("true");
+        PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
+        PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
+        PassYear = parseInt(document.getElementById("editableYear").innerText);
+    } else {
+        console.log("false");
+        PassMonth = new Date().getMonth() + 1;
+        PassDay = new Date().getDate();
+        PassYear = new Date().getFullYear();
+    }
+
     $.ajax({
         type: "POST",
-        url: updateDateUrl,
+        url: LoadTrackersUrl,
         data: JSON.stringify({
-            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
-            DayAJAX: day,
-            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
+            MonthAJAX: PassMonth,
+            DayAJAX: PassDay,
+            YearAJAX: PassYear,
         }),
         contentType: 'application/json',
         headers: {
@@ -204,15 +219,34 @@ function updateTable(response) {
     // Append the new row to the table body
     tableBody.append(newRow);
 
-    //Update Trackers
-    // Update Trackers
+    updateTrackers();
+}
+
+// Update Trackers
+function updateTrackers() {
+    console.log(months.indexOf(document.getElementById("editableMonth").innerText));
+    if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
+        passDate = true;
+    }
+    if (passDate) {
+        console.log("true");
+        PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
+        PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
+        PassYear = parseInt(document.getElementById("editableYear").innerText);
+    } else {
+        console.log("false");
+        PassMonth = new Date().getMonth() + 1;
+        PassDay = new Date().getDate();
+        PassYear = new Date().getFullYear();
+    }
+
     $.ajax({
         type: "POST",
         url: LoadTrackersUrl,
         data: JSON.stringify({
-            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
-            DayAJAX: parseInt(document.getElementById("editableDay").innerText.slice(0, -1)),
-            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
+            MonthAJAX: PassMonth,
+            DayAJAX: PassDay,
+            YearAJAX: PassYear,
         }),
         contentType: 'application/json',
         headers: {
@@ -392,6 +426,7 @@ function updateDate(month, day, year, days) {
     document.getElementById("editableDay").innerText += ",";  // Add comma to it
     document.getElementById("editableYear").innerText = year;
 
+    console.log(days);
     // Update the table with new day values
     updateTable(days);
 }
@@ -411,6 +446,8 @@ function getLongMonthNamesSetting() {
                 if (data.longMonthNamesValue) {
                     // Replace abbreviated month names with full month names
                     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                } else {
+                    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 }
             } else {
                 console.error("Update failed.");

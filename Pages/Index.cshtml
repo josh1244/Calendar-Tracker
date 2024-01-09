@@ -104,7 +104,9 @@
     var urlSubmit = '@Url.Page("/Index", "Submit")';
     var loadSettingsUrl = '@Url.Page("/Index", "LoadSettings")';
 
-    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (typeof months === 'undefined') {
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    }
 
     $(document).ready(function () {
         // Handle the button click event
@@ -158,6 +160,8 @@
                 if (data.success) {
                     if (data.longMonthNamesValue) {
                         months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    } else {
+                        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                     }
                     var currentMonth = new Date().getMonth();
                     document.getElementById("Month").innerText = months[currentMonth];

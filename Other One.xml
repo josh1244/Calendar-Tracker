@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CalendarMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <days>
+    <item>
+      <key>
+        <string>2-01-09-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>0</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>0</Id>
+                  <SliderValue>1</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+  </days>
+</CalendarMap>

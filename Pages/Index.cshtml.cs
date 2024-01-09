@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static Calendar;
 using static Options;
+using static Config;
 
 namespace Calendar_Tracker.Pages
 {
@@ -11,32 +12,50 @@ namespace Calendar_Tracker.Pages
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
         public string? GreetingValue { get; set; }
         public List<string>? Configurations { get; set; }
-        public string? selectedConfiguration { get; set; }
+        public static string? selectedConfiguration { get; set; }
+        public static CalendarMap MyCalendar { get; set; }
 
         public void OnGet()
         {
-            var currentSettings = Options.LoadFromFile("Settings.xml");
-            GreetingValue = currentSettings.GreetingOption;
-            Configurations = currentSettings.Configurations;
-            
+            Config config = null;
+            try
+            {
+                config = Config.LoadConfigFromFile("Settings.xml");
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (e.g., log the error) and provide a default configuration
+                Console.WriteLine("Error loading configuration file: " + ex.Message);
+            }
+
+            // If the file was successfully loaded, use the configurations from the loaded config object
+            if (config != null)
+            {
+                Configurations = config.Configurations;
+            }
+            else
+            {
+                // If the file was not loaded, provide a default configuration
+                Configurations = new List<string> { "DefaultConfiguration" };
+            }
 
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];
+            Console.WriteLine(selectedConfiguration);
 
-            // If the selectedConfiguration is null, use the default configuration
             selectedConfiguration ??= Configurations[0];
-            selectedConfiguration ??= "DefaultCalendar";
 
 
             Console.WriteLine(selectedConfiguration);
 
-            var myCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
+            MyCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
             var now = DateTime.Today;
             var id = ID.DateToID(now);
-            var retrievedNotes = myCalendar.GetDayNotes(id);
+            var retrievedNotes = MyCalendar.GetDayNotes(id);
             TrackersValues = retrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
             
-            currentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
+            Options currentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
+            GreetingValue = currentSettings.GreetingOption;
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
 
             foreach (var (trackerId, trackerValues) in TrackersValues)
@@ -82,9 +101,10 @@ namespace Calendar_Tracker.Pages
                 return BadRequest(ModelState);
             }
 
-            var myCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
+            //var myCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
             var id = ID.DateToID(DateTime.Today);
-            var note = myCalendar.GetDayNotes(id);
+            Console.WriteLine("Id:" + id);
+            var note = MyCalendar.GetDayNotes(id);
 
             if (model != null && model.TrackersValues != null && note != null && note.TrackersData != null)
             {
@@ -107,16 +127,16 @@ namespace Calendar_Tracker.Pages
                 }
             }
 
-            var newCalendar = myCalendar;
+            var newCalendar = MyCalendar;
             newCalendar.AddDay(id, note);
-            CalendarMap.SaveToFile("CalendarData.xml", newCalendar);
+            CalendarMap.SaveToFile(selectedConfiguration + ".xml", newCalendar);
 
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
         }
 
         public IActionResult OnPostLoadSettings()
         {
-            var currentSettings = Options.LoadFromFile("Settings.xml");
+            var currentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
             var longMonthNamesValue = currentSettings.LongMonthNamesOption;
 
             return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });
