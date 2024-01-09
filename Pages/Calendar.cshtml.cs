@@ -70,13 +70,6 @@ namespace Calendar_Tracker.Pages
             CalculateDate();
         }
 
-        public class UpdateDateModel
-        {
-            public int MonthAJAX { get; set; }
-            public int DayAJAX { get; set; }
-            public int YearAJAX { get; set; }
-        }
-
         public class NextWeekModel
         {
             public int Days { get; set; }
@@ -98,7 +91,34 @@ namespace Calendar_Tracker.Pages
             });
         }
 
+        public void NextWeek(int days)
+        {
+            DateTime editDate = new DateTime(EditedYear, EditedMonth, EditedDay);
+            DateTime newWeek = editDate.AddDays(days);
+            EditedMonth = newWeek.Month;
+            EditedDay = newWeek.Day;
+            EditedYear = newWeek.Year;
+        }
+
+        public class UpdateDateModel
+        {
+            public int MonthAJAX { get; set; }
+            public int DayAJAX { get; set; }
+            public int YearAJAX { get; set; }
+        }
+
         public IActionResult OnPostUpdateDate([FromBody] UpdateDateModel model)
+        {
+            EditedMonth = model.MonthAJAX;
+            EditedDay = model.DayAJAX;
+            EditedYear = model.YearAJAX;
+
+            CalculateDate();
+
+            return new JsonResult(new { success = true, message = "Update successful", days = CurrentWeekDays });
+        }
+
+        public IActionResult OnPostUpdateServer([FromBody] UpdateDateModel model)
         {
             EditedMonth = model.MonthAJAX;
             EditedDay = model.DayAJAX;
@@ -153,15 +173,6 @@ namespace Calendar_Tracker.Pages
             CalendarMap.SaveToFile(selectedConfiguration + ".xml", newCalendar);
 
             return new JsonResult(new { success = true, message = "Form submitted successfully" });
-        }
-
-        public void NextWeek(int days)
-        {
-            DateTime editDate = new DateTime(EditedYear, EditedMonth, EditedDay);
-            DateTime newWeek = editDate.AddDays(days);
-            EditedMonth = newWeek.Month;
-            EditedDay = newWeek.Day;
-            EditedYear = newWeek.Year;
         }
 
         public void CalculateDate()

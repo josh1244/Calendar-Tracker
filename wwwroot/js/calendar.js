@@ -92,7 +92,6 @@ function updateDate(month, day, year, days) {
 
 
 
-
 function makeEditable(element, widthValue, number, typeValue) {
     // Create an input element
     var inputElement = document.createElement("input");
@@ -221,15 +220,15 @@ function updateServer() {
     // Add the comma to day
     document.getElementById("editableDay").innerText += ",";  
 
-    console.log(months.indexOf(document.getElementById("editableMonth").innerText));
+    //console.log(months.indexOf(document.getElementById("editableMonth").innerText));
 
     if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
-        console.log("true");
+        console.log("true2");
         PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
         PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
         PassYear = parseInt(document.getElementById("editableYear").innerText);
     } else {
-        console.log("false");
+        console.log("false2");
         PassMonth = new Date().getMonth() + 1;
         PassDay = new Date().getDate();
         PassYear = new Date().getFullYear();
@@ -237,7 +236,7 @@ function updateServer() {
 
     $.ajax({
         type: "POST",
-        url: LoadTrackersUrl,
+        url: UpdateServerUrl,
         data: JSON.stringify({
             MonthAJAX: PassMonth,
             DayAJAX: PassDay,
@@ -251,6 +250,7 @@ function updateServer() {
         success: function (data) {
             if (data.success) {
                 // Update the table with the new data
+                console.log(data);
                 updateTable(data.days);
             } else {
                 console.error("Update failed.");
@@ -263,6 +263,7 @@ function updateServer() {
 }
 
 function updateTable(response) {
+    //console.log(response);
     var tableBody = $('#weekTable');
     tableBody.empty(); // Clear existing rows
 
@@ -307,17 +308,17 @@ function updateTable(response) {
 }
 
 function updateTrackers() {
-    console.log(months.indexOf(document.getElementById("editableMonth").innerText));
+    //console.log(months.indexOf(document.getElementById("editableMonth").innerText));
     if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
         passDate = true;
     }
     if (passDate) {
-        console.log("true");
+        console.log("true1");
         PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
         PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
         PassYear = parseInt(document.getElementById("editableYear").innerText);
     } else {
-        console.log("false");
+        console.log("false1");
         PassMonth = new Date().getMonth() + 1;
         PassDay = new Date().getDate();
         PassYear = new Date().getFullYear();
