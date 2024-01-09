@@ -6,102 +6,148 @@
 
 <div class="text-center">
     <h1>@ViewData["Title"]</h1>
-    <p></p>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </div>
+
+<ul class="nav nav-tabs justify-content-center" id="myTabs">
+    <li class="nav-item">
+        <a class="nav-link active font-weight-bold" id="general-tab" data-toggle="tab" href="#general">General</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link font-weight-bold" id="trackers-tab" data-toggle="tab" href="#trackers">Trackers</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link font-weight-bold" id="configuration-tab" data-toggle="tab" href="#configuration">Configuration</a>
+    </li>
+</ul>
+
+<p></p>
 
 <div class="center-container">
     <form id="myForm" method="post">
         @Html.AntiForgeryToken()
 
-        <div  class="form-container">
-            <div class="text-column">
-                <p>Greeting</p>
+        <div class="tab-content">
+            <div id="general" class="tab-pane fade show active">
 
-                <p>Long Month Names</p>
+                <div  class="form-container">
+                    <div class="text-column">
+                        <p>Greeting</p>
 
-                <p>Add Tracker</p>
+                        <p>Long Month Names</p>
+               
 
-                
+                    </div>
 
-            </div>
-
-            <div class="components-column">
-                <!-- Greeting -->
-                <div class="components-container">
-                    <input type="text" id="GreetingValue" name="GreetingValue" class="tracker-name" placeholder="Hello!" value="@Model.GreetingValue" />
-                </div>
-
-                <!-- Short/Long Month Names -->
-                <div class="components-container">
-                    <input id="LongMonthNames" name="LongMonthNames" type="checkbox" asp-for="LongMonthNamesValue">
-                </div>
-
-
-
-                <!-- Plus Button to Add Tracker Fields -->
-                <div class="components-container">
-                    <button type="button" id="addTrackerButton">+</button>
-                </div>
-
-                
-            </div>
-        </div>
-
-        <div class="center-container">
-            <b>Trackers</b>
-        </div>
-
-        <!--  Trackers -->
-        <div>
-            @if (Model.Trackers != null && Model.Trackers.Any())
-            {
-                for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
-                {
-                    if (Model.Trackers.TryGetValue(i, out var tracker))
-                    {
-                        <div class="components-container" id="trackerFields@(i)">
-                            <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
-                            <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
-                            <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
-                            <select name="Trackers[@i].Type" class="tracker-select">
-                                <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
-                                <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
-                                <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
-                                <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
-                            </select>
-
-                            <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
-                            
-                            <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-default-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
-
-                            <div name="Trackers[@i].DropdownComponent" id="trackerDropdown@(i)" class="components-container  tracker-dropdown-component" style="display: none;">
-                                <button type="button" name="@i" id="trackerDropdownButton[@i]" class="small-btn tracker-dropdown-button">Add Dropdown Option</button>
-                                @if (tracker.DropdownOptions != null && tracker.DropdownOptions.Any())
-                                {
-                                    // Loop through each existing dropdown option and add it
-                                    for (int j = 0; j < tracker.DropdownOptions.Count; j++)
-                                    {
-                                        <div class="components-container" id="@(i)DropdownOption@(j)">
-                                            <input type="hidden" id="@(i)" value="@(j)" />
-                                            <input type="text" name="Trackers[@i].DropdownOptions[@j]" placeholder="Option" class="dropdown-option" id="@(i)" value="@tracker.DropdownOptions[j]" />
-                                            <button type="button" id="minusOptionButton" class="small-btn minusOptionButton">-</button>
-                                        </div>
-                                    }
-                                }
-                            </div>
+                    <div class="components-column">
+                        <!-- Greeting -->
+                        <div class="components-container">
+                            <input type="text" id="GreetingValue" name="GreetingValue" class="tracker-name" placeholder="Hello!" value="@Model.GreetingValue" />
                         </div>
-                    }
-                }
-            }
-            else
-            {
-            <p>No trackers found.</p>
-            }
-        </div>
 
-        <!-- Tracker Name and Tracker Type pairs -->
-        <div class="tracker-container" id="trackerNameAndType">
-            <!-- This container will hold the dynamically added tracker name and type pairs -->
+                        <!-- Short/Long Month Names -->
+                        <div class="components-container">
+                            <input id="LongMonthNames" name="LongMonthNames" type="checkbox" asp-for="LongMonthNamesValue">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="configuration" class="tab-pane fade">
+
+                <div class="form-container">
+                    <div class="components-column">
+
+                        <div class="configuration-container components-column" id="configurations">
+                            <button type="button" class="addConfigurationButton">Add Configuration</button>
+                            <!-- This container will hold the dynamically added configurations -->
+                            @for (int i = 0; i < Model.Configurations.Count; i++)
+                            {
+                                <div class="components-container" id="configuration@(i)">
+                                    <input type="hidden" id="@(i)" value="@(i)" />
+                                    <input type="text" name="Configurations[@i]" placeholder="Configuration" class="configuration" id="@(i)" value="@Model.Configurations[i]" />
+                                    <button type="button" id="minusConfigurationButton" class="small-btn minusConfigurationButton">-</button>
+                                </div>
+                            }
+                        </div>
+
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="trackers" class="tab-pane fade">
+                <div class="form-container">
+                    <div class="text-column">
+                        <p>Add Tracker</p>
+                    </div>
+                    <div class="components-column">
+                        <!-- Plus Button to Add Tracker Fields -->
+                        <div class="components-container">
+                            <button type="button" id="addTrackerButton">+</button>
+                        </div>
+
+                
+                    </div>
+                </div>
+
+
+                <!--  Trackers -->
+                <div>
+                    @if (Model.Trackers != null && Model.Trackers.Any())
+                    {
+                        for (int i = 0; i <= Model.Trackers.Keys.Max(); i++)
+                        {
+                            if (Model.Trackers.TryGetValue(i, out var tracker))
+                            {
+                                <div class="components-container" id="trackerFields@(i)">
+                                    <input type="hidden" name="Trackers[@i].Id" class="tracker-id" value="@i" />
+                                    <input type="hidden" name="Trackers[@i].Order" class="tracker-order" value="@i" />
+                                    <input type="text" name="Trackers[@i].Name" placeholder="Tracker Name" class="tracker-name" value="@tracker.Name" />
+                                    <select name="Trackers[@i].Type" class="tracker-select">
+                                        <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
+                                        <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
+                                        <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
+                                        <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
+                                    </select>
+
+                                    <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
+                            
+                                    <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-default-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
+
+                                    <div name="Trackers[@i].DropdownComponent" id="trackerDropdown@(i)" class="components-container  tracker-dropdown-component" style="display: none;">
+                                        <button type="button" name="@i" id="trackerDropdownButton[@i]" class="small-btn tracker-dropdown-button">Add Dropdown Option</button>
+                                        @if (tracker.DropdownOptions != null && tracker.DropdownOptions.Any())
+                                        {
+                                            // Loop through each existing dropdown option and add it
+                                            for (int j = 0; j < tracker.DropdownOptions.Count; j++)
+                                            {
+                                                <div class="components-container" id="@(i)DropdownOption@(j)">
+                                                    <input type="hidden" id="@(i)" value="@(j)" />
+                                                    <input type="text" name="Trackers[@i].DropdownOptions[@j]" placeholder="Option" class="dropdown-option" id="@(i)" value="@tracker.DropdownOptions[j]" />
+                                                    <button type="button" id="minusOptionButton" class="small-btn minusOptionButton">-</button>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                    <p>No trackers found.</p>
+                    }
+                </div>
+
+                <!-- Tracker Name and Tracker Type pairs -->
+                <div class="tracker-container" id="trackerNameAndType">
+                    <!-- This container will hold the dynamically added tracker name and type pairs -->
+                </div>
+
+
+            </div>
         </div>
 
         <!-- Submit button -->
@@ -110,6 +156,7 @@
         </div>
     </form>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
@@ -122,6 +169,49 @@
         };
     }
 
+    // Function to validate configurations
+    function validateConfigurations() {
+        let isValid = true;
+
+        // Iterate through each configuration input
+        $(".configuration").each(function () {
+            if ($(this).val() === "") {
+                isValid = false;
+                // You can display an error message or handle invalid configurations here
+                alert("Please enter a valid configuration value.");
+                return false; // Exit the loop early
+            }
+        });
+
+        return isValid;
+    }
+
+    function AddConfiguration() {
+        return function () {
+            // Add option to dropdown
+            let configurationCount = document.getElementById("configurations").childElementCount - 1;
+            console.log(configurationCount);
+
+            // Create new option fields for option id (hidden) and text
+            var configurationIdInput = $('<input type="hidden" class="" id="' + configurationCount + '" value="' + configurationCount + '" />');
+            var configurationNameInput = $('<input type="text" name="Configurations[' + configurationCount + ']" placeholder="Configuration" class="configuration" id="' + configurationCount + '" />');
+            var configurationMinusButton = $('<button type="button" id="minusConfigurationButton"  class="small-btn minusConfigurationButton">-</button>');
+
+            // Append the new fields to the container
+            $("#configurations").append('<div class="components-container" id="configuration' + configurationCount + '"></div>');
+            $("#configuration" + configurationCount).append(configurationIdInput);
+            $("#configuration" + configurationCount).append(configurationNameInput);
+            $("#configuration" + configurationCount).append(configurationMinusButton);
+
+        };
+    }
+
+    $(document).on("click", ".minusConfigurationButton", function () {
+        console.log("Clicked minusConfigurationButton");
+        console.log($(this).parent());
+        $(this).parent().remove();
+    });
+
     function AddDropdownOption(Id) {
         return function () {
             // Add option to dropdown
@@ -132,7 +222,7 @@
             // Create unique IDs for the new option fields
             var optionId = 'optionId' + optionCount;
             var optionTextId = 'trackerText' + optionCount;
-             
+
             // Create new option fields for option id (hidden) and text
             var optionIdInput = $('<input type="hidden" class="" id="' + Id + '" value="' + optionCount + '" />');
             var optionNameInput = $('<input type="text" name="Trackers[' + Id + '].DropdownOptions[' + optionCount + ']" placeholder="Option" class="dropdown-option" id="' + Id + '" />');
@@ -154,7 +244,12 @@
         $(this).parent().remove();
     });
 
-    $(document).ready(function () { 
+    $(document).ready(function () {
+            $('#myTabs a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
         // Handle the visibility of default text input when the page loads
         $("select[name^='Trackers[']").each(function () {
             toggleDefaultTextInputVisibility($(this));
@@ -189,6 +284,11 @@
             AddDropdownOption(number)();
         });
 
+        // Handle the button click event to add options to dropdown component
+        $(".addConfigurationButton").click(function () {
+            AddConfiguration()();
+        });
+
         // Initialize trackerCount within the Razor syntax block
         let trackerCount = @((Model.Trackers != null && Model.Trackers.Any()) ? Model.Trackers.Keys.Max() : -1);
 
@@ -206,6 +306,12 @@
             if ($("#GreetingValue").val() === "") {
                 // Assign the placeholder value to GreetingValue
                 $("#GreetingValue").val($("#GreetingValue").attr("placeholder"));
+            }
+
+            // Validate configurations
+            if (!validateConfigurations()) {
+                // Do not proceed with form submission if configurations are not valid
+                return;
             }
 
             // Serialize the form data

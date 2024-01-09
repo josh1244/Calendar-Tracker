@@ -20,6 +20,7 @@ public class Options // Class to manage the Options
     public string? GreetingOption { get; set; }
     public bool LongMonthNamesOption { get; set; }
     public SerializableDictionary<int, TrackerData> TrackersOption { get; set; } = new SerializableDictionary<int, TrackerData>();
+    public List<string> Configurations { get; set; }
 
     public Options()
     {

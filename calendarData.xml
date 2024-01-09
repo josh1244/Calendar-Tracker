@@ -853,7 +853,7 @@
                   <Id>7</Id>
                   <SliderValue xsi:nil="true" />
                   <CheckboxValue xsi:nil="true" />
-                  <DropdownValue>Woof</DropdownValue>
+                  <DropdownValue>Chezburger</DropdownValue>
                 </TrackerComponentData>
               </value>
             </item>

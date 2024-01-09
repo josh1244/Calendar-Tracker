@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using static Options;
 
@@ -10,7 +11,7 @@ namespace Calendar_Tracker.Pages
         [BindProperty]
         public string? GreetingValue { get; set; }
         public bool LongMonthNamesValue { get; set; }
-
+        public List<string>? Configurations { get; set; }
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
 
         public void OnGet()
@@ -20,6 +21,7 @@ namespace Calendar_Tracker.Pages
             // Set Options from config file
             GreetingValue = currentSettings.GreetingOption;
             LongMonthNamesValue = currentSettings.LongMonthNamesOption;
+            Configurations = currentSettings.Configurations ?? new List<string> { "DefaultCalendar" };
             Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
         }
 
@@ -27,6 +29,7 @@ namespace Calendar_Tracker.Pages
         {
             public string? GreetingValue { get; set; }
             public bool LongMonthNames { get; set; }
+            public List<string>? Configurations { get; set; }
             public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         }
 
@@ -43,6 +46,7 @@ namespace Calendar_Tracker.Pages
 
             currentSettings.GreetingOption = model.GreetingValue;
             currentSettings.LongMonthNamesOption = model.LongMonthNames;
+            currentSettings.Configurations = model.Configurations ?? new List<string> { "DefaultCalendar" };
             currentSettings.TrackersOption = model.Trackers;
 
             foreach (var trackerEntry in model.Trackers)

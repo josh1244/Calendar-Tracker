@@ -56,5 +56,28 @@
         </TrackerData>
       </value>
     </item>
+    <item>
+      <key>
+        <int>7</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>7</Id>
+          <Order>7</Order>
+          <Name>Food Eaten:</Name>
+          <Type>Dropdown</Type>
+          <DropdownOptions>
+            <string>Dog</string>
+            <string>Cat</string>
+            <string>Fat</string>
+            <string>Hamburger</string>
+            <string>Chezburger</string>
+          </DropdownOptions>
+        </TrackerData>
+      </value>
+    </item>
   </TrackersOption>
+  <Configurations>
+    <string>DefaultCalendar</string>
+  </Configurations>
 </Options>
