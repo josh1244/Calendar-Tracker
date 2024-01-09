@@ -44,7 +44,6 @@ function getLongMonthNamesSetting(callback) {
         }
     });
 }
-
 function handleCellClick(index, selectedDay) {
     // Handle the cell click event by finding the difference in indices and progressing the week
 
@@ -78,7 +77,6 @@ function nextWeek(number) {
         }
     });
 }
-
 function updateDate(month, day, year, days) {
     // Access month, day year in html and update them to c# values
     document.getElementById("editableMonth").innerText = months[month - 1];
@@ -89,6 +87,7 @@ function updateDate(month, day, year, days) {
     // Update the table with new day value
     updateTable(days);
 }
+
 
 
 
@@ -180,7 +179,6 @@ function makeEditable(element, widthValue, number, typeValue) {
         }
     });
 }
-
 function cycleMonth(direction) {
     var currentMonth = document.getElementById("editableMonth").innerText;
     var currentIndex = months.indexOf(currentMonth);
@@ -246,7 +244,6 @@ function updateServer() {
         }
     });
 }
-
 function updateTable(response) {
     //console.log(response);
     var tableBody = $('#weekTable');
@@ -291,7 +288,6 @@ function updateTable(response) {
 
     updateTrackers();
 }
-
 function updateTrackers() {
     $.ajax({
         type: "POST",

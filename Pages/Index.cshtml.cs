@@ -41,12 +41,9 @@ namespace Calendar_Tracker.Pages
 
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];
-            Console.WriteLine(selectedConfiguration);
 
             selectedConfiguration ??= Configurations[0];
 
-
-            Console.WriteLine(selectedConfiguration);
 
             MyCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
             var now = DateTime.Today;
@@ -93,8 +90,6 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostSubmit([FromForm] FormData model)
         {
-            Console.WriteLine("OnPostSubmit method executed.");
-
             if (!ModelState.IsValid)
             {
                 LogModelStateErrors();
@@ -103,7 +98,6 @@ namespace Calendar_Tracker.Pages
 
             //var myCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
             var id = ID.DateToID(DateTime.Today);
-            Console.WriteLine("Id:" + id);
             var note = MyCalendar.GetDayNotes(id);
 
             if (model != null && model.TrackersValues != null && note != null && note.TrackersData != null)
@@ -122,7 +116,6 @@ namespace Calendar_Tracker.Pages
                     else
                     {
                         note.TrackersData[trackerData.Id] = trackerData;
-                        Console.WriteLine($"Created a new tracker with Id {trackerData.Id}");
                     }
                 }
             }

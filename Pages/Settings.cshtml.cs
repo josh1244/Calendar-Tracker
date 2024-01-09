@@ -42,12 +42,8 @@ namespace Calendar_Tracker.Pages
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];
 
-            Console.WriteLine(selectedConfiguration);
-
             selectedConfiguration ??= Configurations[0];
 
-
-            Console.WriteLine(selectedConfiguration);
 
             var myCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
             var now = DateTime.Today;
@@ -92,6 +88,7 @@ namespace Calendar_Tracker.Pages
             currentSettings.LongMonthNamesOption = model.LongMonthNames;
             currentSettings.TrackersOption = model.Trackers;
 
+            /*
             foreach (var trackerEntry in model.Trackers)
             {
                 Console.WriteLine($"Tracker Id: {trackerEntry.Key}");
@@ -111,7 +108,7 @@ namespace Calendar_Tracker.Pages
                     }
                 }
             }
-
+            */
 
 
             // Save to file

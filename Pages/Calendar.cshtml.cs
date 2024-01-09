@@ -51,12 +51,9 @@ namespace Calendar_Tracker.Pages
 
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];
-            Console.WriteLine(selectedConfiguration);
 
             selectedConfiguration ??= Configurations[0];
 
-
-            Console.WriteLine(selectedConfiguration);
 
             MyCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
 
@@ -194,7 +191,6 @@ namespace Calendar_Tracker.Pages
             EditedMonth = model.MonthAJAX;
             EditedDay = model.DayAJAX;
             EditedYear = model.YearAJAX;
-            Console.WriteLine(EditedMonth + "" + EditedDay + "" + EditedYear);
 
             DateTime editDate = new DateTime(EditedYear, EditedMonth, EditedDay);
             string id = ID.DateToID(editDate);
