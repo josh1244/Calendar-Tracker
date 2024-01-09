@@ -29,6 +29,28 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Settings">Settings</a>
                         </li>
                     </ul>
+
+                    <!-- Dropdown with configurations -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="configurationsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Configurations
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="configurationsDropdown">
+                                <!-- Iterate through configurations and create dropdown items -->
+                                @foreach (var configuration in Model.Configurations)
+                                {
+                                    <a class="dropdown-item" href="#">@configuration</a>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+
+                    <!-- Display selected configuration next to the dropdown -->
+                    <span class="navbar-text">
+                        <strong id="selectedConfiguration">Default</strong>
+                    </span>
+
                 </div>
             </div>
         </nav>
@@ -44,6 +66,68 @@
             Joshua Ham - &copy;2024 - Calendar Tracker - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- JavaScript to update the selected configuration -->
+    <script>
+        $(document).ready(function () {
+            // Get the text of the first dropdown item
+            var defaultConfiguration = $(".dropdown-item:first-child").text();
+
+            // Try to retrieve the selected configuration from sessionStorage
+            var storedConfiguration = sessionStorage.getItem('selectedConfiguration');
+
+            // Set the initial selected configuration or use the stored one
+            var initialConfiguration = storedConfiguration || defaultConfiguration;
+            $("#selectedConfiguration").text(initialConfiguration);
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var configurationParam = urlParams.get('configuration');
+
+            // If there's no configuration in the URL or it's different from the stored one, update the URL with the initial configuration
+            if (!configurationParam || configurationParam !== storedConfiguration) {
+                updateUrlWithConfiguration(initialConfiguration);
+            }
+
+            // Update the selected configuration text when a dropdown item is clicked
+            $(".dropdown-item").on("click", function () {
+                var selectedConfiguration = $(this).text();
+                $("#selectedConfiguration").text(selectedConfiguration);
+
+                // Set the selected configuration as a query parameter in the URL
+                updateUrlWithConfiguration(selectedConfiguration);
+            });
+
+            function updateUrlWithConfiguration(configuration) {
+                var url = new URL(window.location.href);
+                url.searchParams.set('configuration', configuration);
+                window.history.pushState({}, '', url);
+
+                // Update the stored configuration in sessionStorage
+                sessionStorage.setItem('selectedConfiguration', configuration);
+            }
+
+            function loadPageContent() {
+                // Use AJAX to load the content dynamically
+                var url = window.location.href;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (data) {
+                        // Replace the content of the main element with the loaded content
+                        var content = $(data).find('main').html();
+                        $('main').html(content);
+                    }
+                });
+            }
+
+            // Refresh the page when the URL changes
+            window.onpopstate = function (event) {
+                loadPageContent(); // Load content when navigating back or forward
+            };
+        });
+    </script>
+
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

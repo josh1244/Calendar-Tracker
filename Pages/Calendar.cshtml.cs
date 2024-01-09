@@ -15,6 +15,7 @@ namespace Calendar_Tracker.Pages
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
         public Options? CurrentSettings { get; set; }
+        public List<string>? Configurations { get; set; }
 
         public int[] CurrentWeekDays { get; set; } = new int[7];
 
@@ -25,12 +26,14 @@ namespace Calendar_Tracker.Pages
 
         public void OnGet()
         {
+            CurrentSettings = Options.LoadFromFile("Settings.xml");
+            Configurations = CurrentSettings.Configurations;
+
             MyCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
             EditedMonth = DateTime.Now.Month;
             EditedDay = DateTime.Now.Day;
             EditedYear = DateTime.Now.Year;
             CalculateDate();
-            CurrentSettings = Options.LoadFromFile("SettingsData.xml");
         }
 
         public class UpdateDateModel
@@ -151,7 +154,7 @@ namespace Calendar_Tracker.Pages
             string id = ID.DateToID(editDate);
 
             DayNotes retrievedNotes = MyCalendar.GetDayNotes(id);
-            CurrentSettings = Options.LoadFromFile("SettingsData.xml");
+            CurrentSettings = Options.LoadFromFile("Settings.xml");
 
             Trackers = CurrentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
             TrackersValues = retrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
@@ -194,7 +197,7 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostLoadSettings()
         {
-            Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+            Options currentSettings = Options.LoadFromFile("Settings.xml");
             bool longMonthNamesValue = currentSettings.LongMonthNamesOption;
 
             return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });

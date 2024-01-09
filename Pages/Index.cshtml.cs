@@ -10,18 +10,34 @@ namespace Calendar_Tracker.Pages
         public SerializableDictionary<int, TrackerData> Trackers { get; set; } = new SerializableDictionary<int, TrackerData>();
         public SerializableDictionary<int, TrackerComponentData> TrackersValues { get; set; } = new SerializableDictionary<int, TrackerComponentData>();
         public string? GreetingValue { get; set; }
+        public List<string>? Configurations { get; set; }
+        public string? selectedConfiguration { get; set; }
 
         public void OnGet()
         {
-            var myCalendar = CalendarMap.LoadFromFile("CalendarData.xml");
+            var currentSettings = Options.LoadFromFile("Settings.xml");
+            GreetingValue = currentSettings.GreetingOption;
+            Configurations = currentSettings.Configurations;
+            
+
+            // Retrieve the selected configuration from the query parameters
+            selectedConfiguration = HttpContext.Request.Query["configuration"];
+
+            // If the selectedConfiguration is null, use the default configuration
+            selectedConfiguration ??= Configurations[0];
+            selectedConfiguration ??= "DefaultCalendar";
+
+
+            Console.WriteLine(selectedConfiguration);
+
+            var myCalendar = CalendarMap.LoadFromFile(selectedConfiguration + ".xml");
             var now = DateTime.Today;
             var id = ID.DateToID(now);
             var retrievedNotes = myCalendar.GetDayNotes(id);
-
-            var currentSettings = Options.LoadFromFile("SettingsData.xml");
-            GreetingValue = currentSettings.GreetingOption;
-            Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
             TrackersValues = retrievedNotes.TrackersData ?? new SerializableDictionary<int, TrackerComponentData>();
+            
+            currentSettings = Options.LoadFromFile(selectedConfiguration + ".Settings.xml");
+            Trackers = currentSettings.TrackersOption ?? new SerializableDictionary<int, TrackerData>();
 
             foreach (var (trackerId, trackerValues) in TrackersValues)
             {
@@ -100,7 +116,7 @@ namespace Calendar_Tracker.Pages
 
         public IActionResult OnPostLoadSettings()
         {
-            var currentSettings = Options.LoadFromFile("SettingsData.xml");
+            var currentSettings = Options.LoadFromFile("Settings.xml");
             var longMonthNamesValue = currentSettings.LongMonthNamesOption;
 
             return new JsonResult(new { success = true, message = "Update successful", longMonthNamesValue });

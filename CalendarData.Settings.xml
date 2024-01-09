@@ -78,6 +78,7 @@
     </item>
   </TrackersOption>
   <Configurations>
-    <string>DefaultCalendar</string>
+    <string>CalendarData</string>
+    <string>StormyData</string>
   </Configurations>
 </Options>

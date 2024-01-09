@@ -16,7 +16,7 @@ namespace Calendar_Tracker.Pages
 
         public void OnGet()
         {
-            Options currentSettings = Options.LoadFromFile("SettingsData.xml");
+            Options currentSettings = Options.LoadFromFile("Settings.xml");
 
             // Set Options from config file
             GreetingValue = currentSettings.GreetingOption;
@@ -72,7 +72,7 @@ namespace Calendar_Tracker.Pages
 
 
             // Save to file
-            Options.SaveToFile("SettingsData.xml", currentSettings);
+            Options.SaveToFile("Settings.xml", currentSettings);
 
             return new JsonResult(new { success = true });
         }
