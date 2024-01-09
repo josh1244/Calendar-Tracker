@@ -5,7 +5,7 @@ if (typeof months === 'undefined') {
 }
 var currentIndex = null;
 
-//Setup current week at start
+//Setup everything when loaded.
 $(function () {
     getLongMonthNamesSetting(function () {
         nextWeek(0);
@@ -220,27 +220,13 @@ function updateServer() {
     // Add the comma to day
     document.getElementById("editableDay").innerText += ",";  
 
-    //console.log(months.indexOf(document.getElementById("editableMonth").innerText));
-
-    if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
-        console.log("true2");
-        PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
-        PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
-        PassYear = parseInt(document.getElementById("editableYear").innerText);
-    } else {
-        console.log("false2");
-        PassMonth = new Date().getMonth() + 1;
-        PassDay = new Date().getDate();
-        PassYear = new Date().getFullYear();
-    }
-
     $.ajax({
         type: "POST",
         url: UpdateServerUrl,
         data: JSON.stringify({
-            MonthAJAX: PassMonth,
-            DayAJAX: PassDay,
-            YearAJAX: PassYear,
+            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
+            DayAJAX: parseInt(document.getElementById("editableDay").innerText.slice(0, -1)),
+            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
         }),
         contentType: 'application/json',
         headers: {
@@ -250,7 +236,6 @@ function updateServer() {
         success: function (data) {
             if (data.success) {
                 // Update the table with the new data
-                console.log(data);
                 updateTable(data.days);
             } else {
                 console.error("Update failed.");
@@ -308,29 +293,13 @@ function updateTable(response) {
 }
 
 function updateTrackers() {
-    //console.log(months.indexOf(document.getElementById("editableMonth").innerText));
-    if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
-        passDate = true;
-    }
-    if (passDate) {
-        console.log("true1");
-        PassMonth = months.indexOf(document.getElementById("editableMonth").innerText) + 1;
-        PassDay = parseInt(document.getElementById("editableDay").innerText.slice(0, -1));
-        PassYear = parseInt(document.getElementById("editableYear").innerText);
-    } else {
-        console.log("false1");
-        PassMonth = new Date().getMonth() + 1;
-        PassDay = new Date().getDate();
-        PassYear = new Date().getFullYear();
-    }
-
     $.ajax({
         type: "POST",
         url: LoadTrackersUrl,
         data: JSON.stringify({
-            MonthAJAX: PassMonth,
-            DayAJAX: PassDay,
-            YearAJAX: PassYear,
+            MonthAJAX: months.indexOf(document.getElementById("editableMonth").innerText) + 1,
+            DayAJAX: parseInt(document.getElementById("editableDay").innerText.slice(0, -1)),
+            YearAJAX: parseInt(document.getElementById("editableYear").innerText),
         }),
         contentType: 'application/json',
         headers: {
