@@ -6,10 +6,93 @@ if (typeof months === 'undefined') {
 var currentIndex = null;
 
 //Setup current week at start
-$(document).ready(function () {
-    getLongMonthNamesSetting();
-    nextWeek(0);
+$(function () {
+    getLongMonthNamesSetting(function () {
+        nextWeek(0);
+    });
 });
+
+function getLongMonthNamesSetting(callback) {
+    // Function to get the value of LongMonthNames from the XML file
+    $.ajax({
+        type: "POST",
+        url: loadSettingsUrl,
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+                // Send Month, Day, Year from c# to updateDate
+                if (data.longMonthNamesValue) {
+                    // Replace abbreviated month names with full month names
+                    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                } else {
+                    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                }
+                // Call the provided callback function to continue the initialization
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+                console.error("Update failed.");
+            }
+        },
+        error: function (error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
+}
+
+function handleCellClick(index, selectedDay) {
+    // Handle the cell click event by finding the difference in indices and progressing the week
+
+    // Calculate the difference in indices
+    let dayDifference = index - currentIndex;
+    nextWeek(dayDifference); // Progress week by difference
+}
+
+function nextWeek(number) {
+    //Progress week by number. ex. Back 5 days.
+    $.ajax({
+        type: "POST",
+        url: nextWeekUrl,
+        data: JSON.stringify({ Days: number }), // Wrap the number in an object
+        contentType: "application/json", // Set content type to JSON
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+                // Send Month, Day, Year from c# to updateDate
+                updateDate(data.month, data.day, data.year, data.days);
+            } else {
+                console.error("Update failed.");
+            }
+        },
+        error: function (error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
+}
+
+function updateDate(month, day, year, days) {
+    // Access month, day year in html and update them to c# values
+    document.getElementById("editableMonth").innerText = months[month - 1];
+    document.getElementById("editableDay").innerText = day;
+    document.getElementById("editableDay").innerText += ",";  // Add comma to it
+    document.getElementById("editableYear").innerText = year;
+
+    // Update the table with new day value
+    updateTable(days);
+}
+
+
+
+
 function makeEditable(element, widthValue, number, typeValue) {
     // Create an input element
     var inputElement = document.createElement("input");
@@ -117,6 +200,7 @@ function cycleMonth(direction) {
     updateServer();
 }
 
+
 function updateServer() {
     // Remove comma from day
     document.getElementById("editableDay").innerText = document.getElementById("editableDay").innerText.slice(0, -1); 
@@ -222,7 +306,6 @@ function updateTable(response) {
     updateTrackers();
 }
 
-// Update Trackers
 function updateTrackers() {
     console.log(months.indexOf(document.getElementById("editableMonth").innerText));
     if (months.indexOf(document.getElementById("editableMonth").innerText) != -1) {
@@ -386,76 +469,9 @@ function updateTrackers() {
     });
 }
 
-function handleCellClick(index, selectedDay) {
-    // Handle the cell click event, e.g., update the date
 
-    // Calculate the difference in indices
-    let dayDifference = index - currentIndex;
-    nextWeek(dayDifference);
-}
 
-function nextWeek(number) {
-    $.ajax({
-        type: "POST",
-        url: nextWeekUrl,
-        data: JSON.stringify({ Days: number }), // Wrap the number in an object
-        contentType: "application/json", // Set content type to JSON
-        headers: {
-            RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val()
-        },
-        success: function (data) {
-            if (data.success) {
-                // Send Month, Day, Year from c# to updateDate
-                updateDate(data.month, data.day, data.year, data.days);
-            } else {
-                console.error("Update failed.");
-            }
-        },
-        error: function (error) {
-            // Handle errors
-            console.error(error);
-        }
-    });
-}
 
-function updateDate(month, day, year, days) {
-    //Access month, day year in html and update them to c# values
-    document.getElementById("editableMonth").innerText = months[month - 1];
-    document.getElementById("editableDay").innerText = day;
-    document.getElementById("editableDay").innerText += ",";  // Add comma to it
-    document.getElementById("editableYear").innerText = year;
 
-    console.log(days);
-    // Update the table with new day values
-    updateTable(days);
-}
 
-// Function to get the value of LongMonthNames from the XML file
-function getLongMonthNamesSetting() {
-    $.ajax({
-        type: "POST",
-        url: loadSettingsUrl,
-        headers: {
-            RequestVerificationToken:
-                $('input:hidden[name="__RequestVerificationToken"]').val()
-        },
-        success: function (data) {
-            if (data.success) {
-                // Send Month, Day, Year from c# to updateDate
-                if (data.longMonthNamesValue) {
-                    // Replace abbreviated month names with full month names
-                    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                } else {
-                    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                }
-            } else {
-                console.error("Update failed.");
-            }
-        },
-        error: function (error) {
-            // Handle errors
-            console.error(error);
-        }
-    });
-}
+
