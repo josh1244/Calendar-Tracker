@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CalendarMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <days>
+    <item>
+      <key>
+        <string>3-01-10-2024</string>
+      </key>
+      <value>
+        <DayNotes>
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>0</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>0</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>1</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>1</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>2</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>2</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>9</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue>1</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>7</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>7</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
+        </DayNotes>
+      </value>
+    </item>
+  </days>
+</CalendarMap>

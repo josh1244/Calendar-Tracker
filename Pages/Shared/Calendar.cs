@@ -11,6 +11,7 @@ public class Calendar
         public int? SliderValue { get; set; }
         public bool? CheckboxValue { get; set; }
         public string? TextValue { get; set; }
+        public string? NumberValue { get; set; }
         public string? DropdownValue { get; set; }
     }
 
@@ -79,38 +80,51 @@ public class Calendar
                 // Return a new CalendarMap object
                 return new CalendarMap();
             }
-            using TextReader reader = new StreamReader(fileName);
-            var serializer = new XmlSerializer(typeof(CalendarMap));
-            // Check if the file is empty
-            if (reader.Peek() == -1)
-            {
-                // Return a new CalendarMap object
-                return new CalendarMap();
-            }
-            else
-            {
-                // Deserialize the CalendarMap object from the file
-                object deserializedObject = serializer.Deserialize(reader)!;
 
-                if (deserializedObject is CalendarMap calendarMap)
+            using (TextReader reader = new StreamReader(fileName))
+            {
+                // Check if the file is empty
+                if (reader.Peek() == -1)
                 {
-                    // Successfully deserialized into a CalendarMap object
-                    return calendarMap;
-                }
-                else
-                {
-                    // Handling the case where deserialization was not successful
+                    // Return a new CalendarMap object
                     return new CalendarMap();
                 }
+
+                var serializer = new XmlSerializer(typeof(CalendarMap));
+
+                try
+                {
+                    // Deserialize the CalendarMap object from the file
+                    object deserializedObject = serializer.Deserialize(reader)!;
+
+                    if (deserializedObject is CalendarMap calendarMap)
+                    {
+                        // Successfully deserialized into a CalendarMap object
+                        return calendarMap;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle deserialization exception (e.g., log the error)
+                    Console.WriteLine($"Error deserializing from file: {ex.Message}");
+                }
+
+                // Handling the case where deserialization was not successful
+                return new CalendarMap();
             }
         }
+
 
         // Function to save calendar to file
         public static void SaveToFile(string fileName, CalendarMap data)
         {
-            XmlSerializer serializer = new(typeof(CalendarMap));
-            using StreamWriter writer = new(fileName);
-            serializer.Serialize(writer, data);
+            XmlSerializer serializer = new XmlSerializer(typeof(CalendarMap));
+
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                serializer.Serialize(writer, data);
+            }
         }
+
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GreetingOption>TestPlot</GreetingOption>
-  <LongMonthNamesOption>false</LongMonthNamesOption>
+  <LongMonthNamesOption>true</LongMonthNamesOption>
   <TrackersOption>
     <item>
       <key>
@@ -13,6 +13,7 @@
           <Order>0</Order>
           <Name>Quality of Sleep</Name>
           <Type>Slider</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -26,6 +27,7 @@
           <Order>1</Order>
           <Name>Screentime Hours before Bed</Name>
           <Type>Slider</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -39,6 +41,7 @@
           <Order>2</Order>
           <Name>Dairy before Bed</Name>
           <Type>Checkbox</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>

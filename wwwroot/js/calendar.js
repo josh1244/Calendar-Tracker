@@ -383,6 +383,15 @@ function updateTrackers() {
                                 trackerComponentsDiv.append(textInput);
                                 break;
 
+                            case "Number":
+                                // Check if numberValue is null, display default text
+                                var numberValue = (trackerData && trackerData.numberValue !== null) ? trackerData.numberValue : "";
+                                var defaultNumberValue = (tracker && tracker.defaultNumber !== null) ? tracker.defaultNumber : "";
+
+                                var numberInput = $('<input type="number" id="' + tracker.name + '" name="TrackersValues[' + trackerId + '].NumberValue" placeholder="' + defaultNumberValue + '" class="tracker-textbox" value="' + numberValue + '">');
+                                trackerComponentsDiv.append(numberInput);
+                                break;
+
                             case "Dropdown":
                                 // Check if dropdownValue is null, display default text
                                 var dropdownValue = (trackerData && trackerData.dropdownValue !== null) ? trackerData.dropdownValue : "";

@@ -17,7 +17,7 @@ namespace Calendar_Tracker.Pages
         public static string? selectedConfiguration { get; set; }
         public void OnGet()
         {
-            Config config = null;
+            Config? config = null;
             try
             {
                 config = Config.LoadConfigFromFile("Settings.xml");
@@ -29,15 +29,7 @@ namespace Calendar_Tracker.Pages
             }
 
             // If the file was successfully loaded, use the configurations from the loaded config object
-            if (config != null)
-            {
-                Configurations = config.Configurations;
-            }
-            else
-            {
-                // If the file was not loaded, provide a default configuration
-                Configurations = new List<string> { "DefaultConfiguration" };
-            }
+            Configurations = config?.Configurations ?? new List<string> { "DefaultConfiguration" };
 
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];

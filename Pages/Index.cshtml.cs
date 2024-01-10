@@ -17,7 +17,7 @@ namespace Calendar_Tracker.Pages
 
         public void OnGet()
         {
-            Config config = null;
+            Config? config = null;
             try
             {
                 config = Config.LoadConfigFromFile("Settings.xml");
@@ -29,15 +29,7 @@ namespace Calendar_Tracker.Pages
             }
 
             // If the file was successfully loaded, use the configurations from the loaded config object
-            if (config != null)
-            {
-                Configurations = config.Configurations;
-            }
-            else
-            {
-                // If the file was not loaded, provide a default configuration
-                Configurations = new List<string> { "DefaultConfiguration" };
-            }
+            Configurations = config?.Configurations ?? new List<string> { "DefaultConfiguration" };
 
             // Retrieve the selected configuration from the query parameters
             selectedConfiguration = HttpContext.Request.Query["configuration"];
@@ -63,6 +55,7 @@ namespace Calendar_Tracker.Pages
                     SliderValue = trackerValues.SliderValue,
                     CheckboxValue = trackerValues.CheckboxValue,
                     TextValue = trackerValues.TextValue,
+                    NumberValue = trackerValues.NumberValue,
                     DropdownValue = trackerValues.DropdownValue,
                 };
 
@@ -73,6 +66,7 @@ namespace Calendar_Tracker.Pages
                         existingTrackerData.SliderValue = newTrackerData.SliderValue;
                         existingTrackerData.CheckboxValue = newTrackerData.CheckboxValue;
                         existingTrackerData.TextValue = newTrackerData.TextValue;
+                        existingTrackerData.NumberValue = newTrackerData.NumberValue;
                         existingTrackerData.DropdownValue = newTrackerData.DropdownValue;
                     }
                     else
@@ -111,6 +105,7 @@ namespace Calendar_Tracker.Pages
                         existingTrackerData.SliderValue = trackerData.SliderValue;
                         existingTrackerData.CheckboxValue = trackerData.CheckboxValue;
                         existingTrackerData.TextValue = trackerData.TextValue;
+                        existingTrackerData.NumberValue = trackerData.NumberValue;
                         existingTrackerData.DropdownValue = trackerData.DropdownValue;
                     }
                     else

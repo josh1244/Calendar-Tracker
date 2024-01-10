@@ -108,12 +108,15 @@
                                         <option value="Slider" selected="@("Slider" == tracker.Type)">Slider</option>
                                         <option value="Checkbox" selected="@("Checkbox" == tracker.Type)">Checkbox</option>
                                         <option value="Text" selected="@("Text" == tracker.Type)">Text</option>
+                                        <option value="Number" selected="@("Number" == tracker.Type)">Number</option>
                                         <option value="Dropdown" selected="@("Dropdown" == tracker.Type)">Dropdown</option>
                                     </select>
 
                                     <button type="button" name="@i" class="small-btn minusTrackerButton">-</button>
                             
                                     <input type="text" name="Trackers[@i].DefaultText" placeholder="Default Text" class="tracker-default-text" id="trackerText@(i)" style="display: none;" value="@tracker.DefaultText" />
+                                    <input type="number" name="Trackers[@i].DefaultNumber" placeholder="0" class="tracker-default-number" id="trackerNumber@(i)" style="display: none;" value="@tracker.DefaultNumber" />
+
 
                                     <div name="Trackers[@i].DropdownComponent" id="trackerDropdown@(i)" class="components-container  tracker-dropdown-component" style="display: none;">
                                         <button type="button" name="@i" id="trackerDropdownButton[@i]" class="small-btn tracker-dropdown-button">Add Dropdown Option</button>
@@ -263,6 +266,7 @@
         function toggleDefaultTextInputVisibility(trackerTypeDropdown) {
             var trackerIndex = trackerTypeDropdown.attr("name").match(/\[(\d+)\]/)[1];
             var defaultTextInput = $("#trackerText" + trackerIndex);
+            var defaultNumberInput = $("#trackerNumber" + trackerIndex);
             var DropdownComponent = $("#trackerDropdown" + trackerIndex);
 
             // Toggle visibility of the text input based on the selected type
@@ -270,6 +274,11 @@
                 defaultTextInput.show();
             } else {
                 defaultTextInput.hide();
+            }
+            if (trackerTypeDropdown.val() === 'Number') {
+                defaultNumberInput.show();
+            } else {
+                defaultNumberInput.hide();
             }
             if (trackerTypeDropdown.val() === 'Dropdown') {
                 DropdownComponent.show();
@@ -299,9 +308,14 @@
         });
 
 
+        // Flag to track whether Ctrl or Command key is currently held down
+        var ctrlKeyPressed = false;
+
+        // Flag to track whether the form is currently being submitted
+        var isSubmitting = false;
+
         // Handle the button click event
         $("#submitButton").click(function () {
-
             // Check if GreetingValue is empty
             if ($("#GreetingValue").val() === "") {
                 // Assign the placeholder value to GreetingValue
@@ -314,26 +328,62 @@
                 return;
             }
 
-            // Serialize the form data
-            var formData = $("#myForm").serialize();
+            // Check if currently submitting
+            if (!isSubmitting) {
+                isSubmitting = true;
 
-            console.log("Form Data: " + JSON.stringify(formData));
+                // Serialize the form data
+                var formData = $("#myForm").serialize();
 
-            // Send an AJAX request to the server
-            $.ajax({
-                type: "POST",
-                url: urlSubmit,
-                data: formData,
-                success: function (data) {
-                    // Handle the success response if needed
-                    console.log("Form submitted successfully");
-                },
-                error: function (error) {
-                    // Handle the error response if needed
-                    console.error("Error submitting form: " + error.responseText);
-                }
-            });
+                console.log("Form Data: " + JSON.stringify(formData));
+
+                // Send an AJAX request to the server
+                $.ajax({
+                    type: "POST",
+                    url: urlSubmit,
+                    data: formData,
+                    success: function (data) {
+                        // Handle the success response if needed
+                        console.log("Form submitted successfully");
+                    },
+                    error: function (error) {
+                        // Handle the error response if needed
+                        console.error("Error submitting form: " + error.responseText);
+                    },
+                    complete: function () {
+                        // Reset the submitting flag after a cooldown period
+                        setTimeout(function () {
+                            isSubmitting = false;
+                        }, 500); // Adjust the cooldown time in milliseconds (e.g., 1000 = 1 second)
+                    }
+                });
+            }
         });
+
+        // Handle Ctrl+S keyup event
+        $(document).keyup(function (e) {
+            // Check if Ctrl or Command key is released
+            if ((e.ctrlKey || e.metaKey) && ctrlKeyPressed && e.key === 's' && !$("input, textarea, select").is(":focus")) {
+                // Trigger the click event on the submit button
+                $("#submitButton").click();
+                // Prevent the default browser save behavior
+                e.preventDefault();
+            }
+
+            // Reset the flags
+            ctrlKeyPressed = false;
+        });
+
+        // Handle Ctrl keydown event
+        $(document).keydown(function (e) {
+            // Check if Ctrl or Command key is pressed
+            if (e.ctrlKey || e.metaKey) {
+                ctrlKeyPressed = true;
+                // Prevent the default browser save behavior
+                e.preventDefault();
+            }
+        });
+
 
         // Handle the button click event to add tracker fields
         $("#addTrackerButton").click(function () {
@@ -345,6 +395,7 @@
             var trackerNameId = 'trackerName' + trackerCount;
             var trackerTypeId = 'trackerType' + trackerCount;
             var trackerTextId = 'trackerText' + trackerCount;
+            var trackerNumberId = 'trackerNumber' + trackerCount;
             var trackerDropdownId = 'trackerDropdown' + trackerCount;
 
             // Create new input fields for tracker id (hidden), name, and type with unique IDs
@@ -357,11 +408,13 @@
             trackerTypeSelect.append('<option value="Slider">Slider</option>');
             trackerTypeSelect.append('<option value="Checkbox">Checkbox</option>');
             trackerTypeSelect.append('<option value="Text">Text</option>');
+            trackerTypeSelect.append('<option value="Number">Number</option>');
             trackerTypeSelect.append('<option value="Dropdown">Dropdown</option>');
 
             var trackerMinusButton = $('<button type="button" id="minusTrackerButton" class="small-btn minusTrackerButton">-</button>');
            
             var trackerDefaultTextInput = $('<input type="text" name="Trackers[' + trackerCount + '].DefaultText" placeholder="Default Text" class="tracker-default-text" id="' + trackerTextId + '" style="display: none;" />');
+            var trackerDefaultNumberInput = $('<input type="number" name="Trackers[' + trackerCount + '].DefaultNumber" placeholder="0" class="tracker-default-number" id="' + trackerNumberId + '" style="display: none;" />');
 
             var trackerDefaultDropdownComponent = $('<div name="Trackers[' + trackerCount + '].DropdownComponent" class="components-container tracker-dropdown-component" id="' + trackerDropdownId + '" style="display: none;"/>');
             var trackerDefaultDropdownComponentButton = $('<button type="button" name="trackerCount" id="trackerDropdownButton[' + trackerDropdownId + ']" class="small-btn tracker-dropdown-button"/>Add Dropdown Option</button>');
@@ -376,6 +429,7 @@
 
             // Append the default text input
             $("#trackerFields" + trackerCount).append(trackerDefaultTextInput);
+            $("#trackerFields" + trackerCount).append(trackerDefaultNumberInput);
 
             // Append the dropdown component
             trackerDefaultDropdownComponent.append(trackerDefaultDropdownComponentButton);
@@ -396,22 +450,17 @@
                 } else {
                     $("#" + trackerTextId).hide();
                 }
+                if ($(this).val() === 'Number') {
+                    $("#" + trackerNumberId).show();
+                } else {
+                    $("#" + trackerNumberId).hide();
+                }
                 if ($(this).val() === 'Dropdown') {
                     $("#" + trackerDropdownId).show();
                 } else {
                     $("#" + trackerDropdownId).hide();
                 }
             });
-        });
-
-        // Handle Ctrl+S keypress event
-        $(document).keydown(function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                // Trigger the click event on the submit button
-                $("#submitButton").click();
-                // Prevent the default browser save behavior
-                e.preventDefault();
-            }
         });
     });
 </script>

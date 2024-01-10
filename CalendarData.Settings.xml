@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GreetingOption>Hello Josh!</GreetingOption>
+  <GreetingOption>Hello there Josh!</GreetingOption>
   <LongMonthNamesOption>false</LongMonthNamesOption>
   <TrackersOption>
     <item>
@@ -13,6 +13,7 @@
           <Order>3</Order>
           <Name>Day Quality</Name>
           <Type>Slider</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -26,6 +27,7 @@
           <Order>4</Order>
           <Name>Sleep Quality</Name>
           <Type>Slider</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -39,6 +41,7 @@
           <Order>5</Order>
           <Name>Took Medication</Name>
           <Type>Checkbox</Type>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -53,6 +56,7 @@
           <Name>Exercise</Name>
           <Type>Text</Type>
           <DefaultText>None</DefaultText>
+          <DefaultNumber xsi:nil="true" />
         </TrackerData>
       </value>
     </item>
@@ -66,6 +70,7 @@
           <Order>7</Order>
           <Name>Food Eaten:</Name>
           <Type>Dropdown</Type>
+          <DefaultNumber xsi:nil="true" />
           <DropdownOptions>
             <string>Dog</string>
             <string>Cat</string>
@@ -73,6 +78,21 @@
             <string>Hamburger</string>
             <string>Chezburger</string>
           </DropdownOptions>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>8</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>8</Id>
+          <Order>8</Order>
+          <Name>TestNumbersf</Name>
+          <Type>Number</Type>
+          <DefaultText>42</DefaultText>
+          <DefaultNumber>1</DefaultNumber>
         </TrackerData>
       </value>
     </item>

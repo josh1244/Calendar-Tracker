@@ -75,40 +75,73 @@
     var loadSettingsUrl = '@Url.Page("/Calendar", "LoadSettings")';
 
     $(document).ready(function () {
+        // Flag to track whether Ctrl or Command key is currently held down
+        var ctrlKeyPressed = false;
+
+        // Flag to track whether the form is currently being submitted
+        var isSubmitting = false;
+
         // Handle the button click event
         $("#submitButton").click(function () {
-            // Modify checkbox values before submitting
-            $('input[type="checkbox"]').each(function () {
-                $(this).val($(this).is(':checked').toString());
-            });
+            // Check if currently submitting
+            if (!isSubmitting) {
+                isSubmitting = true;
 
-            // Serialize the form data
-            var formData = $("#myForm").serialize();
-            // Send an AJAX request to the server
-            $.ajax({
-                type: "POST",
-                url: urlSubmit,
-                data: formData,
-                success: function (data) {
-                    // Handle the success response if needed
-                    console.log("Form submitted successfully");
-                },
-                error: function (error) {
-                    // Handle the error response if needed
-                    console.error("Error submitting form: " + error.responseText);
-                }
-            });
+                // Modify checkbox values before submitting
+                $('input[type="checkbox"]').each(function () {
+                    $(this).val($(this).is(':checked').toString());
+                });
+
+                // Serialize the form data
+                var formData = $("#myForm").serialize();
+
+                // Send an AJAX request to the server
+                $.ajax({
+                    type: "POST",
+                    url: urlSubmit,
+                    data: formData,
+                    success: function (data) {
+                        // Handle the success response if needed
+                        console.log("Form submitted successfully");
+                    },
+                    error: function (error) {
+                        // Handle the error response if needed
+                        console.error("Error submitting form: " + error.responseText);
+                    },
+                    complete: function () {
+                        // Reset the submitting flag after a cooldown period
+                        setTimeout(function () {
+                            isSubmitting = false;
+                        }, 500); // Adjust the cooldown time in milliseconds (e.g., 1000 = 1 second)
+                    }
+                });
+            }
         });
 
-        // Handle Ctrl+S keypress event
-        $(document).keydown(function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        // Handle Ctrl+S keyup event
+        $(document).keyup(function (e) {
+            // Check if Ctrl or Command key is released
+            if ((e.ctrlKey || e.metaKey) && ctrlKeyPressed && e.key === 's' && !$("input, textarea, select").is(":focus")) {
                 // Trigger the click event on the submit button
                 $("#submitButton").click();
                 // Prevent the default browser save behavior
                 e.preventDefault();
             }
+
+            // Reset the flags
+            ctrlKeyPressed = false;
         });
+
+        // Handle Ctrl keydown event
+        $(document).keydown(function (e) {
+            // Check if Ctrl or Command key is pressed
+            if (e.ctrlKey || e.metaKey) {
+                ctrlKeyPressed = true;
+                // Prevent the default browser save behavior
+                e.preventDefault();
+            }
+        });
+
     });
 </script>
 <script src="~/js/calendar.js"></script>

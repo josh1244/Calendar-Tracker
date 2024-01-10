@@ -45,6 +45,7 @@
                         var trackerSliderValue = Model.TrackersValues.TryGetValue(i, out var trackerDataSlider) ? trackerDataSlider.SliderValue : null;
                         var trackerCheckboxValue = Model.TrackersValues.TryGetValue(i, out var trackerDataCheckbox) ? trackerDataCheckbox.CheckboxValue : false;
                         var trackerTextValue = Model.TrackersValues.TryGetValue(i, out var trackerDataText) ? trackerDataText.TextValue : string.Empty;
+                        var trackerNumberValue = Model.TrackersValues.TryGetValue(i, out var trackerDataNumber) ? trackerDataNumber.NumberValue : null;
                         var trackerDropdownValue = Model.TrackersValues.TryGetValue(i, out var trackerDataDropdown) ? trackerDataDropdown.DropdownValue : string.Empty;
 
                         var classvalue = trackerSliderValue == null ? "grayout" : "";
@@ -64,6 +65,10 @@
                                     <input type="text" id="@tracker.Name" name="TrackersValues[@i].TextValue" placeholder="@tracker.DefaultText" class="tracker-textbox" value="@trackerTextValue" />
                                     break;
 
+                                case "Number":
+                                    <input type="number" id="@tracker.Name" name="TrackersValues[@i].NumberValue" placeholder="@tracker.DefaultNumber" class="tracker-textbox" value="@trackerNumberValue" />
+                                    break;
+
                                 case "Dropdown":
                                     var dropdownOptions = tracker.DropdownOptions ?? new List<string>();
                                     var trackerData = Model.TrackersValues != null && Model.TrackersValues.TryGetValue(i, out var data) ? data : null;
@@ -80,11 +85,6 @@
                                         }
                                     </select>
                                     break;
-
-
-    
-
-
 
                                 default:
                                     <p>Tracker type undefined.</p>
@@ -117,26 +117,66 @@
     }
 
     $(document).ready(function () {
+        // Flag to track whether Ctrl or Command key is currently held down
+        var ctrlKeyPressed = false;
+
+        // Flag to track whether the form is currently being submitted
+        var isSubmitting = false;
+
         // Handle the button click event
         $("#submitButton").click(function () {
-            $('input[type="checkbox"]').each(function () {
-                $(this).val($(this).is(':checked').toString());
-            });
+            if (!isSubmitting) {
+                isSubmitting = true;
 
-            var formData = $("#myForm").serialize();
+                $('input[type="checkbox"]').each(function () {
+                    $(this).val($(this).is(':checked').toString());
+                });
 
-            $.ajax({
-                type: "POST",
-                url: urlSubmit,
-                data: formData,
-                success: function (data) {
-                    console.log("Form submitted successfully");
-                },
-                error: function (error) {
-                    console.error("Error submitting form: " + error.responseText);
-                }
-            });
+                var formData = $("#myForm").serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: urlSubmit,
+                    data: formData,
+                    success: function (data) {
+                        console.log("Form submitted successfully");
+                    },
+                    error: function (error) {
+                        console.error("Error submitting form: " + error.responseText);
+                    },
+                    complete: function () {
+                        // Reset the submitting flag after a cooldown period
+                        setTimeout(function () {
+                            isSubmitting = false;
+                        }, 500); // Adjust the cooldown time in milliseconds (e.g., 1000 = 1 second)
+                    }
+                });
+            }
         });
+
+        // Handle Ctrl+S keyup event
+        $(document).keyup(function (e) {
+            // Check if Ctrl or Command key is released
+            if ((e.ctrlKey || e.metaKey) && ctrlKeyPressed && e.key === 's' && !$("input, textarea, select").is(":focus")) {
+                $("#submitButton").click();
+                // Prevent the default browser save behavior
+                e.preventDefault()
+            }
+
+            // Reset the flags
+            ctrlKeyPressed = false;
+        });
+
+        // Handle Ctrl keydown event
+        $(document).keydown(function (e) {
+            // Check if Ctrl or Command key is pressed
+            if (e.ctrlKey || e.metaKey) {
+                ctrlKeyPressed = true;
+                // Prevent the default browser save behavior
+                e.preventDefault()
+            }
+        });
+
 
         // Attach input event listeners for sliders
         $("input[type='range']").on("input", function () {
@@ -145,13 +185,6 @@
             document.getElementById(trackerName + " Output").innerHTML = $(this).val();
         });
 
-        // Handle Ctrl+S keypress event
-        $(document).keydown(function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                $("#submitButton").click();
-                e.preventDefault();
-            }
-        });
 
         // Setup Month Setting at start
         getLongMonthNamesSetting();

@@ -1016,6 +1016,19 @@
                 </TrackerComponentData>
               </value>
             </item>
+            <item>
+              <key>
+                <int>8</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>8</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <NumberValue>262</NumberValue>
+                </TrackerComponentData>
+              </value>
+            </item>
           </TrackersData>
         </DayNotes>
       </value>
