@@ -65,17 +65,25 @@
                                     break;
 
                                 case "Dropdown":
-                                    var dropdownOptions = tracker.DropdownOptions;
+                                    var dropdownOptions = tracker.DropdownOptions ?? new List<string>();
+                                    var trackerData = Model.TrackersValues != null && Model.TrackersValues.TryGetValue(i, out var data) ? data : null;
+                                    var dropdownValue = trackerData?.DropdownValue ?? "";
 
-                                    if (!dropdownOptions.Any())
-                                    {
-                                        dropdownOptions = new List<string>();
-                                        dropdownOptions.Add("Add in Settings"); // Add default element
-                                    }
-                                    <div>
-                                        @Html.DropDownListFor(model => model.TrackersValues[i].DropdownValue, new SelectList(dropdownOptions), new { @class = "tracker-dropdown" })
-                                    </div>
+                                    <select id="@tracker.Name" name="TrackersValues[@i].DropdownValue" class="tracker-dropdown">
+                                        @foreach (var option in dropdownOptions)
+                                        {
+                                            <option value="@option" selected="@Equals(option, dropdownValue)">@option</option>
+                                        }
+                                        @if (!dropdownOptions.Any())
+                                        {
+                                            <option value="" selected>Add in Settings</option>
+                                        }
+                                    </select>
                                     break;
+
+
+    
+
 
 
                                 default:
@@ -160,8 +168,6 @@
                 if (data.success) {
                     if (data.longMonthNamesValue) {
                         months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    } else {
-                        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                     }
                     var currentMonth = new Date().getMonth();
                     document.getElementById("Month").innerText = months[currentMonth];

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GreetingOption>Cycle Tracking</GreetingOption>
+  <LongMonthNamesOption>false</LongMonthNamesOption>
+  <TrackersOption>
+    <item>
+      <key>
+        <int>0</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>0</Id>
+          <Order>0</Order>
+          <Name>Body Temperature</Name>
+          <Type>Text</Type>
+          <DefaultText>96.8</DefaultText>
+        </TrackerData>
+      </value>
+    </item>
+    <item>
+      <key>
+        <int>1</int>
+      </key>
+      <value>
+        <TrackerData>
+          <Id>1</Id>
+          <Order>1</Order>
+          <Name>Mucus Wetness</Name>
+          <Type>Slider</Type>
+        </TrackerData>
+      </value>
+    </item>
+  </TrackersOption>
+</Options>

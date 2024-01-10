@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GreetingOption>Another One!</GreetingOption>
-  <LongMonthNamesOption>true</LongMonthNamesOption>
+  <GreetingOption>TestPlot</GreetingOption>
+  <LongMonthNamesOption>false</LongMonthNamesOption>
   <TrackersOption>
     <item>
       <key>
@@ -11,7 +11,7 @@
         <TrackerData>
           <Id>0</Id>
           <Order>0</Order>
-          <Name>Another Slider</Name>
+          <Name>Quality of Sleep</Name>
           <Type>Slider</Type>
         </TrackerData>
       </value>
@@ -24,8 +24,8 @@
         <TrackerData>
           <Id>1</Id>
           <Order>1</Order>
-          <Name>Another Checkbox</Name>
-          <Type>Checkbox</Type>
+          <Name>Screentime Hours before Bed</Name>
+          <Type>Slider</Type>
         </TrackerData>
       </value>
     </item>
@@ -37,26 +37,8 @@
         <TrackerData>
           <Id>2</Id>
           <Order>2</Order>
-          <Name>Another Text</Name>
-          <Type>Text</Type>
-          <DefaultText>Something</DefaultText>
-        </TrackerData>
-      </value>
-    </item>
-    <item>
-      <key>
-        <int>3</int>
-      </key>
-      <value>
-        <TrackerData>
-          <Id>3</Id>
-          <Order>3</Order>
-          <Name>Another Dropdown</Name>
-          <Type>Dropdown</Type>
-          <DropdownOptions>
-            <string>a</string>
-            <string>b</string>
-          </DropdownOptions>
+          <Name>Dairy before Bed</Name>
+          <Type>Checkbox</Type>
         </TrackerData>
       </value>
     </item>
