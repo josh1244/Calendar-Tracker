@@ -1039,8 +1039,83 @@
       </key>
       <value>
         <DayNotes>
-          <Exists>false</Exists>
-          <TrackersData />
+          <Exists>true</Exists>
+          <TrackersData>
+            <item>
+              <key>
+                <int>3</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>3</Id>
+                  <SliderValue>2</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>4</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>4</Id>
+                  <SliderValue>5</SliderValue>
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>5</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>5</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>6</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>6</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>7</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>7</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <DropdownValue>Dog</DropdownValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+            <item>
+              <key>
+                <int>8</int>
+              </key>
+              <value>
+                <TrackerComponentData>
+                  <Id>8</Id>
+                  <SliderValue xsi:nil="true" />
+                  <CheckboxValue xsi:nil="true" />
+                  <NumberValue>9845</NumberValue>
+                </TrackerComponentData>
+              </value>
+            </item>
+          </TrackersData>
         </DayNotes>
       </value>
     </item>

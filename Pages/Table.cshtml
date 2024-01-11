@@ -1,0 +1,118 @@
+﻿@page
+@model Calendar_Tracker.Pages.TableModel
+@{
+}
+
+
+<form id="myForm" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="text-center">
+        <h1>Calendar</h1>
+
+        <div id="table-container">
+            <table id="tableBody" style="border: 2px solid black;">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Date</th>
+                        @if (Model.Trackers.Any())
+                        {
+                            @foreach (var (i, tracker) in Model.Trackers)
+                            {
+                                <th>@tracker.Name</th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                
+                <tbody id="daysTable">
+                    @if (Model.MyCalendar.days != null && Model.MyCalendar.days.Any())
+                    {
+                    @using System.Globalization
+
+                        var sortedDays = Model.MyCalendar.days.OrderBy(pair => DateTime.ParseExact(pair.Key.Substring(2), "MM-dd-yyyy", CultureInfo.InvariantCulture));
+
+                        var sortedDaysWithExistence = Model.MyCalendar.days
+                        .Where(pair => pair.Value.Exists)
+                        .OrderBy(pair => DateTime.ParseExact(pair.Key.Substring(2), "MM-dd-yyyy", CultureInfo.InvariantCulture));
+
+                        var firstDay = sortedDaysWithExistence.FirstOrDefault(); // Get the first day with data and is shown
+                        var firstDayId = firstDay.Key;
+
+                        foreach (var (dayId, _) in sortedDays)
+                        {
+                            // Check if the dayId exists and if its corresponding data has 'Exists' set to true
+                            if (Model.MyCalendar.days.ContainsKey(dayId) && Model.MyCalendar.days[dayId].Exists)
+                            {
+                                // Calculate the difference in days between the current day and the first day
+                                // Adds 1 becuase first day is #1
+                                var dayCount = (DateTime.ParseExact(dayId.Substring(2), "MM-dd-yyyy", CultureInfo.InvariantCulture) -
+                                DateTime.ParseExact(firstDayId.Substring(2), "MM-dd-yyyy", CultureInfo.InvariantCulture)).Days;
+
+                                <tr>
+                                    <td>@(dayCount + 1)</td>
+                                    <td>@ID.IDToDate(dayId).ToString("MM-dd-yyyy")</td>
+                                    @foreach (var (trackerId, tracker) in Model.Trackers)
+                                    {
+                                        @switch (tracker.Type)
+                                        {
+                                            case "Slider":
+                                                var trackerSliderValue = Model.MyCalendar.days.ContainsKey(dayId) &&
+                                                Model.MyCalendar.days[dayId].TrackersData.ContainsKey(trackerId)
+                                                ? Model.MyCalendar.days[dayId].TrackersData[trackerId].SliderValue
+                                                : null;
+                                                <td>@trackerSliderValue</td>
+                                                break;
+
+                                            case "Checkbox":
+                                                var trackerCheckboxValue = Model.MyCalendar.days.ContainsKey(dayId) &&
+                                                Model.MyCalendar.days[dayId].TrackersData.ContainsKey(trackerId)
+                                                ? Model.MyCalendar.days[dayId].TrackersData[trackerId].CheckboxValue?.ToString() ?? "false"
+                                                : "False";
+                                                <td>@trackerCheckboxValue</td>
+                                                break;
+
+
+                                            case "Text":
+                                                var trackerTextValue = Model.MyCalendar.days.ContainsKey(dayId) &&
+                                                Model.MyCalendar.days[dayId].TrackersData.ContainsKey(trackerId)
+                                                ? Model.MyCalendar.days[dayId].TrackersData[trackerId].TextValue
+                                                : null;
+                                                <td>@trackerTextValue</td>
+                                                break;
+
+                                            case "Number":
+                                                var trackerNumberValue = Model.MyCalendar.days.ContainsKey(dayId) &&
+                                                Model.MyCalendar.days[dayId].TrackersData.ContainsKey(trackerId)
+                                                ? Model.MyCalendar.days[dayId].TrackersData[trackerId].NumberValue
+                                                : null;
+                                                <td>@trackerNumberValue</td>
+                                                break;
+
+                                            case "Dropdown":
+                                                var trackerDropdownValue = Model.MyCalendar.days.ContainsKey(dayId) &&
+                                                Model.MyCalendar.days[dayId].TrackersData.ContainsKey(trackerId)
+                                                ? Model.MyCalendar.days[dayId].TrackersData[trackerId].DropdownValue
+                                                : null;
+                                                <td>@trackerDropdownValue</td>
+                                                break;
+
+                                            default:
+                                                <td>null</td>
+                                                break;
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
